@@ -8,28 +8,35 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f4f6f8;
+    --bg: #f8fafc;
     --surface: #ffffff; 
-    --surface2: #f8fafc;  
-    --border: #e2e8f0;   
+    --surface2: #f1f5f9;  
+    --border: #cbd5e1;   
     --text: #0f172a;      
     --muted: #64748b;   
-    --label: #475569;     
+    --label: #334155;     
     --accent: #0f344e;       
     --accent-hover: #174666;
-    --accent-dim: rgba(15, 52, 78, 0.08);
-    --yellow: #fabc2a;      
+    --accent-dim: rgba(15, 52, 78, 0.06);
     
-    --low: #15803d;
+    --low: #166534;
     --low-bg: #f0fdf4;
-    --medium: #b45309;
-    --medium-bg: #fffbeb;
+    --low-border: #bbf7d0;
+    
+    --medium: #9a3412;
+    --medium-bg: #fffbe6;
+    --medium-border: #fed7aa;
+    
     --high: #c2410c;
     --high-bg: #fff7ed;
-    --urgent: #b91c1c;
+    --high-border: #ffedd5;
+    
+    --urgent: #991b1b;
     --urgent-bg: #fef2f2;
-    --radius: 8px;
-    --radius-sm: 4px;
+    --urgent-border: #fecdd3;
+    
+    --radius: 12px;
+    --radius-sm: 6px;
   }
 
   body {
@@ -44,33 +51,36 @@
   /* HEADER */
   header {
     background: var(--accent); 
-    border-top: 4px solid var(--yellow); 
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    padding: 18px 32px;
+    padding: 16px 32px;
     display: flex;
     align-items: center;
     gap: 14px;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 4px 20px rgba(15, 52, 78, 0.1);
   }
   .logo-mark {
-    width: 36px; height: 36px;
-    background: var(--yellow); 
+    width: 38px; height: 38px;
+    background: rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-sm);
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px; color: var(--accent); font-weight: 800; flex-shrink: 0;
+    font-size: 18px; color: #ffffff; font-weight: 800; flex-shrink: 0;
   }
-  header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: #ffffff; }
+  header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; color: #ffffff; }
   header p { font-size: 12px; color: #94a3b8; }
-  .header-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .header-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
   
   .badge-count {
     background: var(--urgent); color: #ffffff;
     border: none;
-    font-size: 12px; font-weight: 700;
-    padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+    padding: 4px 12px; border-radius: 20px;
     display: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
   .badge-count.visible { display: inline-block; }
 
@@ -78,14 +88,14 @@
   .page { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
 
   /* TABS */
-  .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: #cbd5e1; border-radius: var(--radius); padding: 4px; width: fit-content; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: #e2e8f0; border-radius: var(--radius); padding: 4px; width: fit-content; }
   .tab {
-    padding: 8px 20px; border-radius: 6px; cursor: pointer;
-    font-size: 13px; font-weight: 600; color: var(--label);
-    border: none; background: none; transition: all 0.15s;
+    padding: 10px 24px; border-radius: 8px; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    border: none; background: none; transition: all 0.2s;
   }
-  .tab.active { background: var(--accent); color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-  .tab:hover:not(.active) { color: var(--accent); }
+  .tab.active { background: var(--surface); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .tab:hover:not(.active) { color: var(--text); background: rgba(255, 255, 255, 0.5); }
 
   /* PANELS */
   .panel { display: none; }
@@ -94,128 +104,135 @@
   /* FORM CARD */
   .form-section {
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--accent);
+    border: 1px solid rgba(226, 232, 240, 0.8);
     border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.02);
   }
   .section-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
     color: var(--accent); text-transform: uppercase;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
   }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; color: var(--label); text-transform: uppercase; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; color: var(--muted); text-transform: uppercase; }
 
   input, select, textarea {
-    background: var(--surface2);
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     color: var(--text);
-    padding: 10px 12px;
+    padding: 12px 14px;
     font-size: 14px;
     font-family: inherit;
     width: 100%;
-    transition: all 0.15s;
+    transition: all 0.2s;
     appearance: none;
     -webkit-appearance: none;
   }
-  input::placeholder, textarea::placeholder { color: #94a3b8; }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); background: var(--surface); }
-  textarea { min-height: 100px; resize: vertical; }
+  input::placeholder, textarea::placeholder { color: #a1a1aa; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); }
+  textarea { min-height: 120px; resize: vertical; }
 
   .select-wrap { position: relative; }
   .select-wrap::after {
     content: ''; position: absolute; right: 14px; top: 50%;
     width: 0; height: 0; margin-top: -2px;
-    border-left: 4px solid transparent; border-right: 4px solid transparent;
-    border-top: 4px solid var(--muted); pointer-events: none;
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 5px solid var(--muted); pointer-events: none;
   }
-  .select-wrap select { padding-right: 30px; }
+  .select-wrap select { padding-right: 36px; }
 
   /* PRIORITY QUICK-SELECT GRID BUTTONS */
-  .priority-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .priority-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .priority-btn {
-    padding: 10px; border-radius: var(--radius-sm);
+    padding: 12px; border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    background: var(--surface2);
+    background: var(--surface);
     color: var(--muted);
     font-size: 13px; font-weight: 600;
-    cursor: pointer; transition: all 0.15s; text-align: center;
+    cursor: pointer; transition: all 0.2s; text-align: center;
   }
-  .priority-btn:hover { border-color: #cbd5e1; color: var(--text); }
-  .priority-btn.selected[data-p="Low"] { border-color: var(--low); background: var(--low-bg); color: var(--low); }
-  .priority-btn.selected[data-p="Medium"] { border-color: var(--medium); background: var(--medium-bg); color: var(--medium); }
-  .priority-btn.selected[data-p="High"] { border-color: var(--high); background: var(--high-bg); color: var(--high); }
-  .priority-btn.selected[data-p="Urgent"] { border-color: var(--urgent); background: var(--urgent-bg); color: var(--urgent); }
+  .priority-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--bg); }
+  .priority-btn.selected[data-p="Low"] { border-color: var(--low); background: var(--low-bg); color: var(--low); box-shadow: 0 2px 4px rgba(22,101,52,0.1); }
+  .priority-btn.selected[data-p="Medium"] { border-color: var(--medium); background: var(--medium-bg); color: var(--medium); box-shadow: 0 2px 4px rgba(154,52,18,0.1); }
+  .priority-btn.selected[data-p="High"] { border-color: var(--high); background: var(--high-bg); color: var(--high); box-shadow: 0 2px 4px rgba(194,65,12,0.1); }
+  .priority-btn.selected[data-p="Urgent"] { border-color: var(--urgent); background: var(--urgent-bg); color: var(--urgent); box-shadow: 0 2px 4px rgba(153,27,27,0.1); }
 
   /* ACTION CONTROLS */
-  .form-actions { display: flex; gap: 10px; margin-top: 8px; }
+  .form-actions { display: flex; gap: 12px; margin-top: 8px; }
   .btn {
-    padding: 11px 22px; border-radius: var(--radius-sm);
+    padding: 12px 24px; border-radius: var(--radius-sm);
     font-size: 14px; font-weight: 600; cursor: pointer;
-    border: none; transition: all 0.15s; font-family: inherit;
-    display: inline-flex; align-items: center; gap: 7px;
+    border: none; transition: all 0.2s; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   }
   .btn-primary { background: var(--accent); color: #ffffff; }
-  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-0.5px); }
   .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: var(--surface2); border-color: #cbd5e1; }
+  .btn-secondary:hover { background: var(--surface2); border-color: #94a3b8; }
   .btn-danger { background: #fff1f2; color: var(--urgent); border: 1px solid #fecdd3; }
   .btn-danger:hover { background: #ffe4e6; }
-  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn-sm { padding: 8px 14px; font-size: 12px; border-radius: 4px; }
   
-  /* OVERRIDE FOR EXPORT BTN TO FIT WHITE NAVY DESIGN SCREEN */
-  header .btn-secondary { background: transparent; color: #ffffff; border-color: rgba(255, 255, 255, 0.3); }
+  header .btn-secondary { background: transparent; color: #ffffff; border-color: rgba(255, 255, 255, 0.3); box-shadow: none; }
   header .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: #ffffff; }
 
   /* TICKET QUEUE DISPLAY AREA */
   .queue-header {
     display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
   }
-  .queue-header h2 { font-size: 17px; font-weight: 700; color: var(--accent); }
+  .queue-header h2 { font-size: 18px; font-weight: 700; color: var(--accent); }
   .ticket-count {
-    background: #cbd5e1; color: var(--text);
+    background: #e2e8f0; color: var(--accent);
     font-size: 12px; font-weight: 600;
-    padding: 2px 10px; border-radius: 20px;
+    padding: 3px 12px; border-radius: 20px;
   }
   .queue-filters { display: flex; gap: 8px; margin-left: auto; }
-  .filter-select { width: auto; padding: 7px 28px 7px 10px; font-size: 12px; background: var(--surface); }
+  .filter-select { width: auto; padding: 8px 32px 8px 12px; font-size: 12px; background: var(--surface); border-radius: var(--radius-sm); }
 
   .empty-state {
     text-align: center; padding: 60px 20px;
     color: var(--muted); background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius);
+    border: 1px solid rgba(226, 232, 240, 0.8); border-radius: var(--radius);
   }
   .empty-state p { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
   .empty-state small { font-size: 12px; display: block; }
 
-  /* COMPONENT TICKET CARDS */
+  /* COMPONENT TICKET CARDS (Enhanced Priority Mapping) */
   .ticket-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
     border-radius: var(--radius);
-    padding: 18px 20px;
-    margin-bottom: 10px;
-    display: flex; gap: 16px; align-items: flex-start;
-    transition: all 0.15s;
+    padding: 22px;
+    margin-bottom: 14px;
+    display: flex; gap: 18px; align-items: flex-start;
+    transition: all 0.2s;
     position: relative;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01), 0 2px 4px -1px rgba(0,0,0,0.01);
   }
-  .ticket-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-  .ticket-card.resolved { opacity: 0.65; background: var(--surface2); border-left-color: var(--muted); }
+  .ticket-card:hover { transform: translateY(-1px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04); }
+  
+  /* Color differentiation by Priority types */
+  .ticket-card[data-priority="Low"] { border-left: 5px solid var(--low); background: var(--surface); }
+  .ticket-card[data-priority="Medium"] { border-left: 5px solid var(--medium); background: var(--surface); }
+  .ticket-card[data-priority="High"] { border-left: 5px solid var(--high); background: var(--high-bg); border-color: var(--high-border); }
+  .ticket-card[data-priority="Urgent"] { border-left: 5px solid var(--urgent); background: var(--urgent-bg); border-color: var(--urgent-border); }
+
+  .ticket-card.resolved { opacity: 0.55; background: var(--surface2) !important; border-left-color: var(--muted) !important; border-color: var(--border) !important; }
   .ticket-card.resolved .ticket-summary { text-decoration: line-through; color: var(--muted); }
 
   .ticket-checkbox {
-    width: 20px; height: 20px; border-radius: 4px;
-    border: 2px solid #cbd5e1;
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--border);
     flex-shrink: 0; cursor: pointer; margin-top: 2px;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; background: var(--surface);
+    transition: all 0.2s; background: var(--surface);
   }
   .ticket-checkbox:hover { border-color: var(--accent); }
   .ticket-card.resolved .ticket-checkbox { background: var(--accent); border-color: var(--accent); }
@@ -223,37 +240,38 @@
   .ticket-card.resolved .ticket-checkbox .check { display: block; }
 
   .ticket-body { flex: 1; min-width: 0; }
-  .ticket-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
-  .ticket-summary { font-size: 15px; font-weight: 600; flex: 1; min-width: 0; color: var(--accent); }
-  .ticket-id { font-size: 11px; color: var(--muted); font-family: monospace; margin-top: 2px; }
+  .ticket-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+  .ticket-summary { font-size: 16px; font-weight: 700; flex: 1; min-width: 0; color: var(--accent); letter-spacing: -0.2px; }
+  .ticket-id { font-size: 11px; color: var(--muted); font-family: monospace; font-weight: 600; margin-top: 3px; background: rgba(0,0,0,0.04); padding: 1px 6px; border-radius: 4px; width: fit-content; }
 
   .pill {
-    font-size: 11px; font-weight: 700; padding: 2px 9px;
-    border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 6px; white-space: nowrap; flex-shrink: 0;
+    text-transform: uppercase; letter-spacing: 0.5px;
   }
-  .pill-low { background: var(--low-bg); color: var(--low); }
-  .pill-medium { background: var(--medium-bg); color: var(--medium); }
-  .pill-high { background: var(--high-bg); color: var(--high); }
-  .pill-urgent { background: var(--urgent-bg); color: var(--urgent); border: 1px solid rgba(185,28,28,0.2); }
+  .pill-low { background: var(--low-bg); color: var(--low); border: 1px solid var(--low-border); }
+  .pill-medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+  .pill-high { background: #ffedf0; color: var(--high); border: 1px solid var(--high-border); }
+  .pill-urgent { background: var(--urgent); color: #ffffff; }
 
-  .ticket-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
-  .meta-item { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .ticket-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm); }
+  .meta-item { font-size: 12px; color: #475569; display: flex; align-items: center; gap: 4px; }
   .meta-item strong { color: var(--label); font-weight: 600; }
 
-  .ticket-desc { font-size: 13px; color: #334155; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border); line-height: 1.5; }
+  .ticket-desc { font-size: 13px; color: #334155; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); line-height: 1.6; }
 
-  .ticket-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+  .ticket-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; margin-left: 12px; }
 
   /* SYSTEM TOAST ALERTS */
   .toast {
     position: fixed; bottom: 24px; right: 24px;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 12px 18px;
+    border-radius: var(--radius-sm); padding: 14px 20px;
     font-size: 13px; font-weight: 600;
     box-shadow: 0 10px 25px rgba(0,0,0,0.08);
     transform: translateY(100px); opacity: 0;
-    transition: all(0.25s);
-    z-index: 999; max-width: 320px;
+    transition: all 0.2s;
+    z-index: 999; max-width: 340px;
     display: flex; align-items: center; gap: 8px;
   }
   .toast.show { transform: translateY(0); opacity: 1; }
@@ -263,27 +281,26 @@
   /* ANALYTICS STATS OVERVIEW CARDS */
   .stats-bar {
     display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 12px; margin-bottom: 24px;
+    gap: 16px; margin-bottom: 28px;
   }
   .stat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-top: 3px solid var(--yellow); 
-    border-radius: var(--radius); padding: 16px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    background: var(--surface); border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: var(--radius); padding: 18px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
   }
-  .stat-value { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
-  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
-  .divider { height: 1px; background: var(--border); margin: 8px 0; }
-
-  @media (max-width: 680px) {
-    .grid-2 { grid-template-columns: 1fr; }
+  @media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; gap: 14px; }
     .priority-grid { grid-template-columns: repeat(2, 1fr); }
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
-    .queue-filters { flex-wrap: wrap; width: 100%; margin-top: 10px; }
+    .queue-filters { flex-wrap: wrap; width: 100%; margin-top: 12px; }
     .queue-header { flex-wrap: wrap; }
-    header { padding: 14px 16px; }
-    .page { padding: 20px 14px; }
+    header { padding: 14px 20px; }
+    .page { padding: 20px 16px; }
+    .ticket-card { flex-direction: column; }
+    .ticket-actions { flex-direction: row; margin-left: 0; width: 100%; margin-top: 10px; border-top: 1px solid var(--surface2); padding-top: 10px; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -294,7 +311,6 @@
   <div class="logo-mark">M</div>
   <div>
     <h1>Maintenance Hub</h1>
-    <p>Property ticket management</p>
   </div>
   <div class="header-right">
     <span class="badge-count" id="urgentBadge">0 Urgent</span>
@@ -477,11 +493,9 @@
 </div>
 
 <script>
-  // 1. Define the keys first!
   const SUPABASE_URL = 'https://dccvbgmqsojobkjtnkxm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
 
-  // 2. Initialize the client using those keys (Also removed /rest/v1/ from the URL so the library works correctly)
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   let tickets = [];
@@ -538,7 +552,7 @@
 
     if (error) { console.error(error); showToast('Could not submit ticket', 'error'); return; }
 
-    showToast(`Ticket ${data[0].ticket_code} submitted`, 'success');
+    showToast(`Ticket submitted successfully`, 'success');
     resetForm();
     loadTickets();
   }
@@ -566,6 +580,7 @@
   }
 
   async function removeTicket(id) {
+    if(!confirm("Are you sure you want to delete this ticket?")) return;
     const { error } = await sb.from('tickets').delete().eq('ticket_code', id);
     if (error) { console.error(error); showToast('Could not delete ticket', 'error'); return; }
     loadTickets();
@@ -575,6 +590,7 @@
   async function clearResolved() {
     const n = tickets.filter(t => t.resolved).length;
     if (!n) { showToast('No resolved tickets to clear', ''); return; }
+    if (!confirm("Clear all resolved tickets from database?")) return;
     const { error } = await sb.from('tickets').delete().eq('resolved', true);
     if (error) { console.error(error); showToast('Could not clear resolved tickets', 'error'); return; }
     loadTickets();
@@ -621,7 +637,7 @@
     }
 
     list.innerHTML = filtered.map(t => `
-      <div class="ticket-card ${t.resolved?'resolved':''}" id="card-${t.id}">
+      <div class="ticket-card ${t.resolved?'resolved':''}" data-priority="${t.priority}" id="card-${t.id}">
         <div class="ticket-checkbox" onclick="toggleResolved('${t.id}')">
           <span class="check">✓</span>
         </div>
@@ -630,7 +646,7 @@
             <div class="ticket-summary">${esc(t.summary)}</div>
             <span class="pill ${priorityClass(t.priority)}">${t.priority}</span>
           </div>
-          <div class="ticket-id">${t.id} · ${fmtDate(t.createdAt)}</div>
+          <div class="ticket-id">Code: ${t.id} · ${fmtDate(t.createdAt)}</div>
           <div class="ticket-meta">
             <span class="meta-item"><strong>Property:</strong> ${esc(t.property)}</span>
             ${t.unit ? `<span class="meta-item"><strong>Unit:</strong> ${esc(t.unit)}</span>` : ''}
