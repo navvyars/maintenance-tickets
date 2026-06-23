@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maintenance Ticket Hub</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #1a1a1a;
+    --surface: #242424;
+    --surface2: #2e2e2e;
+    --border: #3a3a3a;
+    --text: #f0f0f0;
+    --muted: #888;
+    --label: #aaa;
+    --accent: #e8b84b;
+    --accent-dim: rgba(232,184,75,0.12);
+    --low: #5a8a5a;
+    --low-bg: rgba(90,138,90,0.15);
+    --medium: #e8b84b;
+    --medium-bg: rgba(232,184,75,0.15);
+    --high: #d4763a;
+    --high-bg: rgba(212,118,58,0.15);
+    --urgent: #c0392b;
+    --urgent-bg: rgba(192,57,43,0.15);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: #1a1a1a; font-weight: 800; flex-shrink: 0;
+  }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+  header p { font-size: 12px; color: var(--muted); }
+  .header-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .badge-count {
+    background: var(--accent); color: #1a1a1a;
+    font-size: 12px; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px;
+    display: none;
+  }
+  .badge-count.visible { display: inline-block; }
+
+  /* LAYOUT */
+  .page { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: var(--surface); border-radius: var(--radius); padding: 4px; width: fit-content; }
+  .tab {
+    padding: 8px 20px; border-radius: 8px; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    border: none; background: none; transition: all 0.15s;
+  }
+  .tab.active { background: var(--surface2); color: var(--text); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* PANELS */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* FORM CARD */
+  .form-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; color: var(--label); text-transform: uppercase; }
+
+  input, select, textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    width: 100%;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  input::placeholder, textarea::placeholder { color: var(--muted); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+  textarea { min-height: 100px; resize: vertical; }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾'; position: absolute; right: 12px; top: 50%;
+    transform: translateY(-50%); pointer-events: none;
+    color: var(--muted); font-size: 12px;
+  }
+  .select-wrap select { padding-right: 30px; }
+
+  /* PRIORITY */
+  .priority-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .priority-btn {
+    padding: 10px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; text-align: center;
+  }
+  .priority-btn:hover { border-color: var(--text); color: var(--text); }
+  .priority-btn.selected[data-p="Low"] { border-color: var(--low); background: var(--low-bg); color: var(--low); }
+  .priority-btn.selected[data-p="Medium"] { border-color: var(--medium); background: var(--medium-bg); color: var(--medium); }
+  .priority-btn.selected[data-p="High"] { border-color: var(--high); background: var(--high-bg); color: var(--high); }
+  .priority-btn.selected[data-p="Urgent"] { border-color: var(--urgent); background: var(--urgent-bg); color: var(--urgent); }
+
+  /* ACTIONS */
+  .form-actions { display: flex; gap: 10px; margin-top: 8px; }
+  .btn {
+    padding: 11px 22px; border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    border: none; transition: all 0.15s; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .btn-primary { background: var(--accent); color: #1a1a1a; }
+  .btn-primary:hover { background: #f5ca6a; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--text); }
+  .btn-danger { background: rgba(192,57,43,0.15); color: #e74c3c; border: 1px solid rgba(192,57,43,0.3); }
+  .btn-danger:hover { background: rgba(192,57,43,0.25); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+  /* TICKET QUEUE */
+  .queue-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .queue-header h2 { font-size: 17px; font-weight: 700; }
+  .ticket-count {
+    background: var(--surface2); color: var(--muted);
+    font-size: 12px; font-weight: 600;
+    padding: 2px 10px; border-radius: 20px;
+  }
+  .queue-filters { display: flex; gap: 8px; margin-left: auto; }
+  .filter-select { width: auto; padding: 7px 28px 7px 10px; font-size: 12px; }
+
+  .empty-state {
+    text-align: center; padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; }
+  .empty-state small { font-size: 12px; margin-top: 4px; display: block; }
+
+  /* TICKET CARD */
+  .ticket-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 10px;
+    display: flex; gap: 16px; align-items: flex-start;
+    transition: border-color 0.15s;
+    position: relative;
+  }
+  .ticket-card:hover { border-color: #4a4a4a; }
+  .ticket-card.resolved { opacity: 0.45; }
+  .ticket-card.resolved .ticket-summary { text-decoration: line-through; color: var(--muted); }
+
+  .ticket-checkbox {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0; cursor: pointer; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; background: transparent;
+  }
+  .ticket-checkbox:hover { border-color: var(--accent); }
+  .ticket-card.resolved .ticket-checkbox { background: var(--accent); border-color: var(--accent); }
+  .ticket-checkbox .check { display: none; font-size: 11px; color: #1a1a1a; font-weight: 900; }
+  .ticket-card.resolved .ticket-checkbox .check { display: block; }
+
+  .ticket-body { flex: 1; min-width: 0; }
+  .ticket-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+  .ticket-summary { font-size: 15px; font-weight: 600; flex: 1; min-width: 0; }
+  .ticket-id { font-size: 11px; color: var(--muted); font-family: monospace; margin-top: 2px; }
+
+  .pill {
+    font-size: 11px; font-weight: 700; padding: 2px 9px;
+    border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+  }
+  .pill-low { background: var(--low-bg); color: var(--low); }
+  .pill-medium { background: var(--medium-bg); color: var(--medium); }
+  .pill-high { background: var(--high-bg); color: var(--high); }
+  .pill-urgent { background: var(--urgent-bg); color: var(--urgent); animation: pulse-urgent 2s infinite; }
+
+  @keyframes pulse-urgent {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); }
+    50% { box-shadow: 0 0 0 4px rgba(192,57,43,0); }
+  }
+
+  .ticket-meta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 6px; }
+  .meta-item { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .meta-item strong { color: var(--label); }
+
+  .ticket-desc { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+  .ticket-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 18px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 999; max-width: 320px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: var(--low); }
+  .toast.error { border-color: var(--urgent); }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px;
+  }
+  .stat-value { font-size: 26px; font-weight: 800; letter-spacing: -1px; }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+  @media (max-width: 680px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .priority-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .queue-filters { flex-wrap: wrap; }
+    header { padding: 14px 16px; }
+    .page { padding: 20px 14px; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">M</div>
+  <div>
+    <h1>Maintenance Hub</h1>
+    <p>Property ticket management</p>
+  </div>
+  <div class="header-right">
+    <span class="badge-count" id="urgentBadge">0 Urgent</span>
+    <button class="btn btn-secondary btn-sm" onclick="exportCSV()">⬇ Export CSV</button>
+  </div>
+</header>
+
+<div class="page">
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('submit', this)">Submit Request</button>
+    <button class="tab" onclick="switchTab('queue', this)">Ticket Queue <span id="queueTabCount"></span></button>
+  </div>
+
+  <!-- SUBMIT PANEL -->
+  <div class="panel active" id="panel-submit">
+    <form id="ticketForm" onsubmit="submitTicket(event)">
+
+      <div class="form-section">
+        <div class="section-label">Property & Location</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Property</label>
+            <div class="select-wrap">
+              <select id="f-property" required>
+                <option value="">Select property…</option>
+                <option>Beehive Homes – Frisco</option>
+                <option>Beehive Homes – McKinney</option>
+                <option>Villas of Doe Creek – Little Elm</option>
+                <option>Adage Home Care</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Unit / Room #</label>
+            <input type="text" id="f-unit" placeholder="e.g. 102, Common Area">
+          </div>
+          <div class="form-group">
+            <label>Area</label>
+            <div class="select-wrap">
+              <select id="f-area" required>
+                <option value="">Select area…</option>
+                <option>HVAC / Heating & Cooling</option>
+                <option>Plumbing</option>
+                <option>Electrical</option>
+                <option>Appliances</option>
+                <option>Flooring</option>
+                <option>Doors & Windows</option>
+                <option>Exterior / Landscaping</option>
+                <option>Common Areas</option>
+                <option>Safety / Fire</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Reported By</label>
+            <input type="text" id="f-reporter" placeholder="Your name">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">Issue Details</div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label>Summary</label>
+          <input type="text" id="f-summary" placeholder="Brief description of the problem" required>
+        </div>
+        <div class="form-group" style="margin-bottom:20px">
+          <label>Full Description</label>
+          <textarea id="f-description" placeholder="Include when it started, how often it occurs, and any safety concerns…"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <div class="priority-grid" id="priorityGrid">
+            <button type="button" class="priority-btn" data-p="Low" onclick="selectPriority(this)">Low</button>
+            <button type="button" class="priority-btn" data-p="Medium" onclick="selectPriority(this)">Medium</button>
+            <button type="button" class="priority-btn" data-p="High" onclick="selectPriority(this)">High</button>
+            <button type="button" class="priority-btn" data-p="Urgent" onclick="selectPriority(this)">Urgent</button>
+          </div>
+        </div>
+        <input type="hidden" id="f-priority" value="">
+      </div>
+
+      <div class="form-section">
+        <div class="section-label">Scheduling</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Best Time for Access</label>
+            <div class="select-wrap">
+              <select id="f-access">
+                <option>Any time</option>
+                <option>Morning (8am–12pm)</option>
+                <option>Afternoon (12pm–5pm)</option>
+                <option>Evening (5pm–8pm)</option>
+                <option>Weekdays only</option>
+                <option>Weekends only</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Entry Permission</label>
+            <div class="select-wrap">
+              <select id="f-entry">
+                <option>Enter without notice</option>
+                <option>Call 30 min ahead</option>
+                <option>Resident must be present</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Submit Ticket</button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- QUEUE PANEL -->
+  <div class="panel" id="panel-queue">
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">Total Tickets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statOpen" style="color: var(--accent)">0</div>
+        <div class="stat-label">Open</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statUrgent" style="color: var(--urgent)">0</div>
+        <div class="stat-label">Urgent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statResolved" style="color: var(--low)">0</div>
+        <div class="stat-label">Resolved</div>
+      </div>
+    </div>
+
+    <div class="queue-header">
+      <h2>All Tickets</h2>
+      <span class="ticket-count" id="visibleCount">0 tickets</span>
+      <div class="queue-filters" style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+        <div class="select-wrap">
+          <select class="filter-select" id="filterPriority" onchange="renderQueue()">
+            <option value="">All priorities</option>
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+            <option>Urgent</option>
+          </select>
+        </div>
+        <div class="select-wrap">
+          <select class="filter-select" id="filterStatus" onchange="renderQueue()">
+            <option value="">All statuses</option>
+            <option value="open">Open</option>
+            <option value="resolved">Resolved</option>
+          </select>
+        </div>
+        <div class="select-wrap">
+          <select class="filter-select" id="filterProperty" onchange="renderQueue()">
+            <option value="">All properties</option>
+            <option>Beehive Homes – Frisco</option>
+            <option>Beehive Homes – McKinney</option>
+            <option>Villas of Doe Creek – Little Elm</option>
+            <option>Adage Home Care</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="clearResolved()" title="Remove all resolved tickets">🗑 Clear Resolved</button>
+      </div>
+    </div>
+
+    <div id="ticketList"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastIcon"></span>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+  // ---- SUPABASE CONFIG ----
+  // Replace these with your own project's values (Project Settings > API).
+  // The anon key is safe to expose publicly; access is controlled by Row Level Security policies.
+  const SUPABASE_URL = 'https://dccvbgmqsojobkjtnkxm.supabase.co/rest/v1/';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let tickets = [];
+  let selectedPriority = '';
+
+  async function loadTickets() {
+    const { data, error } = await sb.from('tickets').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); showToast('⚠️', 'Could not load tickets', 'error'); return; }
+    tickets = data.map(rowToTicket);
+    renderQueue();
+    updateBadge();
+    updateQueueTabCount();
+  }
+
+  function rowToTicket(r) {
+    return {
+      id: r.ticket_code,
+      property: r.property, unit: r.unit, area: r.area, reporter: r.reporter,
+      summary: r.summary, description: r.description, priority: r.priority,
+      access: r.access, entry: r.entry, resolved: r.resolved,
+      createdAt: r.created_at
+    };
+  }
+
+  // Live updates: keep all open tabs/users in sync without refreshing
+  sb.channel('tickets-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'tickets' }, () => {
+      loadTickets();
+    })
+    .subscribe();
+
+  function selectPriority(btn) {
+    document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedPriority = btn.dataset.p;
+    document.getElementById('f-priority').value = selectedPriority;
+  }
+
+  async function submitTicket(e) {
+    e.preventDefault();
+    const property = document.getElementById('f-property').value;
+    const unit = document.getElementById('f-unit').value;
+    const area = document.getElementById('f-area').value;
+    const reporter = document.getElementById('f-reporter').value;
+    const summary = document.getElementById('f-summary').value;
+    const description = document.getElementById('f-description').value;
+    const priority = selectedPriority || 'Medium';
+    const access = document.getElementById('f-access').value;
+    const entry = document.getElementById('f-entry').value;
+
+    const { data, error } = await sb.from('tickets').insert({
+      property, unit, area, reporter, summary, description,
+      priority, access, entry, resolved: false
+    }).select();
+
+    if (error) { console.error(error); showToast('⚠️', 'Could not submit ticket', 'error'); return; }
+
+    showToast('✅', `Ticket ${data[0].ticket_code} submitted`, 'success');
+    resetForm();
+    loadTickets();
+  }
+
+  function resetForm() {
+    document.getElementById('ticketForm').reset();
+    document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('selected'));
+    selectedPriority = '';
+  }
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+    if (name === 'queue') renderQueue();
+  }
+
+  async function toggleResolved(id) {
+    const t = tickets.find(t => t.id === id);
+    if (!t) return;
+    const { error } = await sb.from('tickets').update({ resolved: !t.resolved }).eq('ticket_code', id);
+    if (error) { console.error(error); showToast('⚠️', 'Could not update ticket', 'error'); return; }
+    loadTickets();
+  }
+
+  async function removeTicket(id) {
+    const { error } = await sb.from('tickets').delete().eq('ticket_code', id);
+    if (error) { console.error(error); showToast('⚠️', 'Could not delete ticket', 'error'); return; }
+    loadTickets();
+    showToast('🗑', 'Ticket removed', '');
+  }
+
+  async function clearResolved() {
+    const n = tickets.filter(t => t.resolved).length;
+    if (!n) { showToast('ℹ️', 'No resolved tickets to clear', ''); return; }
+    const { error } = await sb.from('tickets').delete().eq('resolved', true);
+    if (error) { console.error(error); showToast('⚠️', 'Could not clear resolved tickets', 'error'); return; }
+    loadTickets();
+    showToast('🗑', `${n} resolved ticket${n>1?'s':''} cleared`, '');
+  }
+
+  function priorityClass(p) {
+    return {Low:'pill-low',Medium:'pill-medium',High:'pill-high',Urgent:'pill-urgent'}[p] || '';
+  }
+
+  function fmtDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+
+  function renderQueue() {
+    const fp = document.getElementById('filterPriority').value;
+    const fs = document.getElementById('filterStatus').value;
+    const fpr = document.getElementById('filterProperty').value;
+
+    let filtered = tickets.filter(t => {
+      if (fp && t.priority !== fp) return false;
+      if (fs === 'open' && t.resolved) return false;
+      if (fs === 'resolved' && !t.resolved) return false;
+      if (fpr && t.property !== fpr) return false;
+      return true;
+    });
+
+    // Stats (always from all tickets)
+    document.getElementById('statTotal').textContent = tickets.length;
+    document.getElementById('statOpen').textContent = tickets.filter(t=>!t.resolved).length;
+    document.getElementById('statUrgent').textContent = tickets.filter(t=>t.priority==='Urgent'&&!t.resolved).length;
+    document.getElementById('statResolved').textContent = tickets.filter(t=>t.resolved).length;
+
+    const count = filtered.length;
+    document.getElementById('visibleCount').textContent = count + ' ticket' + (count!==1?'s':'');
+
+    const list = document.getElementById('ticketList');
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty-state">
+        <div class="icon">📋</div>
+        <p>${tickets.length ? 'No tickets match your filters.' : 'No tickets yet.'}</p>
+        <small>${tickets.length ? 'Try clearing a filter.' : 'Submit a request to get started.'}</small>
+      </div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(t => `
+      <div class="ticket-card ${t.resolved?'resolved':''}" id="card-${t.id}">
+        <div class="ticket-checkbox" onclick="toggleResolved('${t.id}')">
+          <span class="check">✓</span>
+        </div>
+        <div class="ticket-body">
+          <div class="ticket-top">
+            <div class="ticket-summary">${esc(t.summary)}</div>
+            <span class="pill ${priorityClass(t.priority)}">${t.priority}</span>
+          </div>
+          <div class="ticket-id">${t.id} · ${fmtDate(t.createdAt)}</div>
+          <div class="ticket-meta">
+            <span class="meta-item"><strong>Property:</strong> ${esc(t.property)}</span>
+            ${t.unit ? `<span class="meta-item"><strong>Unit:</strong> ${esc(t.unit)}</span>` : ''}
+            <span class="meta-item"><strong>Area:</strong> ${esc(t.area)}</span>
+            ${t.reporter ? `<span class="meta-item"><strong>By:</strong> ${esc(t.reporter)}</span>` : ''}
+            <span class="meta-item"><strong>Access:</strong> ${esc(t.access)}</span>
+            <span class="meta-item"><strong>Entry:</strong> ${esc(t.entry)}</span>
+          </div>
+          ${t.description ? `<div class="ticket-desc">${esc(t.description)}</div>` : ''}
+        </div>
+        <div class="ticket-actions">
+          <button class="btn btn-secondary btn-sm" onclick="toggleResolved('${t.id}')">${t.resolved?'Reopen':'Resolve'}</button>
+          <button class="btn btn-danger btn-sm" onclick="removeTicket('${t.id}')">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function exportCSV() {
+    if (!tickets.length) { showToast('ℹ️', 'No tickets to export', ''); return; }
+    const headers = ['ID','Property','Unit/Room','Area','Reporter','Summary','Description','Priority','Access','Entry Permission','Status','Created'];
+    const rows = tickets.map(t => [
+      t.id, t.property, t.unit, t.area, t.reporter, t.summary, t.description,
+      t.priority, t.access, t.entry, t.resolved?'Resolved':'Open', t.createdAt
+    ].map(v => `"${String(v||'').replace(/"/g,'""')}"`));
+
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `maintenance-tickets-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    showToast('⬇', `${tickets.length} ticket${tickets.length>1?'s':''} exported`, 'success');
+  }
+
+  function updateBadge() {
+    const urgent = tickets.filter(t => t.priority === 'Urgent' && !t.resolved).length;
+    const badge = document.getElementById('urgentBadge');
+    badge.textContent = urgent + ' Urgent';
+    badge.classList.toggle('visible', urgent > 0);
+  }
+
+  function updateQueueTabCount() {
+    const open = tickets.filter(t => !t.resolved).length;
+    document.getElementById('queueTabCount').textContent = open ? `(${open})` : '';
+  }
+
+  let toastTimer;
+  function showToast(icon, msg, type) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastIcon').textContent = icon;
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = 'toast show ' + (type||'');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // Init
+  loadTickets();
+</script>
+</body>
+</html>
