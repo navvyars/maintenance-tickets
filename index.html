@@ -23,9 +23,9 @@
     --low-bg: #f0fdf4;
     --low-border: #bbf7d0;
     
-    --medium: #9a3412;
-    --medium-bg: #fffbe6;
-    --medium-border: #fed7aa;
+    --medium: #b45309;
+    --medium-bg: #fef3c7;
+    --medium-border: #fde68a;
     
     --high: #c2410c;
     --high-bg: #fff7ed;
@@ -159,7 +159,7 @@
   }
   .priority-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--bg); }
   .priority-btn.selected[data-p="Low"] { border-color: var(--low); background: var(--low-bg); color: var(--low); box-shadow: 0 2px 4px rgba(22,101,52,0.1); }
-  .priority-btn.selected[data-p="Medium"] { border-color: var(--medium); background: var(--medium-bg); color: var(--medium); box-shadow: 0 2px 4px rgba(154,52,18,0.1); }
+  .priority-btn.selected[data-p="Medium"] { border-color: var(--medium); background: var(--medium-bg); color: var(--medium); box-shadow: 0 2px 4px rgba(180,83,9,0.1); }
   .priority-btn.selected[data-p="High"] { border-color: var(--high); background: var(--high-bg); color: var(--high); box-shadow: 0 2px 4px rgba(194,65,12,0.1); }
   .priority-btn.selected[data-p="Urgent"] { border-color: var(--urgent); background: var(--urgent-bg); color: var(--urgent); box-shadow: 0 2px 4px rgba(153,27,27,0.1); }
 
@@ -204,7 +204,7 @@
   .empty-state p { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
   .empty-state small { font-size: 12px; display: block; }
 
-  /* COMPONENT TICKET CARDS (Enhanced Priority Mapping) */
+  /* COMPONENT TICKET CARDS */
   .ticket-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -218,9 +218,9 @@
   }
   .ticket-card:hover { transform: translateY(-1px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04); }
   
-  /* Color differentiation by Priority types */
-  .ticket-card[data-priority="Low"] { border-left: 5px solid var(--low); background: var(--surface); }
-  .ticket-card[data-priority="Medium"] { border-left: 5px solid var(--medium); background: var(--surface); }
+  /* Unified full container styling based on priorities */
+  .ticket-card[data-priority="Low"] { border-left: 5px solid var(--low); background: var(--low-bg); border-color: var(--low-border); }
+  .ticket-card[data-priority="Medium"] { border-left: 5px solid var(--medium); background: var(--medium-bg); border-color: var(--medium-border); }
   .ticket-card[data-priority="High"] { border-left: 5px solid var(--high); background: var(--high-bg); border-color: var(--high-border); }
   .ticket-card[data-priority="Urgent"] { border-left: 5px solid var(--urgent); background: var(--urgent-bg); border-color: var(--urgent-border); }
 
@@ -244,14 +244,17 @@
   .ticket-summary { font-size: 16px; font-weight: 700; flex: 1; min-width: 0; color: var(--accent); letter-spacing: -0.2px; }
   .ticket-id { font-size: 11px; color: var(--muted); font-family: monospace; font-weight: 600; margin-top: 3px; background: rgba(0,0,0,0.04); padding: 1px 6px; border-radius: 4px; width: fit-content; }
 
+  /* Perfectly standardized tags sizes */
   .pill {
-    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    font-size: 11px; font-weight: 700; 
+    width: 80px; height: 24px;
+    display: inline-flex; align-items: center; justify-content: center;
     border-radius: 6px; white-space: nowrap; flex-shrink: 0;
     text-transform: uppercase; letter-spacing: 0.5px;
   }
-  .pill-low { background: var(--low-bg); color: var(--low); border: 1px solid var(--low-border); }
-  .pill-medium { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
-  .pill-high { background: #ffedf0; color: var(--high); border: 1px solid var(--high-border); }
+  .pill-low { background: #ffffff; color: var(--low); border: 1px solid var(--low-border); }
+  .pill-medium { background: #ffffff; color: var(--medium); border: 1px solid var(--medium-border); }
+  .pill-high { background: #ffffff; color: var(--high); border: 1px solid var(--high-border); }
   .pill-urgent { background: var(--urgent); color: #ffffff; }
 
   .ticket-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm); }
@@ -311,6 +314,7 @@
   <div class="logo-mark">M</div>
   <div>
     <h1>Maintenance Hub</h1>
+    <p>Property ticket management</p>
   </div>
   <div class="header-right">
     <span class="badge-count" id="urgentBadge">0 Urgent</span>
