@@ -23,9 +23,9 @@
     --low-bg: #f0fdf4;
     --low-border: #bbf7d0;
     
-    --medium: #b45309;
-    --medium-bg: #fef3c7;
-    --medium-border: #fde68a;
+    --medium: #854d0e;
+    --medium-bg: #fefce8;
+    --medium-border: #fef08a;
     
     --high: #c2410c;
     --high-bg: #fff7ed;
@@ -159,7 +159,7 @@
   }
   .priority-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--bg); }
   .priority-btn.selected[data-p="Low"] { border-color: var(--low); background: var(--low-bg); color: var(--low); box-shadow: 0 2px 4px rgba(22,101,52,0.1); }
-  .priority-btn.selected[data-p="Medium"] { border-color: var(--medium); background: var(--medium-bg); color: var(--medium); box-shadow: 0 2px 4px rgba(180,83,9,0.1); }
+  .priority-btn.selected[data-p="Medium"] { border-color: var(--medium); background: var(--medium-bg); color: var(--medium); box-shadow: 0 2px 4px rgba(133,77,14,0.1); }
   .priority-btn.selected[data-p="High"] { border-color: var(--high); background: var(--high-bg); color: var(--high); box-shadow: 0 2px 4px rgba(194,65,12,0.1); }
   .priority-btn.selected[data-p="Urgent"] { border-color: var(--urgent); background: var(--urgent-bg); color: var(--urgent); box-shadow: 0 2px 4px rgba(153,27,27,0.1); }
 
@@ -218,9 +218,9 @@
   }
   .ticket-card:hover { transform: translateY(-1px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04); }
   
-  /* Unified full container styling based on priorities */
+  /* Container styling mapping definitions */
   .ticket-card[data-priority="Low"] { border-left: 5px solid var(--low); background: var(--low-bg); border-color: var(--low-border); }
-  .ticket-card[data-priority="Medium"] { border-left: 5px solid var(--medium); background: var(--medium-bg); border-color: var(--medium-border); }
+  .ticket-card[data-priority="Medium"] { border-left: 5px solid #ca8a04; background: var(--medium-bg); border-color: var(--medium-border); }
   .ticket-card[data-priority="High"] { border-left: 5px solid var(--high); background: var(--high-bg); border-color: var(--high-border); }
   .ticket-card[data-priority="Urgent"] { border-left: 5px solid var(--urgent); background: var(--urgent-bg); border-color: var(--urgent-border); }
 
@@ -244,7 +244,7 @@
   .ticket-summary { font-size: 16px; font-weight: 700; flex: 1; min-width: 0; color: var(--accent); letter-spacing: -0.2px; }
   .ticket-id { font-size: 11px; color: var(--muted); font-family: monospace; font-weight: 600; margin-top: 3px; background: rgba(0,0,0,0.04); padding: 1px 6px; border-radius: 4px; width: fit-content; }
 
-  /* Perfectly standardized tags sizes */
+  /* Standardized tags layout structure sizing */
   .pill {
     font-size: 11px; font-weight: 700; 
     width: 80px; height: 24px;
@@ -253,7 +253,7 @@
     text-transform: uppercase; letter-spacing: 0.5px;
   }
   .pill-low { background: #ffffff; color: var(--low); border: 1px solid var(--low-border); }
-  .pill-medium { background: #ffffff; color: var(--medium); border: 1px solid var(--medium-border); }
+  .pill-medium { background: #ffffff; color: #a16207; border: 1px solid var(--medium-border); }
   .pill-high { background: #ffffff; color: var(--high); border: 1px solid var(--high-border); }
   .pill-urgent { background: var(--urgent); color: #ffffff; }
 
@@ -311,10 +311,8 @@
 <body>
 
 <header>
-  <div class="logo-mark">M</div>
   <div>
     <h1>Maintenance Hub</h1>
-    <p>Property ticket management</p>
   </div>
   <div class="header-right">
     <span class="badge-count" id="urgentBadge">0 Urgent</span>
