@@ -157,10 +157,10 @@
   /* ACTION CONTROLS */
   .form-actions { display: flex; gap: 12px; margin-top: 8px; }
   .btn {
-    padding: 12px 24px; border-radius: var(--radius-sm);
-    font-size: 14px; font-weight: 600; cursor: pointer;
+    padding: 10px 20px; border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 600; cursor: pointer;
     border: none; transition: all 0.2s; font-family: inherit;
-    display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+    display: inline-flex; align-items: center; gap: 6px; justify-content: center;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   }
   .btn-primary { background: var(--accent); color: #ffffff; }
@@ -169,7 +169,7 @@
   .btn-secondary:hover { background: var(--surface2); border-color: #94a3b8; }
   .btn-danger { background: #fff1f2; color: var(--urgent); border: 1px solid #fecdd3; }
   .btn-danger:hover { background: #ffe4e6; }
-  .btn-sm { padding: 8px 14px; font-size: 12px; border-radius: 4px; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; }
   
   header .btn-secondary { background: transparent; color: #ffffff; border-color: rgba(255, 255, 255, 0.3); box-shadow: none; }
   header .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: #ffffff; }
@@ -266,16 +266,23 @@
   /* Expanded Content Area */
   .ticket-expanded-content {
     display: none;
-    padding: 0 12px 14px 48px; 
+    padding: 0 16px 14px 48px; 
     border-top: 1px dashed rgba(0,0,0,0.08);
     margin-top: 2px; padding-top: 12px;
   }
   .ticket-card.expanded .ticket-expanded-content {
-    display: flex; gap: 20px; align-items: flex-start;
+    display: block; /* Switched from flex to prevent unwanted height stretching */
   }
   
+  .expanded-top-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 14px;
+  }
   .expanded-main { flex: 1; min-width: 0; }
-  .expanded-actions { flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; width: 120px; }
+  .expanded-actions { flex-shrink: 0; display: flex; gap: 8px; align-items: center; }
 
   .pill {
     font-size: 10px; font-weight: 700; 
@@ -297,18 +304,25 @@
     font-size: 11px; font-weight: 700; text-transform: uppercase;
     color: var(--muted); letter-spacing: 0.5px; margin-bottom: 4px; display: block;
   }
-  .ticket-desc { font-size: 13px; color: #334155; margin-top: 14px; line-height: 1.5; white-space: pre-wrap; }
+  .ticket-desc { font-size: 13px; color: #334155; margin-top: 12px; line-height: 1.5; white-space: pre-wrap; }
 
   /* Comments UI Blocks */
   .comments-wrapper {
-    margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px;
+    margin-top: 14px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px;
+  }
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
   }
   .comment-item {
-    background: var(--surface2); padding: 10px 12px; border-radius: var(--radius-sm);
-    font-size: 12.5px; color: var(--text); margin-bottom: 6px; line-height: 1.4;
+    background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm);
+    font-size: 12.5px; color: var(--text); line-height: 1.4;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
   }
+  .comment-text { flex: 1; }
   .comment-timestamp {
-    font-size: 10px; color: var(--muted); font-weight: 600; display: block; margin-top: 2px;
+    font-size: 10px; color: var(--muted); font-weight: 600; white-space: nowrap;
   }
 
   /* TOAST */
@@ -356,8 +370,9 @@
     .stats-bar, .priority-grid { grid-template-columns: repeat(2, 1fr); }
     .queue-filters { flex-wrap: wrap; width: 100%; margin-top: 12px; }
     .queue-header { flex-wrap: wrap; }
-    .ticket-expanded-content { padding-left: 12px; flex-direction: column; }
-    .expanded-actions { width: 100%; flex-direction: row; }
+    .ticket-expanded-content { padding-left: 12px; }
+    .expanded-top-wrapper { flex-direction: column; }
+    .expanded-actions { width: 100%; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -779,7 +794,7 @@
       if (t.comments && t.comments.length > 0) {
         commentsHtml = t.comments.map(c => `
           <div class="comment-item">
-            ${esc(c.text)}
+            <span class="comment-text">${esc(c.text)}</span>
             <span class="comment-timestamp">${fmtDateTime(c.timestamp)}</span>
           </div>
         `).join('');
@@ -806,32 +821,34 @@
         </div>
 
         <div class="ticket-expanded-content">
-          <div class="expanded-main">
-            <div class="ticket-meta">
-              <span class="meta-item"><strong>Property:</strong> ${esc(t.property)}</span>
-              ${t.unit ? `<span class="meta-item"><strong>Unit / Room:</strong> ${esc(t.unit)}</span>` : ''}
-              <span class="meta-item"><strong>Area:</strong> ${esc(t.area)}</span>
-              ${t.reporter ? `<span class="meta-item"><strong>By:</strong> ${esc(t.reporter)}</span>` : ''}
-              <span class="meta-item"><strong>Access:</strong> ${esc(t.access)}</span>
-              <span class="meta-item"><strong>Entry:</strong> ${esc(t.entry)}</span>
-              <span class="meta-item"><strong>Created:</strong> ${fmtDateTime(t.createdAt)}</span>
+          <div class="expanded-top-wrapper">
+            <div class="expanded-main">
+              <div class="ticket-meta">
+                <span class="meta-item"><strong>Property:</strong> ${esc(t.property)}</span>
+                ${t.unit ? `<span class="meta-item"><strong>Unit / Room:</strong> ${esc(t.unit)}</span>` : ''}
+                <span class="meta-item"><strong>Area:</strong> ${esc(t.area)}</span>
+                ${t.reporter ? `<span class="meta-item"><strong>By:</strong> ${esc(t.reporter)}</span>` : ''}
+                <span class="meta-item"><strong>Access:</strong> ${esc(t.access)}</span>
+                <span class="meta-item"><strong>Entry:</strong> ${esc(t.entry)}</span>
+                <span class="meta-item"><strong>Created:</strong> ${fmtDateTime(t.createdAt)}</span>
+              </div>
             </div>
             
-            <div class="ticket-desc">
-              <span class="ticket-section-title">Additional Info:</span>
-              <span>${t.description ? esc(t.description) : 'No description provided.'}</span>
-            </div>
-
-            <div class="comments-wrapper">
-              <span class="ticket-section-title" style="margin-bottom: 8px;">Comments:</span>
-              <div class="comments-list">${commentsHtml}</div>
+            <div class="expanded-actions">
+              <button class="btn btn-primary btn-sm" style="background-color: #2563eb;" onclick="addComment('${t.id}')">+ Comment</button>
+              <button class="btn btn-secondary btn-sm" onclick="toggleResolved('${t.id}')">${t.resolved?'Reopen':'Resolve'}</button>
+              <button class="btn btn-danger btn-sm" onclick="removeTicket('${t.id}')">Delete</button>
             </div>
           </div>
           
-          <div class="expanded-actions">
-            <button class="btn btn-primary btn-sm" style="width: 100%; background-color:#2563eb;" onclick="addComment('${t.id}')">+ Comment</button>
-            <button class="btn btn-secondary btn-sm" style="width: 100%" onclick="toggleResolved('${t.id}')">${t.resolved?'Reopen':'Resolve'}</button>
-            <button class="btn btn-danger btn-sm" style="width: 100%" onclick="removeTicket('${t.id}')">Delete</button>
+          <div class="ticket-desc">
+            <span class="ticket-section-title">Additional Info:</span>
+            <span>${t.description ? esc(t.description) : 'No description provided.'}</span>
+          </div>
+
+          <div class="comments-wrapper">
+            <span class="ticket-section-title" style="margin-bottom: 6px;">Comments:</span>
+            <div class="comments-list">${commentsHtml}</div>
           </div>
         </div>
 
