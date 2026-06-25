@@ -217,11 +217,11 @@
   .ticket-card.resolved { opacity: 0.6; background: var(--surface2) !important; border-left-color: var(--border) !important; border-color: var(--border) !important; }
   .ticket-card.resolved .cell-summary { text-decoration: line-through; color: var(--muted); }
 
-  /* Optimized Grid Distribution: Building shrank down, Room and Area expanded */
+  /* Updated boundaries exactly as requested in the mockup line drawing */
   .table-grid {
     display: grid;
     /* [x] [ID] [Prio] [Summary] [Bldg] [Room] [Area] [By] [Date] [v] */
-    grid-template-columns: 24px 65px 70px minmax(180px, 2.2fr) 130px 95px minmax(130px, 1.3fr) 90px 65px 24px;
+    grid-template-columns: 24px 65px 70px minmax(170px, 2fr) 175px 95px minmax(130px, 1.2fr) 90px 65px 24px;
     gap: 12px;
     align-items: center;
   }
@@ -329,11 +329,11 @@
 
   /* Responsive column drop schema */
   @media (max-width: 1150px) {
-    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 120px 80px minmax(100px, 1fr) 65px 24px; }
+    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 160px 80px minmax(100px, 1fr) 65px 24px; }
     .col-reporter { display: none; }
   }
   @media (max-width: 950px) {
-    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 120px 80px 24px; }
+    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 160px 80px 24px; }
     .col-area, .col-date { display: none; }
     .queue-table-header { display: none; }
   }
@@ -625,6 +625,7 @@
     }
   }
 
+  // Handle collapsing global nodes
   function toggleAll() {
     isAllExpanded = !isAllExpanded;
     const btn = document.getElementById('btnExpandAll');
@@ -805,14 +806,12 @@
     badge.classList.toggle('visible', urgent > 0);
   }
 
-  // Count badge next to tab header text
   function updateQueueTabCount() {
     const open = tickets.filter(t => !t.resolved).length;
     document.getElementById('queueTabCount').textContent = open ? `(${open})` : '';
   }
 
   let toastTimer;
-  // Feedback alert layout
   function showToast(msg, type) {
     const t = document.getElementById('toast');
     document.getElementById('toastMsg').textContent = msg;
