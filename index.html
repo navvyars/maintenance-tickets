@@ -76,7 +76,7 @@
   .badge-count.visible { display: inline-block; }
 
   /* LAYOUT */
-  .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+  .page { max-width: 1300px; margin: 0 auto; padding: 32px 24px; }
 
   /* TABS */
   .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: #e2e8f0; border-radius: var(--radius); padding: 4px; width: fit-content; }
@@ -201,7 +201,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     display: flex; flex-direction: column;
     transition: all 0.2s;
     position: relative;
@@ -217,36 +217,36 @@
   .ticket-card.resolved { opacity: 0.6; background: var(--surface2) !important; border-left-color: var(--border) !important; border-color: var(--border) !important; }
   .ticket-card.resolved .cell-summary { text-decoration: line-through; color: var(--muted); }
 
-  /* The magic table grid alignment */
+  /* Compact row grid configuration layout to guarantee fit */
   .table-grid {
     display: grid;
-    /* Checkbox, ID, Priority, Summary, Location, Area, Reporter, Date, Toggle */
-    grid-template-columns: 30px 50px 80px minmax(200px, 3fr) minmax(150px, 1.5fr) minmax(120px, 1fr) minmax(100px, 1fr) 80px 30px;
-    gap: 16px;
+    /* [x] [ID] [Prio] [Summary] [Bldg] [Room] [Area] [By] [Date] [v] */
+    grid-template-columns: 24px 65px 70px minmax(180px, 2fr) minmax(150px, 1.8fr) 70px minmax(110px, 1fr) 90px 65px 24px;
+    gap: 12px;
     align-items: center;
   }
 
   .queue-table-header {
-    padding: 0 16px 10px 16px;
-    font-size: 11px; font-weight: 700; color: var(--muted);
+    padding: 0 12px 8px 12px;
+    font-size: 10px; font-weight: 700; color: var(--muted);
     text-transform: uppercase; letter-spacing: 0.5px;
-    border-bottom: 2px solid var(--border); margin-bottom: 12px;
+    border-bottom: 2px solid var(--border); margin-bottom: 8px;
   }
 
   .ticket-header-row {
-    padding: 10px 16px;
+    padding: 8px 12px;
     cursor: pointer;
   }
   .ticket-header-row:hover { background: rgba(0,0,0,0.02); }
 
-  /* Cell styling */
-  .cell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; color: var(--label); }
+  /* Cell typography scaled slightly down for safety */
+  .cell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--label); }
   .cell-id { font-family: monospace; font-size: 11px; color: var(--muted); font-weight: 600; }
-  .cell-summary { font-weight: 600; font-size: 14px; color: var(--accent); letter-spacing: -0.2px; }
+  .cell-summary { font-weight: 600; font-size: 13px; color: var(--accent); letter-spacing: -0.1px; }
   .cell-date { font-size: 11px; color: var(--muted); text-align: right; }
 
   .ticket-checkbox {
-    width: 20px; height: 20px; border-radius: 5px;
+    width: 18px; height: 18px; border-radius: 4px;
     border: 2px solid var(--muted);
     flex-shrink: 0; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
@@ -254,12 +254,12 @@
   }
   .ticket-checkbox:hover { border-color: var(--accent); }
   .ticket-card.resolved .ticket-checkbox { background: var(--accent); border-color: var(--accent); }
-  .ticket-checkbox .check { display: none; font-size: 11px; color: #ffffff; font-weight: 900; }
+  .ticket-checkbox .check { display: none; font-size: 10px; color: #ffffff; font-weight: 900; }
   .ticket-card.resolved .ticket-checkbox .check { display: block; }
 
   .th-toggle {
-    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-    background: none; border: none; color: var(--muted); font-size: 12px; font-weight: 900; cursor: pointer;
+    width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+    background: none; border: none; color: var(--muted); font-size: 11px; font-weight: 900; cursor: pointer;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: monospace; margin-left: auto;
   }
@@ -268,23 +268,23 @@
   /* Expanded Content Area */
   .ticket-expanded-content {
     display: none;
-    padding: 0 16px 16px 62px; /* Indent past checkbox/ID */
+    padding: 0 12px 14px 48px; 
     border-top: 1px dashed rgba(0,0,0,0.08);
-    margin-top: 4px; padding-top: 16px;
+    margin-top: 2px; padding-top: 12px;
   }
   .ticket-card.expanded .ticket-expanded-content {
-    display: flex; gap: 24px; align-items: flex-start;
+    display: flex; gap: 20px; align-items: flex-start;
   }
   
   .expanded-main { flex: 1; min-width: 0; }
-  .expanded-actions { flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; width: 130px; }
+  .expanded-actions { flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; width: 120px; }
 
-  /* Standardized tags layout structure sizing */
+  /* Tags formatting constraints */
   .pill {
-    font-size: 11px; font-weight: 700; 
-    width: 100%; height: 24px;
+    font-size: 10px; font-weight: 700; 
+    width: 100%; height: 20px;
     display: inline-flex; align-items: center; justify-content: center;
-    border-radius: 6px; white-space: nowrap;
+    border-radius: 4px; white-space: nowrap;
     text-transform: uppercase; letter-spacing: 0.5px;
   }
   .pill-low { background: #ffffff; color: var(--low); border: 1px solid var(--low-border); }
@@ -292,13 +292,13 @@
   .pill-high { background: #ffffff; color: var(--high); border: 1px solid var(--high-border); }
   .pill-urgent { background: var(--urgent); color: #ffffff; }
 
-  .ticket-meta { display: flex; gap: 16px; flex-wrap: wrap; background: rgba(0,0,0,0.02); padding: 10px 14px; border-radius: var(--radius-sm); }
+  .ticket-meta { display: flex; gap: 14px; flex-wrap: wrap; background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm); }
   .meta-item { font-size: 12px; color: #475569; display: flex; align-items: center; gap: 4px; }
   .meta-item strong { color: var(--label); font-weight: 600; }
 
-  .ticket-desc { font-size: 13px; color: #334155; margin-top: 14px; line-height: 1.6; white-space: pre-wrap; }
+  .ticket-desc { font-size: 13px; color: #334155; margin-top: 12px; line-height: 1.5; white-space: pre-wrap; }
 
-  /* SYSTEM TOAST ALERTS */
+  /* TOAST */
   .toast {
     position: fixed; bottom: 24px; right: 24px;
     background: var(--surface); border: 1px solid var(--border);
@@ -314,7 +314,7 @@
   .toast.success { border-left: 4px solid var(--low); }
   .toast.error { border-left: 4px solid var(--urgent); }
 
-  /* ANALYTICS STATS OVERVIEW CARDS */
+  /* ANALYTICS */
   .stats-bar {
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 16px; margin-bottom: 28px;
@@ -327,24 +327,24 @@
   .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
-  /* Responsive breakpoints to gracefully hide non-critical columns on smaller screens */
-  @media (max-width: 1050px) {
-    .table-grid { grid-template-columns: 30px 50px 80px minmax(150px, 3fr) minmax(120px, 2fr) minmax(100px, 1fr) 80px 30px; }
+  /* Responsive column drop schema */
+  @media (max-width: 1150px) {
+    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) minmax(120px, 1.5fr) 60px minmax(100px, 1fr) 65px 24px; }
     .col-reporter { display: none; }
   }
-  @media (max-width: 850px) {
-    .table-grid { grid-template-columns: 30px 50px 80px minmax(150px, 3fr) minmax(120px, 2fr) 30px; }
+  @media (max-width: 950px) {
+    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) minmax(120px, 1.5fr) 60px 24px; }
     .col-area, .col-date { display: none; }
-    .queue-table-header { display: none; } /* Hide header when columns get too chaotic */
+    .queue-table-header { display: none; }
   }
-  @media (max-width: 600px) {
-    .table-grid { grid-template-columns: 30px 50px 80px 1fr 30px; }
-    .col-location { display: none; }
+  @media (max-width: 700px) {
+    .table-grid { grid-template-columns: 24px 65px 70px 1fr 24px; }
+    .col-bldg, .col-room { display: none; }
     .grid-2, .stats-bar, .priority-grid { grid-template-columns: 1fr; gap: 14px; }
     .stats-bar, .priority-grid { grid-template-columns: repeat(2, 1fr); }
     .queue-filters { flex-wrap: wrap; width: 100%; margin-top: 12px; }
     .queue-header { flex-wrap: wrap; }
-    .ticket-expanded-content { padding-left: 16px; flex-direction: column; }
+    .ticket-expanded-content { padding-left: 12px; flex-direction: column; }
     .expanded-actions { width: 100%; flex-direction: row; }
   }
 </style>
@@ -719,14 +719,15 @@
       return;
     }
 
-    // Build Table Header
+    // Build optimized Table Header Row with separate building & room options
     let html = `
       <div class="table-grid queue-table-header">
         <div></div>
         <div>ID</div>
         <div>Priority</div>
         <div>Summary</div>
-        <div class="col-location">Location</div>
+        <div class="col-bldg">Building</div>
+        <div class="col-room">Room</div>
         <div class="col-area">Area</div>
         <div class="col-reporter">Reporter</div>
         <div class="col-date" style="text-align: right">Date</div>
@@ -734,13 +735,10 @@
       </div>
     `;
 
-    // Map rows
+    // Map dataset rows
     html += filtered.map(t => {
       const isExp = expandedTickets.has(t.id) ? 'expanded' : '';
-      
-      // Combine Property and Unit cleanly for the location column
-      let locationText = esc(t.property);
-      if (t.unit) locationText += ` - Unit ${esc(t.unit)}`;
+      const displayRoom = t.unit ? esc(t.unit) : '—';
 
       return `
       <div class="ticket-card ${t.resolved?'resolved':''} ${isExp}" data-priority="${t.priority}" id="card-${t.id}">
@@ -752,7 +750,8 @@
           <div class="cell cell-id">${t.id}</div>
           <div><span class="pill ${priorityClass(t.priority)}">${t.priority}</span></div>
           <div class="cell cell-summary" title="${esc(t.summary)}">${esc(t.summary)}</div>
-          <div class="cell col-location" title="${locationText}">${locationText}</div>
+          <div class="cell col-bldg" title="${esc(t.property)}">${esc(t.property)}</div>
+          <div class="cell col-room" title="${displayRoom}">${displayRoom}</div>
           <div class="cell col-area" title="${esc(t.area)}">${esc(t.area)}</div>
           <div class="cell col-reporter" title="${esc(t.reporter)}">${esc(t.reporter)}</div>
           <div class="cell cell-date col-date">${fmtDate(t.createdAt)}</div>
@@ -763,7 +762,7 @@
           <div class="expanded-main">
             <div class="ticket-meta">
               <span class="meta-item"><strong>Property:</strong> ${esc(t.property)}</span>
-              ${t.unit ? `<span class="meta-item"><strong>Unit:</strong> ${esc(t.unit)}</span>` : ''}
+              ${t.unit ? `<span class="meta-item"><strong>Unit / Room:</strong> ${esc(t.unit)}</span>` : ''}
               <span class="meta-item"><strong>Area:</strong> ${esc(t.area)}</span>
               ${t.reporter ? `<span class="meta-item"><strong>By:</strong> ${esc(t.reporter)}</span>` : ''}
               <span class="meta-item"><strong>Access:</strong> ${esc(t.access)}</span>
