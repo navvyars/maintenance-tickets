@@ -271,7 +271,7 @@
     margin-top: 2px; padding-top: 12px;
   }
   .ticket-card.expanded .ticket-expanded-content {
-    display: block; /* Switched from flex to prevent unwanted height stretching */
+    display: block; 
   }
   
   .expanded-top-wrapper {
@@ -279,7 +279,7 @@
     justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
   .expanded-main { flex: 1; min-width: 0; }
   .expanded-actions { flex-shrink: 0; display: flex; gap: 8px; align-items: center; }
@@ -302,9 +302,15 @@
 
   .ticket-section-title {
     font-size: 11px; font-weight: 700; text-transform: uppercase;
-    color: var(--muted); letter-spacing: 0.5px; margin-bottom: 4px; display: block;
+    color: var(--muted); letter-spacing: 0.5px; display: block;
   }
-  .ticket-desc { font-size: 13px; color: #334155; margin-top: 12px; line-height: 1.5; white-space: pre-wrap; }
+  
+  /* FIXED PRE-WRAP SCOPE */
+  .ticket-desc { margin-top: 12px; }
+  .desc-text { 
+    font-size: 13px; color: #334155; line-height: 1.5; 
+    white-space: pre-wrap; margin-top: 4px; 
+  }
 
   /* Comments UI Blocks */
   .comments-wrapper {
@@ -314,6 +320,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    margin-top: 4px;
   }
   .comment-item {
     background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm);
@@ -789,7 +796,6 @@
       const isExp = expandedTickets.has(t.id) ? 'expanded' : '';
       const displayRoom = t.unit ? esc(t.unit) : '—';
 
-      // Build comments layout block dynamically
       let commentsHtml = '';
       if (t.comments && t.comments.length > 0) {
         commentsHtml = t.comments.map(c => `
@@ -843,11 +849,11 @@
           
           <div class="ticket-desc">
             <span class="ticket-section-title">Additional Info:</span>
-            <span>${t.description ? esc(t.description) : 'No description provided.'}</span>
+            <div class="desc-text">${t.description ? esc(t.description) : 'No description provided.'}</div>
           </div>
 
           <div class="comments-wrapper">
-            <span class="ticket-section-title" style="margin-bottom: 6px;">Comments:</span>
+            <span class="ticket-section-title">Comments:</span>
             <div class="comments-list">${commentsHtml}</div>
           </div>
         </div>
