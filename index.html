@@ -217,11 +217,11 @@
   .ticket-card.resolved { opacity: 0.6; background: var(--surface2) !important; border-left-color: var(--border) !important; border-color: var(--border) !important; }
   .ticket-card.resolved .cell-summary { text-decoration: line-through; color: var(--muted); }
 
-  /* Compact row grid configuration layout to guarantee fit */
+  /* Optimized Grid Distribution: Building shrank down, Room and Area expanded */
   .table-grid {
     display: grid;
     /* [x] [ID] [Prio] [Summary] [Bldg] [Room] [Area] [By] [Date] [v] */
-    grid-template-columns: 24px 65px 70px minmax(180px, 2fr) minmax(150px, 1.8fr) 70px minmax(110px, 1fr) 90px 65px 24px;
+    grid-template-columns: 24px 65px 70px minmax(180px, 2.2fr) 130px 95px minmax(130px, 1.3fr) 90px 65px 24px;
     gap: 12px;
     align-items: center;
   }
@@ -329,11 +329,11 @@
 
   /* Responsive column drop schema */
   @media (max-width: 1150px) {
-    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) minmax(120px, 1.5fr) 60px minmax(100px, 1fr) 65px 24px; }
+    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 120px 80px minmax(100px, 1fr) 65px 24px; }
     .col-reporter { display: none; }
   }
   @media (max-width: 950px) {
-    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) minmax(120px, 1.5fr) 60px 24px; }
+    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 120px 80px 24px; }
     .col-area, .col-date { display: none; }
     .queue-table-header { display: none; }
   }
@@ -381,9 +381,6 @@
                 <option value="">Select property...</option>
                 <option>Beehive Homes - Frisco</option>
                 <option>Beehive Homes - McKinney</option>
-                <option>Villas of Doe Creek - Little Elm</option>
-                <option>Adage Home Care</option>
-                <option>Other</option>
               </select>
             </div>
           </div>
@@ -521,9 +518,6 @@
             <option value="">All properties</option>
             <option>Beehive Homes - Frisco</option>
             <option>Beehive Homes - McKinney</option>
-            <option>Villas of Doe Creek - Little Elm</option>
-            <option>Adage Home Care</option>
-            <option>Other</option>
           </select>
         </div>
         <button class="btn btn-danger btn-sm" onclick="clearResolved()" title="Remove all resolved tickets">Clear Resolved</button>
@@ -719,7 +713,6 @@
       return;
     }
 
-    // Build optimized Table Header Row with separate building & room options
     let html = `
       <div class="table-grid queue-table-header">
         <div></div>
@@ -735,7 +728,6 @@
       </div>
     `;
 
-    // Map dataset rows
     html += filtered.map(t => {
       const isExp = expandedTickets.has(t.id) ? 'expanded' : '';
       const displayRoom = t.unit ? esc(t.unit) : '—';
@@ -813,12 +805,14 @@
     badge.classList.toggle('visible', urgent > 0);
   }
 
+  // Count badge next to tab header text
   function updateQueueTabCount() {
     const open = tickets.filter(t => !t.resolved).length;
     document.getElementById('queueTabCount').textContent = open ? `(${open})` : '';
   }
 
   let toastTimer;
+  // Feedback alert layout
   function showToast(msg, type) {
     const t = document.getElementById('toast');
     document.getElementById('toastMsg').textContent = msg;
