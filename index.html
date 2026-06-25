@@ -217,10 +217,9 @@
   .ticket-card.resolved { opacity: 0.6; background: var(--surface2) !important; border-left-color: var(--border) !important; border-color: var(--border) !important; }
   .ticket-card.resolved .cell-summary { text-decoration: line-through; color: var(--muted); }
 
-  /* Updated boundaries exactly as requested in the mockup line drawing */
+  /* Layout configuration mapping perfectly to column adjustments */
   .table-grid {
     display: grid;
-    /* [x] [ID] [Prio] [Summary] [Bldg] [Room] [Area] [By] [Date] [v] */
     grid-template-columns: 24px 65px 70px minmax(170px, 2fr) 175px 95px minmax(130px, 1.2fr) 90px 65px 24px;
     gap: 12px;
     align-items: center;
@@ -239,7 +238,6 @@
   }
   .ticket-header-row:hover { background: rgba(0,0,0,0.02); }
 
-  /* Cell typography scaled slightly down for safety */
   .cell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--label); }
   .cell-id { font-family: monospace; font-size: 11px; color: var(--muted); font-weight: 600; }
   .cell-summary { font-weight: 600; font-size: 13px; color: var(--accent); letter-spacing: -0.1px; }
@@ -279,7 +277,6 @@
   .expanded-main { flex: 1; min-width: 0; }
   .expanded-actions { flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; width: 120px; }
 
-  /* Tags formatting constraints */
   .pill {
     font-size: 10px; font-weight: 700; 
     width: 100%; height: 20px;
@@ -296,7 +293,23 @@
   .meta-item { font-size: 12px; color: #475569; display: flex; align-items: center; gap: 4px; }
   .meta-item strong { color: var(--label); font-weight: 600; }
 
-  .ticket-desc { font-size: 13px; color: #334155; margin-top: 12px; line-height: 1.5; white-space: pre-wrap; }
+  .ticket-section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    color: var(--muted); letter-spacing: 0.5px; margin-bottom: 4px; display: block;
+  }
+  .ticket-desc { font-size: 13px; color: #334155; margin-top: 14px; line-height: 1.5; white-space: pre-wrap; }
+
+  /* Comments UI Blocks */
+  .comments-wrapper {
+    margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px;
+  }
+  .comment-item {
+    background: var(--surface2); padding: 10px 12px; border-radius: var(--radius-sm);
+    font-size: 12.5px; color: var(--text); margin-bottom: 6px; line-height: 1.4;
+  }
+  .comment-timestamp {
+    font-size: 10px; color: var(--muted); font-weight: 600; display: block; margin-top: 2px;
+  }
 
   /* TOAST */
   .toast {
@@ -327,7 +340,6 @@
   .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
-  /* Responsive column drop schema */
   @media (max-width: 1150px) {
     .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 160px 80px minmax(100px, 1fr) 65px 24px; }
     .col-reporter { display: none; }
@@ -553,12 +565,21 @@
   }
 
   function rowToTicket(r) {
+    let parsedComments = [];
+    if (r.comments) {
+      try {
+        parsedComments = typeof r.comments === 'string' ? JSON.parse(r.comments) : r.comments;
+      } catch(e) {
+        parsedComments = [];
+      }
+    }
     return {
       id: r.ticket_code,
       property: r.property, unit: r.unit, area: r.area, reporter: r.reporter,
       summary: r.summary, description: r.description, priority: r.priority,
       access: r.access, entry: r.entry, resolved: r.resolved,
-      createdAt: r.created_at
+      createdAt: r.created_at,
+      comments: Array.isArray(parsedComments) ? parsedComments : []
     };
   }
 
@@ -589,7 +610,7 @@
 
     const { data, error } = await sb.from('tickets').insert({
       property, unit, area, reporter, summary, description,
-      priority, access, entry, resolved: false
+      priority, access, entry, resolved: false, comments: []
     }).select();
 
     if (error) { console.error(error); showToast('Could not submit ticket', 'error'); return; }
@@ -625,7 +646,6 @@
     }
   }
 
-  // Handle collapsing global nodes
   function toggleAll() {
     isAllExpanded = !isAllExpanded;
     const btn = document.getElementById('btnExpandAll');
@@ -650,6 +670,27 @@
     const { error } = await sb.from('tickets').update({ resolved: !t.resolved }).eq('ticket_code', id);
     if (error) { console.error(error); showToast('Could not update ticket', 'error'); return; }
     loadTickets();
+  }
+
+  async function addComment(id) {
+    const text = prompt("Enter updates or notes for this ticket (e.g., 'Began working on connection issue'):");
+    if (!text || !text.trim()) return;
+
+    const t = tickets.find(t => t.id === id);
+    if (!t) return;
+
+    const newCommentObj = {
+      text: text.trim(),
+      timestamp: new Date().toISOString()
+    };
+
+    const updatedComments = [...t.comments, newCommentObj];
+
+    const { error } = await sb.from('tickets').update({ comments: updatedComments }).eq('ticket_code', id);
+    if (error) { console.error(error); showToast('Could not post comment', 'error'); return; }
+    
+    loadTickets();
+    showToast('Comment updated', 'success');
   }
 
   async function removeTicket(id) {
@@ -733,6 +774,19 @@
       const isExp = expandedTickets.has(t.id) ? 'expanded' : '';
       const displayRoom = t.unit ? esc(t.unit) : '—';
 
+      // Build comments layout block dynamically
+      let commentsHtml = '';
+      if (t.comments && t.comments.length > 0) {
+        commentsHtml = t.comments.map(c => `
+          <div class="comment-item">
+            ${esc(c.text)}
+            <span class="comment-timestamp">${fmtDateTime(c.timestamp)}</span>
+          </div>
+        `).join('');
+      } else {
+        commentsHtml = `<div style="font-size: 12px; color: var(--muted); font-style: italic;">No comments logged yet.</div>`;
+      }
+
       return `
       <div class="ticket-card ${t.resolved?'resolved':''} ${isExp}" data-priority="${t.priority}" id="card-${t.id}">
         
@@ -762,10 +816,20 @@
               <span class="meta-item"><strong>Entry:</strong> ${esc(t.entry)}</span>
               <span class="meta-item"><strong>Created:</strong> ${fmtDateTime(t.createdAt)}</span>
             </div>
-            ${t.description ? `<div class="ticket-desc">${esc(t.description)}</div>` : ''}
+            
+            <div class="ticket-desc">
+              <span class="ticket-section-title">Additional Info:</span>
+              <span>${t.description ? esc(t.description) : 'No description provided.'}</span>
+            </div>
+
+            <div class="comments-wrapper">
+              <span class="ticket-section-title" style="margin-bottom: 8px;">Comments:</span>
+              <div class="comments-list">${commentsHtml}</div>
+            </div>
           </div>
           
           <div class="expanded-actions">
+            <button class="btn btn-primary btn-sm" style="width: 100%; background-color:#2563eb;" onclick="addComment('${t.id}')">+ Comment</button>
             <button class="btn btn-secondary btn-sm" style="width: 100%" onclick="toggleResolved('${t.id}')">${t.resolved?'Reopen':'Resolve'}</button>
             <button class="btn btn-danger btn-sm" style="width: 100%" onclick="removeTicket('${t.id}')">Delete</button>
           </div>
