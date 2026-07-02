@@ -34,6 +34,10 @@
     --urgent: #991b1b;
     --urgent-bg: #fef2f2;
     --urgent-border: #fecdd3;
+
+    --inprogress: #1d4ed8;
+    --inprogress-bg: #eff6ff;
+    --inprogress-border: #bfdbfe;
     
     --radius: 12px;
     --radius-sm: 6px;
@@ -169,6 +173,8 @@
   .btn-secondary:hover { background: var(--surface2); border-color: #94a3b8; }
   .btn-danger { background: #fff1f2; color: var(--urgent); border: 1px solid #fecdd3; }
   .btn-danger:hover { background: #ffe4e6; }
+  .btn-inprogress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
+  .btn-inprogress:hover { background: #dbeafe; }
   .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; }
   
   header .btn-secondary { background: transparent; color: #ffffff; border-color: rgba(255, 255, 255, 0.3); box-shadow: none; }
@@ -214,6 +220,8 @@
   .ticket-card[data-priority="High"] { border-left: 5px solid var(--high); background: var(--high-bg); border-color: var(--high-border); }
   .ticket-card[data-priority="Urgent"] { border-left: 5px solid var(--urgent); background: var(--urgent-bg); border-color: var(--urgent-border); }
 
+  /* In Progress overrides priority color */
+  .ticket-card.in-progress { border-left: 5px solid var(--inprogress) !important; background: var(--inprogress-bg) !important; border-color: var(--inprogress-border) !important; }
   .ticket-card.resolved { opacity: 0.6; background: var(--surface2) !important; border-left-color: var(--border) !important; border-color: var(--border) !important; }
   .ticket-card.resolved .cell-summary { text-decoration: line-through; color: var(--muted); }
 
@@ -305,7 +313,6 @@
     color: var(--muted); letter-spacing: 0.5px; display: block;
   }
   
-  /* FIXED PRE-WRAP SCOPE */
   .ticket-desc { margin-top: 12px; }
   .desc-text { 
     font-size: 13px; color: #334155; line-height: 1.5; 
@@ -332,6 +339,15 @@
     font-size: 10px; color: var(--muted); font-weight: 600; white-space: nowrap;
   }
 
+  /* Status badge shown in ticket row */
+  .status-badge {
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+    white-space: nowrap;
+  }
+  .status-badge.in-progress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
+
   /* TOAST */
   .toast {
     position: fixed; bottom: 24px; right: 24px;
@@ -350,7 +366,7 @@
 
   /* ANALYTICS */
   .stats-bar {
-    display: grid; grid-template-columns: repeat(4, 1fr);
+    display: grid; grid-template-columns: repeat(5, 1fr);
     gap: 16px; margin-bottom: 28px;
   }
   .stat-card {
@@ -364,6 +380,7 @@
   @media (max-width: 1150px) {
     .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 160px 80px minmax(100px, 1fr) 65px 24px; }
     .col-reporter { display: none; }
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 950px) {
     .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 160px 80px 24px; }
@@ -373,7 +390,7 @@
   @media (max-width: 700px) {
     .table-grid { grid-template-columns: 24px 65px 70px 1fr 24px; }
     .col-bldg, .col-room { display: none; }
-    .grid-2, .stats-bar, .priority-grid { grid-template-columns: 1fr; gap: 14px; }
+    .grid-2, .priority-grid { grid-template-columns: 1fr; gap: 14px; }
     .stats-bar, .priority-grid { grid-template-columns: repeat(2, 1fr); }
     .queue-filters { flex-wrap: wrap; width: 100%; margin-top: 12px; }
     .queue-header { flex-wrap: wrap; }
@@ -442,7 +459,8 @@
           </div>
           <div class="form-group">
             <label>Reported By</label>
-            <input type="text" id="f-reporter" placeholder="Your name">
+            <!-- required attribute added -->
+            <input type="text" id="f-reporter" required placeholder="Your name">
           </div>
         </div>
       </div>
@@ -516,6 +534,10 @@
         <div class="stat-label">Open</div>
       </div>
       <div class="stat-card">
+        <div class="stat-value" id="statInProgress" style="color: var(--inprogress)">0</div>
+        <div class="stat-label">In Progress</div>
+      </div>
+      <div class="stat-card">
         <div class="stat-value" id="statUrgent" style="color: var(--urgent)">0</div>
         <div class="stat-label">Urgent</div>
       </div>
@@ -544,6 +566,7 @@
           <select class="filter-select" id="filterStatus" onchange="renderQueue()">
             <option value="">All statuses</option>
             <option value="open">Open</option>
+            <option value="in_progress">In Progress</option>
             <option value="resolved">Resolved</option>
           </select>
         </div>
@@ -554,7 +577,7 @@
             <option>Beehive Homes - McKinney</option>
           </select>
         </div>
-        <button class="btn btn-danger btn-sm" onclick="clearResolved()" title="Remove all resolved tickets">Clear Resolved</button>
+        <button class="btn btn-danger btn-sm" onclick="clearResolved()">Clear Resolved</button>
       </div>
     </div>
 
@@ -591,15 +614,15 @@
     if (r.comments) {
       try {
         parsedComments = typeof r.comments === 'string' ? JSON.parse(r.comments) : r.comments;
-      } catch(e) {
-        parsedComments = [];
-      }
+      } catch(e) { parsedComments = []; }
     }
     return {
       id: r.ticket_code,
       property: r.property, unit: r.unit, area: r.area, reporter: r.reporter,
       summary: r.summary, description: r.description, priority: r.priority,
-      access: r.access, entry: r.entry, resolved: r.resolved,
+      access: r.access, entry: r.entry,
+      resolved: r.resolved,
+      inProgress: r.in_progress || false,   // ← new field
       createdAt: r.created_at,
       comments: Array.isArray(parsedComments) ? parsedComments : []
     };
@@ -620,24 +643,26 @@
 
   async function submitTicket(e) {
     e.preventDefault();
-    const property = document.getElementById('f-property').value;
-    const unit = document.getElementById('f-unit').value;
-    const area = document.getElementById('f-area').value;
-    const reporter = document.getElementById('f-reporter').value;
-    const summary = document.getElementById('f-summary').value;
+    const property  = document.getElementById('f-property').value;
+    const unit      = document.getElementById('f-unit').value;
+    const area      = document.getElementById('f-area').value;
+    const reporter  = document.getElementById('f-reporter').value;
+    const summary   = document.getElementById('f-summary').value;
     const description = document.getElementById('f-description').value;
-    const priority = selectedPriority || 'Medium';
-    const access = document.getElementById('f-access').value;
-    const entry = document.getElementById('f-entry').value;
+    const priority  = selectedPriority || 'Medium';
+    const access    = document.getElementById('f-access').value;
+    const entry     = document.getElementById('f-entry').value;
 
     const { data, error } = await sb.from('tickets').insert({
       property, unit, area, reporter, summary, description,
-      priority, access, entry, resolved: false, comments: []
+      priority, access, entry,
+      resolved: false,
+      in_progress: false,
+      comments: []
     }).select();
 
     if (error) { console.error(error); showToast('Could not submit ticket', 'error'); return; }
-
-    showToast(`Ticket submitted successfully`, 'success');
+    showToast('Ticket submitted successfully', 'success');
     resetForm();
     loadTickets();
   }
@@ -670,53 +695,50 @@
 
   function toggleAll() {
     isAllExpanded = !isAllExpanded;
-    const btn = document.getElementById('btnExpandAll');
-    btn.textContent = isAllExpanded ? 'Collapse All' : 'Expand All';
-    
-    const visibleCards = document.querySelectorAll('.ticket-card');
-    visibleCards.forEach(card => {
+    document.getElementById('btnExpandAll').textContent = isAllExpanded ? 'Collapse All' : 'Expand All';
+    document.querySelectorAll('.ticket-card').forEach(card => {
       const id = card.id.replace('card-', '');
-      if (isAllExpanded) {
-        expandedTickets.add(id);
-        card.classList.add('expanded');
-      } else {
-        expandedTickets.delete(id);
-        card.classList.remove('expanded');
-      }
+      if (isAllExpanded) { expandedTickets.add(id); card.classList.add('expanded'); }
+      else { expandedTickets.delete(id); card.classList.remove('expanded'); }
     });
   }
 
   async function toggleResolved(id) {
     const t = tickets.find(t => t.id === id);
     if (!t) return;
-    const { error } = await sb.from('tickets').update({ resolved: !t.resolved }).eq('ticket_code', id);
+    const nowResolved = !t.resolved;
+    // Resolving a ticket clears in-progress
+    const { error } = await sb.from('tickets').update({
+      resolved: nowResolved,
+      in_progress: nowResolved ? false : t.inProgress
+    }).eq('ticket_code', id);
+    if (error) { console.error(error); showToast('Could not update ticket', 'error'); return; }
+    loadTickets();
+  }
+
+  async function toggleInProgress(id) {
+    const t = tickets.find(t => t.id === id);
+    if (!t) return;
+    if (t.resolved) { showToast('Reopen the ticket before marking in progress', ''); return; }
+    const { error } = await sb.from('tickets').update({ in_progress: !t.inProgress }).eq('ticket_code', id);
     if (error) { console.error(error); showToast('Could not update ticket', 'error'); return; }
     loadTickets();
   }
 
   async function addComment(id) {
-    const text = prompt("Enter updates or notes for this ticket (e.g., 'Began working on connection issue'):");
+    const text = prompt("Enter updates or notes (e.g. 'John began working on the AC unit'):");
     if (!text || !text.trim()) return;
-
     const t = tickets.find(t => t.id === id);
     if (!t) return;
-
-    const newCommentObj = {
-      text: text.trim(),
-      timestamp: new Date().toISOString()
-    };
-
-    const updatedComments = [...t.comments, newCommentObj];
-
+    const updatedComments = [...t.comments, { text: text.trim(), timestamp: new Date().toISOString() }];
     const { error } = await sb.from('tickets').update({ comments: updatedComments }).eq('ticket_code', id);
     if (error) { console.error(error); showToast('Could not post comment', 'error'); return; }
-    
     loadTickets();
-    showToast('Comment updated', 'success');
+    showToast('Comment added', 'success');
   }
 
   async function removeTicket(id) {
-    if(!confirm("Are you sure you want to delete this ticket?")) return;
+    if (!confirm('Are you sure you want to delete this ticket?')) return;
     const { error } = await sb.from('tickets').delete().eq('ticket_code', id);
     if (error) { console.error(error); showToast('Could not delete ticket', 'error'); return; }
     loadTickets();
@@ -726,47 +748,47 @@
   async function clearResolved() {
     const n = tickets.filter(t => t.resolved).length;
     if (!n) { showToast('No resolved tickets to clear', ''); return; }
-    if (!confirm("Clear all resolved tickets from database?")) return;
+    if (!confirm('Clear all resolved tickets from database?')) return;
     const { error } = await sb.from('tickets').delete().eq('resolved', true);
     if (error) { console.error(error); showToast('Could not clear resolved tickets', 'error'); return; }
     loadTickets();
-    showToast(`${n} resolved ticket${n>1?'s':''} cleared`, '');
+    showToast(`${n} resolved ticket${n > 1 ? 's' : ''} cleared`, '');
   }
 
   function priorityClass(p) {
-    return {Low:'pill-low',Medium:'pill-medium',High:'pill-high',Urgent:'pill-urgent'}[p] || '';
+    return { Low: 'pill-low', Medium: 'pill-medium', High: 'pill-high', Urgent: 'pill-urgent' }[p] || '';
   }
 
   function fmtDate(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', {month:'short',day:'numeric'});
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
-  
   function fmtDateTime(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
 
   function renderQueue() {
-    const fp = document.getElementById('filterPriority').value;
-    const fs = document.getElementById('filterStatus').value;
+    const fp  = document.getElementById('filterPriority').value;
+    const fs  = document.getElementById('filterStatus').value;
     const fpr = document.getElementById('filterProperty').value;
 
     let filtered = tickets.filter(t => {
       if (fp && t.priority !== fp) return false;
-      if (fs === 'open' && t.resolved) return false;
-      if (fs === 'resolved' && !t.resolved) return false;
+      if (fs === 'open'        && (t.resolved || t.inProgress)) return false;
+      if (fs === 'in_progress' && !t.inProgress) return false;
+      if (fs === 'resolved'    && !t.resolved) return false;
       if (fpr && t.property !== fpr) return false;
       return true;
     });
 
-    document.getElementById('statTotal').textContent = tickets.length;
-    document.getElementById('statOpen').textContent = tickets.filter(t=>!t.resolved).length;
-    document.getElementById('statUrgent').textContent = tickets.filter(t=>t.priority==='Urgent'&&!t.resolved).length;
-    document.getElementById('statResolved').textContent = tickets.filter(t=>t.resolved).length;
+    // Stats
+    document.getElementById('statTotal').textContent      = tickets.length;
+    document.getElementById('statOpen').textContent       = tickets.filter(t => !t.resolved && !t.inProgress).length;
+    document.getElementById('statInProgress').textContent = tickets.filter(t => t.inProgress && !t.resolved).length;
+    document.getElementById('statUrgent').textContent     = tickets.filter(t => t.priority === 'Urgent' && !t.resolved).length;
+    document.getElementById('statResolved').textContent   = tickets.filter(t => t.resolved).length;
 
     const count = filtered.length;
-    document.getElementById('visibleCount').textContent = count + ' ticket' + (count!==1?'s':'');
+    document.getElementById('visibleCount').textContent = count + ' ticket' + (count !== 1 ? 's' : '');
 
     const list = document.getElementById('ticketList');
     if (!filtered.length) {
@@ -779,22 +801,23 @@
 
     let html = `
       <div class="table-grid queue-table-header">
-        <div></div>
-        <div>ID</div>
-        <div>Priority</div>
-        <div>Summary</div>
-        <div class="col-bldg">Building</div>
-        <div class="col-room">Room</div>
-        <div class="col-area">Area</div>
-        <div class="col-reporter">Reporter</div>
-        <div class="col-date" style="text-align: right">Date</div>
-        <div></div>
-      </div>
-    `;
+        <div></div><div>ID</div><div>Priority</div><div>Summary</div>
+        <div class="col-bldg">Building</div><div class="col-room">Room</div>
+        <div class="col-area">Area</div><div class="col-reporter">Reporter</div>
+        <div class="col-date" style="text-align:right">Date</div><div></div>
+      </div>`;
 
     html += filtered.map(t => {
       const isExp = expandedTickets.has(t.id) ? 'expanded' : '';
+      const statusClass = t.resolved ? 'resolved' : t.inProgress ? 'in-progress' : '';
       const displayRoom = t.unit ? esc(t.unit) : '—';
+
+      const inProgressBtnLabel = t.inProgress ? '⏸ Pause' : '▶ In Progress';
+      const inProgressBtnClass = t.inProgress ? 'btn-secondary' : 'btn-inprogress';
+
+      const inProgressBadge = t.inProgress && !t.resolved
+        ? `<span class="status-badge in-progress">In Progress</span>`
+        : '';
 
       let commentsHtml = '';
       if (t.comments && t.comments.length > 0) {
@@ -802,22 +825,20 @@
           <div class="comment-item">
             <span class="comment-text">${esc(c.text)}</span>
             <span class="comment-timestamp">${fmtDateTime(c.timestamp)}</span>
-          </div>
-        `).join('');
+          </div>`).join('');
       } else {
-        commentsHtml = `<div style="font-size: 12px; color: var(--muted); font-style: italic;">No comments logged yet.</div>`;
+        commentsHtml = `<div style="font-size:12px;color:var(--muted);font-style:italic;">No comments logged yet.</div>`;
       }
 
       return `
-      <div class="ticket-card ${t.resolved?'resolved':''} ${isExp}" data-priority="${t.priority}" id="card-${t.id}">
-        
+      <div class="ticket-card ${statusClass} ${isExp}" data-priority="${t.priority}" id="card-${t.id}">
         <div class="table-grid ticket-header-row" onclick="toggleTicket('${t.id}')">
           <div class="ticket-checkbox" onclick="event.stopPropagation(); toggleResolved('${t.id}')">
             <span class="check">✓</span>
           </div>
           <div class="cell cell-id">${t.id}</div>
           <div><span class="pill ${priorityClass(t.priority)}">${t.priority}</span></div>
-          <div class="cell cell-summary" title="${esc(t.summary)}">${esc(t.summary)}</div>
+          <div class="cell cell-summary" title="${esc(t.summary)}">${esc(t.summary)} ${inProgressBadge}</div>
           <div class="cell col-bldg" title="${esc(t.property)}">${esc(t.property)}</div>
           <div class="cell col-room" title="${displayRoom}">${displayRoom}</div>
           <div class="cell col-area" title="${esc(t.area)}">${esc(t.area)}</div>
@@ -839,14 +860,14 @@
                 <span class="meta-item"><strong>Created:</strong> ${fmtDateTime(t.createdAt)}</span>
               </div>
             </div>
-            
             <div class="expanded-actions">
-              <button class="btn btn-primary btn-sm" style="background-color: #2563eb;" onclick="addComment('${t.id}')">+ Comment</button>
-              <button class="btn btn-secondary btn-sm" onclick="toggleResolved('${t.id}')">${t.resolved?'Reopen':'Resolve'}</button>
+              <button class="btn btn-primary btn-sm" style="background-color:#2563eb" onclick="addComment('${t.id}')">+ Comment</button>
+              ${!t.resolved ? `<button class="btn ${inProgressBtnClass} btn-sm" onclick="toggleInProgress('${t.id}')">${inProgressBtnLabel}</button>` : ''}
+              <button class="btn btn-secondary btn-sm" onclick="toggleResolved('${t.id}')">${t.resolved ? 'Reopen' : 'Resolve'}</button>
               <button class="btn btn-danger btn-sm" onclick="removeTicket('${t.id}')">Delete</button>
             </div>
           </div>
-          
+
           <div class="ticket-desc">
             <span class="ticket-section-title">Additional Info:</span>
             <div class="desc-text">${t.description ? esc(t.description) : 'No description provided.'}</div>
@@ -857,9 +878,8 @@
             <div class="comments-list">${commentsHtml}</div>
           </div>
         </div>
-
-      </div>
-    `}).join('');
+      </div>`;
+    }).join('');
 
     list.innerHTML = html;
   }
@@ -874,16 +894,17 @@
     const headers = ['ID','Property','Unit/Room','Area','Reporter','Summary','Description','Priority','Access','Entry Permission','Status','Created'];
     const rows = tickets.map(t => [
       t.id, t.property, t.unit, t.area, t.reporter, t.summary, t.description,
-      t.priority, t.access, t.entry, t.resolved?'Resolved':'Open', t.createdAt
-    ].map(v => `"${String(v||'').replace(/"/g,'""')}"`));
-
+      t.priority, t.access, t.entry,
+      t.resolved ? 'Resolved' : t.inProgress ? 'In Progress' : 'Open',
+      t.createdAt
+    ].map(v => `"${String(v || '').replace(/"/g, '""')}"`));
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const blob = new Blob([csv], {type:'text/csv'});
+    const blob = new Blob([csv], { type: 'text/csv' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `maintenance-tickets-${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
-    showToast(`${tickets.length} ticket${tickets.length>1?'s':''} exported`, 'success');
+    showToast(`${tickets.length} ticket${tickets.length > 1 ? 's' : ''} exported`, 'success');
   }
 
   function updateBadge() {
@@ -902,7 +923,7 @@
   function showToast(msg, type) {
     const t = document.getElementById('toast');
     document.getElementById('toastMsg').textContent = msg;
-    t.className = 'toast show ' + (type||'');
+    t.className = 'toast show ' + (type || '');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
   }
