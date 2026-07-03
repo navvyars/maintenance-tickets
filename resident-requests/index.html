@@ -69,7 +69,17 @@
   /* Discharge fields */
   .discharge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .discharge-checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-  .discharge-checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; appearance: auto; -webkit-appearance: auto; }
+  .discharge-checkbox-row input[type="checkbox"] { 
+    width: 18px; 
+    height: 18px; 
+    accent-color: var(--accent); 
+    cursor: pointer; 
+    appearance: auto;
+    -webkit-appearance: auto;
+    padding: 0;
+    background: revert;
+    border-radius: 3px;
+  }
   .discharge-checkbox-row label { font-size: 13px; font-weight: 600; color: var(--label); text-transform: none; letter-spacing: normal; cursor: pointer; }
   .span-2 { grid-column: span 2; }
  
