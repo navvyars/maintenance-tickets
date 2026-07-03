@@ -218,7 +218,7 @@
  
       <!-- Change details — old/new columns -->
       <div class="form-section">
-        <div class="section-label">Changes — fill in only what is changing</div>
+        <div class="section-label">Changes</div>
         <table class="change-table">
           <thead>
             <tr>
@@ -230,12 +230,33 @@
           <tbody>
  
             <!-- Room / Location -->
-            <tr class="group-row"><td colspan="3"><span class="group-title">Change in Room #/Location</span></td></tr>
+            <tr class="group-row"><td colspan="3"><span class="group-title">Change in Location</span></td></tr>
             <tr>
-              <td class="change-label">Room #/Location</td>
-              <td><input type="text" id="f-room-old" placeholder="Current room/location"></td>
-              <td><input type="text" id="f-room-new" placeholder="New room/location"></td>
+              <td class="change-label">Room #</td>
+              <td><input type="text" id="f-room-old" placeholder="Current room #"></td>
+              <td><input type="text" id="f-room-new" placeholder="New room #"></td>
             </tr>
+            <tr>
+                <td class="change-label">Building</td>
+                <td>
+                    <div class="select-wrap">
+                      <select id="f-loc-old">
+                        <option value="">Current...</option>
+                        <option>Frisco</option>
+                        <option>McKinney</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="select-wrap">
+                      <select id="f-loc-new">
+                        <option value="">New...</option>
+                        <option>Frisco</option>
+                        <option>McKinney</option>
+                      </select>
+                    </div>
+                  </td>
+              </tr>
  
             <!-- Rate -->
             <tr class="group-row"><td colspan="3"><span class="group-title">Change in Rate</span></td></tr>
@@ -318,7 +339,7 @@
         <div class="section-label">Additional Notes</div>
         <div class="form-group">
           <label>Notes / Comments</label>
-          <textarea id="f-notes" placeholder="Any additional context, attachments needed, or instructions..."></textarea>
+          <textarea id="f-notes" placeholder="Any additional information..."></textarea>
         </div>
       </div>
  
