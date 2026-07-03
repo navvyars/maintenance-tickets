@@ -1,51 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resident Change Requests</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f8fafc; --surface: #ffffff; --surface2: #f1f5f9;
+    --border: #cbd5e1; --text: #0f172a; --muted: #64748b; --label: #334155;
+    --accent: #0f344e; --accent-hover: #174666; --accent-dim: rgba(15,52,78,0.06);
+    --low: #166534; --low-bg: #f0fdf4; --low-border: #bbf7d0;
+    --urgent: #991b1b; --urgent-bg: #fef2f2; --urgent-border: #fecdd3;
+    --inprogress: #1d4ed8; --inprogress-bg: #eff6ff; --inprogress-border: #bfdbfe;
+    --radius: 12px; --radius-sm: 6px;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; }
 
-Claude finished the response
+  header { background: var(--accent); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 16px 32px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(15,52,78,0.1); }
+  .header-back { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.25); border-radius: 6px; transition: all 0.2s; }
+  .header-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  header h1 { font-size: 18px; font-weight: 700; color: #fff; }
+  .header-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
 
-Diagnosed deployment queue status and troubleshooting strategies
-Diagnosed deployment queue status and troubleshooting strategies
-A yellow circle means it's queued or actively running — not failed. That's a normal, healthy state, it just hasn't finished yet. Your homepage won't update until that job completes and the deploy step succeeds, so what you're seeing (old version still live) is expected while it's mid-run.
+  .page { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
 
-That said, a few minutes of "queued" is on the long side for GitHub Pages — these usually kick off within seconds. Let me check if GitHub's having a broader issue right now.
+  .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: #e2e8f0; border-radius: var(--radius); padding: 4px; width: fit-content; }
+  .tab { padding: 10px 24px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); border: none; background: none; transition: all 0.2s; }
+  .tab.active { background: var(--surface); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.5); }
+  .panel { display: none; } .panel.active { display: block; }
 
+  .form-section { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+  .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--accent); padding-left: 10px; }
+  .section-sub { font-size: 11px; color: var(--muted); margin: -12px 0 18px 13px; }
 
-Searched the web
-Searched the web
-No active incident being reported for Pages/Actions right now — GitHub's status looks normal as of today. So a multi-minute "queued" state isn't a known widespread outage; it's more likely stuck for your run specifically.
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; color: var(--muted); text-transform: uppercase; }
+  input, select, textarea { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 10px 12px; font-size: 14px; font-family: inherit; width: 100%; transition: all 0.2s; appearance: none; -webkit-appearance: none; }
+  input::placeholder, textarea::placeholder { color: #a1a1aa; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  textarea { min-height: 90px; resize: vertical; }
+  .select-wrap { position: relative; }
+  .select-wrap::after { content: ''; position: absolute; right: 12px; top: 50%; width: 0; height: 0; margin-top: -2px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--muted); pointer-events: none; }
+  .select-wrap select { padding-right: 32px; }
 
-A few things to check:
+  /* Top meta row */
+  .meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
 
-Refresh the Actions tab page itself (not just the deployments card on your repo home) — sometimes the UI just doesn't live-update and you're looking at a stale view. Go to your repo → Actions tab → click into the most recent "pages build and deployment" run directly.
-If it's genuinely still yellow/queued after 5+ minutes, that's unusually long for Pages. You can:
-Click into the run and hit Cancel workflow, then push a tiny change (or use "Re-run all jobs") to trigger a fresh one.
-Sometimes a stuck queued run is an orphaned job — cancelling and retrying clears it.
-Your homepage not updating is expected either way — the live site only updates once the deploy job finishes successfully, so nothing will change until that run completes (or you retry a fresh one).
-Go check the Actions tab directly and let me know what you see — if it's still sitting at queued/yellow after a cancel-and-retry, send a screenshot and we'll dig further.
+  /* Change rows table */
+  .change-table { width: 100%; border-collapse: collapse; }
+  .change-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); padding: 0 8px 10px 8px; text-align: left; border-bottom: 2px solid var(--border); }
+  .change-table td { padding: 8px; vertical-align: middle; }
+  .change-table tr:not(:last-child) td { border-bottom: 1px solid rgba(226,232,240,0.6); }
+  .change-label { font-size: 12px; font-weight: 700; color: var(--label); white-space: nowrap; padding-right: 12px !important; min-width: 200px; }
+  .change-sublabel { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 400; }
+  .change-table input, .change-table select { padding: 8px 10px; font-size: 13px; }
+  .change-table .select-wrap::after { right: 10px; }
+  .group-row td { padding-top: 18px !important; border-bottom: none !important; }
+  .group-row:first-child td { padding-top: 8px !important; }
+  .group-title { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--accent); text-transform: uppercase; }
 
-Screenshot 2026-07-02 at 6.20.05 PM.png
+  /* col widths */
+  .col-field { width: 240px; }
+  .col-old { width: 30%; }
+  .col-new { width: 30%; }
 
-I notice the user prompt is empty, so I cannot determine the primary language. However, based on the thinking block being in English, here is my summary: Diagnosed UI inconsistency and pinpointed deployment failure
-I notice the user prompt is empty, so I cannot determine the primary language. However, based on the thinking block being in English, here is my summary: Diagnosed UI inconsistency and pinpointed deployment failure
-That "Queued" banner at the top is stale — the page didn't refresh. Look at the left sidebar: deploy already shows a red ✕, meaning this run already failed, not that it's still waiting.
+  /* Discharge fields */
+  .discharge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .discharge-checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .discharge-checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+  .discharge-checkbox-row label { font-size: 13px; font-weight: 600; color: var(--label); text-transform: none; letter-spacing: normal; cursor: pointer; }
+  .span-2 { grid-column: span 2; }
 
-Click directly on "deploy" in that left sidebar list to open its log and see what the actual error was this time. Also do a hard refresh of the page (Cmd+Shift+R) since the summary panel clearly isn't showing current state.
+  .form-actions { display: flex; gap: 12px; margin-top: 8px; }
+  .btn { padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  .btn-primary { background: var(--accent); color: #ffffff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--surface2); }
+  .btn-danger { background: #fff1f2; color: var(--urgent); border: 1px solid #fecdd3; }
+  .btn-danger:hover { background: #ffe4e6; }
+  .btn-inprogress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; }
+  header .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,0.3); box-shadow: none; }
+  header .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 
-Given the artifact from build was created fine (31.1 KB, visible at the bottom) and only deploy failed again, this is very likely the same Error: Deployment failed, try again later. as before — but click into the job to confirm rather than assume. If it's the same generic error twice in a row, that bumps it from "probably a one-off blip" to "worth checking githubstatus.com again in real time" or trying one more re-run after a few minutes' wait, since back-to-back failures on an otherwise-healthy build are unusual but not unheard of during periods of elevated Pages deployment load.
+  /* Queue */
+  .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 18px; }
+  .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
+  .queue-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .queue-header h2 { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .ticket-count { background: #e2e8f0; color: var(--accent); font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 20px; }
+  .queue-filters { display: flex; gap: 8px; margin-left: auto; align-items: center; flex-wrap: wrap; }
+  .filter-select { width: auto; padding: 8px 32px 8px 12px; font-size: 12px; background: var(--surface); border-radius: var(--radius-sm); }
+  .divider-v { width: 1px; height: 24px; background: var(--border); }
 
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Operations Hub</title> <style> * { box-sizing: border-box; margin: 0; padding: 0; } :root { --bg: #f8fafc; --surface: #ffffff; --border: #cbd5e
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); }
+  .empty-state p { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+  .empty-state small { font-size: 12px; display: block; }
 
-pasted
+  /* Request cards */
+  .req-card { background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--accent); border-radius: var(--radius); margin-bottom: 8px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+  .req-card:hover { border-color: #94a3b8; }
+  .req-card.completed { opacity: 0.55; border-left-color: var(--low) !important; background: var(--surface2) !important; }
+  .req-card.in-progress { border-left-color: var(--inprogress) !important; background: var(--inprogress-bg) !important; }
 
-ok so i added the resident change file and pushed again and it was able to deploy. but now the issue is that the site just takes me to the maintenance page i tihkn because originally the repo only had that one page but now i want it to start at the homepage and redirect you to the three sections. how do i do this? this is the home page index. what i see on my site is just the maintenance html file.
+  .req-header { display: grid; grid-template-columns: 24px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
+  .req-header:hover { background: rgba(0,0,0,0.01); border-radius: var(--radius); }
 
+  .req-checkbox { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--muted); display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: var(--surface); flex-shrink: 0; cursor: pointer; }
+  .req-checkbox:hover { border-color: var(--accent); }
+  .req-card.completed .req-checkbox { background: var(--low); border-color: var(--low); }
+  .req-checkbox .check { display: none; font-size: 10px; color: #fff; font-weight: 900; }
+  .req-card.completed .req-checkbox .check { display: block; }
 
-Thought for 6s
-Thought for 6s
-Screenshot 2026-07-02 at 10.54.42 PM.png
-update the resident change file to have this info instead (i just temp pasted the employee file here for the structure but the info all needs to change). this is the info actually needed. on the left are the changes fields, on the right is the info needed to record, and we need an old/new column for everything except for the whole discharge section
+  .req-main { min-width: 0; }
+  .req-title { font-size: 14px; font-weight: 700; color: var(--accent); }
+  .req-card.completed .req-title { text-decoration: line-through; color: var(--muted); }
+  .req-meta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
+  .req-meta-item { font-size: 11px; color: var(--muted); }
+  .req-meta-item strong { color: var(--label); }
 
+  .req-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .req-date { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .req-id { font-size: 10px; font-family: monospace; color: var(--muted); }
+  .th-toggle { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; transition: transform 0.3s; font-family: monospace; }
+  .req-card.expanded .th-toggle { transform: rotate(180deg); }
 
-Thought for 10s
+  .req-expanded { display: none; padding: 0 16px 16px 54px; border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 14px; }
+  .req-card.expanded .req-expanded { display: block; }
+
+  .changes-summary { background: rgba(0,0,0,0.02); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 14px; }
+  .changes-summary-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 10px; display: block; }
+  .change-row-summary { display: grid; grid-template-columns: 180px 1fr 1fr; gap: 8px; padding: 6px 0; font-size: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); align-items: start; }
+  .change-row-summary:last-child { border-bottom: none; }
+  .crs-field { font-weight: 700; color: var(--label); }
+  .crs-old { color: var(--muted); }
+  .crs-new { color: var(--text); font-weight: 600; }
+  .change-row-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 2px solid var(--border) !important; padding-bottom: 6px !important; }
+
+  .discharge-summary { background: var(--urgent-bg); border: 1px solid var(--urgent-border); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 14px; }
+  .discharge-summary-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--urgent); margin-bottom: 8px; display: block; }
+  .discharge-row { font-size: 12px; color: var(--text); margin-top: 4px; }
+  .discharge-row strong { color: var(--label); }
+
+  .expanded-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .status-badge.in-progress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
+  .status-badge.discharge { background: var(--urgent-bg); color: var(--urgent); border: 1px solid var(--urgent-border); }
+
+  /* Comments */
+  .comments-wrapper { margin-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px; }
+  .comments-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+  .comment-item { background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .comment-text { flex: 1; color: var(--text); }
+  .comment-ts { font-size: 10px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .section-title-sm { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; display: block; }
+
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 20px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.08); transform: translateY(100px); opacity: 0; transition: all 0.2s; z-index: 999; max-width: 340px; display: flex; align-items: center; gap: 8px; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-left: 4px solid var(--low); }
+  .toast.error { border-left: 4px solid var(--urgent); }
+
+  @media (max-width: 800px) {
+    .meta-grid { grid-template-columns: 1fr 1fr; }
+    .col-old, .col-new { display: none; }
+    .change-row-summary { grid-template-columns: 1fr 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .discharge-grid { grid-template-columns: 1fr; }
+    .span-2 { grid-column: span 1; }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+<header>
+  <a class="header-back" href="../index.html">← Hub</a>
+  <h1>Resident Change Requests</h1>
+  <div class="header-right">
+    <button class="btn btn-secondary btn-sm" onclick="exportCSV()">Export CSV</button>
+  </div>
+</header>
+
+<div class="page">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('submit',this)">Submit Request</button>
+    <button class="tab" onclick="switchTab('queue',this)">Request Queue <span id="queueTabCount"></span></button>
+  </div>
+
+  <!-- SUBMIT PANEL -->
+  <div class="panel active" id="panel-submit">
+    <form id="reqForm" onsubmit="submitRequest(event)">
+
+      <!-- Resident / Submitter / Approver -->
+      <div class="form-section">
+        <div class="section-label">Request Info</div>
+        <div class="meta-grid">
+          <div class="form-group">
+            <label>Resident Name <span style="color:var(--urgent)">*</span></label>
+            <input type="text" id="f-resident" required placeholder="Resident this change is for">
+          </div>
+          <div class="form-group">
+            <label>Submitted By <span style="color:var(--urgent)">*</span></label>
+            <input type="text" id="f-submitter" required placeholder="Person submitting this form">
+          </div>
+          <div class="form-group">
+            <label>Approved By <span style="color:var(--urgent)">*</span></label>
+            <input type="text" id="f-approver" required placeholder="Approving manager">
+          </div>
+        </div>
+      </div>
+
+      <!-- Change details — old/new columns -->
+      <div class="form-section">
+        <div class="section-label">Changes — fill in only what is changing</div>
+        <table class="change-table">
+          <thead>
+            <tr>
+              <th class="col-field">Change Type / Field</th>
+              <th class="col-old">Current / Old Value</th>
+              <th class="col-new">New Value</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <!-- Room / Location -->
+            <tr class="group-row"><td colspan="3"><span class="group-title">Change in Room #/Location</span></td></tr>
+            <tr>
+              <td class="change-label">Room #/Location</td>
+              <td><input type="text" id="f-room-old" placeholder="Current room/location"></td>
+              <td><input type="text" id="f-room-new" placeholder="New room/location"></td>
+            </tr>
+
+            <!-- Rate -->
+            <tr class="group-row"><td colspan="3"><span class="group-title">Change in Rate</span></td></tr>
+            <tr>
+              <td class="change-label">Monthly Rate</td>
+              <td><input type="text" id="f-rate-old" placeholder="Current monthly rate"></td>
+              <td><input type="text" id="f-rate-new" placeholder="New monthly rate"></td>
+            </tr>
+            <tr>
+              <td class="change-label">Community Fees / Deposit</td>
+              <td><input type="text" id="f-fees-old" placeholder="Current fees/deposit"></td>
+              <td><input type="text" id="f-fees-new" placeholder="New fees/deposit"></td>
+            </tr>
+
+            <!-- POA -->
+            <tr class="group-row"><td colspan="3"><span class="group-title">POA Change</span></td></tr>
+            <tr>
+              <td class="change-label">POA Name</td>
+              <td><input type="text" id="f-poaname-old" placeholder="Current POA name"></td>
+              <td><input type="text" id="f-poaname-new" placeholder="New POA name"></td>
+            </tr>
+            <tr>
+              <td class="change-label">POA Address</td>
+              <td><input type="text" id="f-poaaddress-old" placeholder="Current POA address"></td>
+              <td><input type="text" id="f-poaaddress-new" placeholder="New POA address"></td>
+            </tr>
+            <tr>
+              <td class="change-label">POA Phone Number</td>
+              <td><input type="text" id="f-poaphone-old" placeholder="Current POA phone"></td>
+              <td><input type="text" id="f-poaphone-new" placeholder="New POA phone"></td>
+            </tr>
+            <tr>
+              <td class="change-label">POA Email</td>
+              <td><input type="text" id="f-poaemail-old" placeholder="Current POA email"></td>
+              <td><input type="text" id="f-poaemail-new" placeholder="New POA email"></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Discharge — no old/new, standalone -->
+      <div class="form-section">
+        <div class="section-label">Discharge</div>
+        <div class="section-sub">Fill in only if this request involves a resident discharge</div>
+
+        <div class="discharge-checkbox-row">
+          <input type="checkbox" id="f-discharge-single">
+          <label for="f-discharge-single">Single occupancy room (for discharge)</label>
+        </div>
+
+        <div class="discharge-grid">
+          <div class="form-group">
+            <label>Notice Given</label>
+            <div class="select-wrap">
+              <select id="f-discharge-notice">
+                <option value="">Select...</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Effective Date</label>
+            <input type="date" id="f-discharge-date">
+          </div>
+          <div class="form-group span-2">
+            <label>Reason</label>
+            <input type="text" id="f-discharge-reason" placeholder="Reason for discharge">
+          </div>
+          <div class="form-group span-2">
+            <label>Comments</label>
+            <textarea id="f-discharge-comments" placeholder="Any additional discharge details..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-section">
+        <div class="section-label">Additional Notes</div>
+        <div class="form-group">
+          <label>Notes / Comments</label>
+          <textarea id="f-notes" placeholder="Any additional context, attachments needed, or instructions..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- QUEUE PANEL -->
+  <div class="panel" id="panel-queue">
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statOpen" style="color:var(--accent)">0</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statInProgress" style="color:var(--inprogress)">0</div>
+        <div class="stat-label">In Progress</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statDone" style="color:var(--low)">0</div>
+        <div class="stat-label">Completed</div>
+      </div>
+    </div>
+
+    <div class="queue-header">
+      <h2>All Requests</h2>
+      <span class="ticket-count" id="visibleCount">0 requests</span>
+      <div class="queue-filters">
+        <button class="btn btn-secondary btn-sm" id="btnExpandAll" onclick="toggleAll()">Expand All</button>
+        <div class="divider-v"></div>
+        <div class="select-wrap">
+          <select class="filter-select" id="filterStatus" onchange="renderQueue()">
+            <option value="">All statuses</option>
+            <option value="open">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="clearCompleted()">Clear Completed</button>
+      </div>
+    </div>
+
+    <div id="reqList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+  const SUPABASE_URL = 'https://dccvbgmqsojobkjtnkxm.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let requests = [];
+  let expandedIds = new Set();
+  let isAllExpanded = false;
+
+  // ── Field definitions for collecting old/new change data ──
+  const CHANGE_FIELDS = [
+    { key: 'room',       label: 'Room #/Location' },
+    { key: 'rate',       label: 'Monthly Rate' },
+    { key: 'fees',       label: 'Community Fees/Deposit' },
+    { key: 'poaname',    label: 'POA Name' },
+    { key: 'poaaddress', label: 'POA Address' },
+    { key: 'poaphone',   label: 'POA Phone Number' },
+    { key: 'poaemail',   label: 'POA Email' },
+  ];
+
+  function collectChanges() {
+    const changes = [];
+    CHANGE_FIELDS.forEach(f => {
+      const oldVal = (document.getElementById(`f-${f.key}-old`)?.value || '').trim();
+      const newVal = (document.getElementById(`f-${f.key}-new`)?.value || '').trim();
+      if (oldVal || newVal) {
+        changes.push({ field: f.label, old: oldVal, new: newVal });
+      }
+    });
+    return changes;
+  }
+
+  function collectDischarge() {
+    const single   = document.getElementById('f-discharge-single').checked;
+    const reason   = document.getElementById('f-discharge-reason').value.trim();
+    const notice   = document.getElementById('f-discharge-notice').value;
+    const effDate  = document.getElementById('f-discharge-date').value;
+    const comments = document.getElementById('f-discharge-comments').value.trim();
+    if (!single && !reason && !notice && !effDate && !comments) return null;
+    return { single, reason, notice, effective_date: effDate, comments };
+  }
+
+  async function loadRequests() {
+    const { data, error } = await sb.from('resident_requests').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); showToast('Could not load requests', 'error'); return; }
+    requests = data.map(rowToRequest);
+    renderQueue(); updateStats(); updateQueueTabCount();
+  }
+
+  function rowToRequest(r) {
+    let comments = [];
+    try { comments = typeof r.comments === 'string' ? JSON.parse(r.comments) : (r.comments || []); } catch(e) {}
+    let changes = [];
+    try { changes = typeof r.changes === 'string' ? JSON.parse(r.changes) : (r.changes || []); } catch(e) {}
+    let discharge = null;
+    try { discharge = typeof r.discharge === 'string' ? JSON.parse(r.discharge) : (r.discharge || null); } catch(e) {}
+    return {
+      id: r.request_code, resident: r.resident, submitter: r.submitter, approver: r.approver,
+      notes: r.notes, changes, discharge, comments,
+      completed: r.completed || false, inProgress: r.in_progress || false,
+      createdAt: r.created_at
+    };
+  }
+
+  sb.channel('resident-req-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'resident_requests' }, loadRequests)
+    .subscribe();
+
+  async function submitRequest(e) {
+    e.preventDefault();
+    const changes = collectChanges();
+    const discharge = collectDischarge();
+    const payload = {
+      resident:  document.getElementById('f-resident').value.trim(),
+      submitter: document.getElementById('f-submitter').value.trim(),
+      approver:  document.getElementById('f-approver').value.trim(),
+      notes:     document.getElementById('f-notes').value.trim(),
+      changes,
+      discharge,
+      completed: false, in_progress: false, comments: []
+    };
+    const { error } = await sb.from('resident_requests').insert(payload).select();
+    if (error) { console.error(error); showToast('Could not submit — Supabase may be unavailable', 'error'); return; }
+    showToast('Request submitted successfully', 'success');
+    resetForm();
+    loadRequests();
+  }
+
+  function resetForm() {
+    document.getElementById('reqForm').reset();
+  }
+
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+    if (name === 'queue') renderQueue();
+  }
+
+  function toggleCard(id) {
+    const card = document.getElementById('req-' + id);
+    if (!card) return;
+    if (expandedIds.has(id)) { expandedIds.delete(id); card.classList.remove('expanded'); }
+    else { expandedIds.add(id); card.classList.add('expanded'); }
+  }
+
+  function toggleAll() {
+    isAllExpanded = !isAllExpanded;
+    document.getElementById('btnExpandAll').textContent = isAllExpanded ? 'Collapse All' : 'Expand All';
+    document.querySelectorAll('.req-card').forEach(card => {
+      const id = card.id.replace('req-', '');
+      if (isAllExpanded) { expandedIds.add(id); card.classList.add('expanded'); }
+      else { expandedIds.delete(id); card.classList.remove('expanded'); }
+    });
+  }
+
+  async function toggleCompleted(id) {
+    const r = requests.find(r => r.id === id);
+    if (!r) return;
+    const { error } = await sb.from('resident_requests').update({ completed: !r.completed, in_progress: false }).eq('request_code', id);
+    if (error) { showToast('Could not update', 'error'); return; }
+    loadRequests();
+  }
+
+  async function toggleInProgress(id) {
+    const r = requests.find(r => r.id === id);
+    if (!r || r.completed) return;
+    const { error } = await sb.from('resident_requests').update({ in_progress: !r.inProgress }).eq('request_code', id);
+    if (error) { showToast('Could not update', 'error'); return; }
+    loadRequests();
+  }
+
+  async function addComment(id) {
+    const text = prompt('Add a note or update for this request:');
+    if (!text || !text.trim()) return;
+    const r = requests.find(r => r.id === id);
+    if (!r) return;
+    const updated = [...r.comments, { text: text.trim(), timestamp: new Date().toISOString() }];
+    const { error } = await sb.from('resident_requests').update({ comments: updated }).eq('request_code', id);
+    if (error) { showToast('Could not post comment', 'error'); return; }
+    loadRequests(); showToast('Comment added', 'success');
+  }
+
+  async function deleteRequest(id) {
+    if (!confirm('Delete this request?')) return;
+    const { error } = await sb.from('resident_requests').delete().eq('request_code', id);
+    if (error) { showToast('Could not delete', 'error'); return; }
+    loadRequests(); showToast('Request deleted', '');
+  }
+
+  async function clearCompleted() {
+    const n = requests.filter(r => r.completed).length;
+    if (!n) { showToast('No completed requests to clear', ''); return; }
+    if (!confirm(`Clear ${n} completed request${n > 1 ? 's' : ''}?`)) return;
+    const { error } = await sb.from('resident_requests').delete().eq('completed', true);
+    if (error) { showToast('Could not clear', 'error'); return; }
+    loadRequests(); showToast(`${n} request${n > 1 ? 's' : ''} cleared`, '');
+  }
+
+  function updateStats() {
+    document.getElementById('statTotal').textContent      = requests.length;
+    document.getElementById('statOpen').textContent       = requests.filter(r => !r.completed && !r.inProgress).length;
+    document.getElementById('statInProgress').textContent = requests.filter(r => r.inProgress && !r.completed).length;
+    document.getElementById('statDone').textContent       = requests.filter(r => r.completed).length;
+  }
+
+  function updateQueueTabCount() {
+    const open = requests.filter(r => !r.completed).length;
+    document.getElementById('queueTabCount').textContent = open ? `(${open})` : '';
+  }
+
+  function renderQueue() {
+    updateStats();
+    const fs = document.getElementById('filterStatus')?.value || '';
+    let filtered = requests.filter(r => {
+      if (fs === 'open'        && (r.completed || r.inProgress)) return false;
+      if (fs === 'in_progress' && !r.inProgress) return false;
+      if (fs === 'completed'   && !r.completed) return false;
+      return true;
+    });
+
+    const count = filtered.length;
+    document.getElementById('visibleCount').textContent = count + ' request' + (count !== 1 ? 's' : '');
+
+    const list = document.getElementById('reqList');
+    if (!filtered.length) {
+      list.innerHTML = `<div class="empty-state"><p>${requests.length ? 'No requests match your filter.' : 'No requests yet.'}</p><small>${requests.length ? 'Try clearing the filter.' : 'Submit a request to get started.'}</small></div>`;
+      return;
+    }
+
+    list.innerHTML = filtered.map(r => {
+      const isExp = expandedIds.has(r.id) ? 'expanded' : '';
+      const statusClass = r.completed ? 'completed' : r.inProgress ? 'in-progress' : '';
+      const ipBadge = r.inProgress && !r.completed ? `<span class="status-badge in-progress">In Progress</span>` : '';
+      const dischargeBadge = r.discharge ? `<span class="status-badge discharge">Discharge</span>` : '';
+      const ipBtn   = !r.completed ? `<button class="btn ${r.inProgress ? 'btn-secondary' : 'btn-inprogress'} btn-sm" onclick="toggleInProgress('${r.id}')">${r.inProgress ? '⏸ Pause' : '▶ In Progress'}</button>` : '';
+
+      // Changes summary rows
+      let changesHtml = '';
+      if (r.changes && r.changes.length > 0) {
+        changesHtml = `
+          <div class="changes-summary">
+            <span class="changes-summary-title">Changes Requested</span>
+            <div class="change-row-summary change-row-header">
+              <div class="crs-field">Field</div><div class="crs-old">Current</div><div class="crs-new">New</div>
+            </div>
+            ${r.changes.map(c => `
+              <div class="change-row-summary">
+                <div class="crs-field">${esc(c.field)}</div>
+                <div class="crs-old">${esc(c.old) || '—'}</div>
+                <div class="crs-new">${esc(c.new) || '—'}</div>
+              </div>`).join('')}
+          </div>`;
+      }
+
+      // Discharge summary
+      let dischargeHtml = '';
+      if (r.discharge) {
+        const d = r.discharge;
+        dischargeHtml = `
+          <div class="discharge-summary">
+            <span class="discharge-summary-title">Discharge Details</span>
+            <div class="discharge-row"><strong>Single occupancy:</strong> ${d.single ? 'Yes' : 'No'}</div>
+            ${d.reason ? `<div class="discharge-row"><strong>Reason:</strong> ${esc(d.reason)}</div>` : ''}
+            ${d.notice ? `<div class="discharge-row"><strong>Notice given:</strong> ${esc(d.notice)}</div>` : ''}
+            ${d.effective_date ? `<div class="discharge-row"><strong>Effective date:</strong> ${fmtDate(d.effective_date)}</div>` : ''}
+            ${d.comments ? `<div class="discharge-row"><strong>Comments:</strong> ${esc(d.comments)}</div>` : ''}
+          </div>`;
+      }
+
+      const notesHtml = r.notes ? `<div style="margin-bottom:12px"><span class="section-title-sm">Notes</span><div style="font-size:13px;color:#334155;margin-top:4px;white-space:pre-wrap">${esc(r.notes)}</div></div>` : '';
+
+      const commentsHtml = r.comments.length > 0
+        ? r.comments.map(c => `<div class="comment-item"><span class="comment-text">${esc(c.text)}</span><span class="comment-ts">${fmtDateTime(c.timestamp)}</span></div>`).join('')
+        : `<div style="font-size:12px;color:var(--muted);font-style:italic">No comments yet.</div>`;
+
+      // Summary of what changed for the card row
+      const changeCount = r.changes?.length || 0;
+      let changeSummary = changeCount > 0 ? `${changeCount} change${changeCount > 1 ? 's' : ''} requested` : 'No changes recorded';
+      if (r.discharge) changeSummary = changeCount > 0 ? changeSummary + ' + discharge' : 'Discharge request';
+
+      return `
+      <div class="req-card ${statusClass} ${isExp}" id="req-${r.id}">
+        <div class="req-header" onclick="toggleCard('${r.id}')">
+          <div class="req-checkbox" onclick="event.stopPropagation(); toggleCompleted('${r.id}')">
+            <span class="check">✓</span>
+          </div>
+          <div class="req-main">
+            <div class="req-title">${esc(r.resident)} ${ipBadge} ${dischargeBadge}</div>
+            <div class="req-meta-row">
+              <span class="req-meta-item"><strong>Submitted by:</strong> ${esc(r.submitter)}</span>
+              <span class="req-meta-item"><strong>Approved by:</strong> ${esc(r.approver)}</span>
+              <span class="req-meta-item">${changeSummary}</span>
+            </div>
+          </div>
+          <div class="req-right">
+            <span class="req-id">${r.id}</span>
+            <span class="req-date">${fmtDate(r.createdAt)}</span>
+            <button class="th-toggle">▼</button>
+          </div>
+        </div>
+        <div class="req-expanded">
+          ${changesHtml}
+          ${dischargeHtml}
+          ${notesHtml}
+          <div class="comments-wrapper">
+            <span class="section-title-sm">Comments</span>
+            <div class="comments-list">${commentsHtml}</div>
+          </div>
+          <div class="expanded-actions">
+            <button class="btn btn-primary btn-sm" style="background:#2563eb" onclick="addComment('${r.id}')">+ Comment</button>
+            ${ipBtn}
+            <button class="btn btn-secondary btn-sm" onclick="toggleCompleted('${r.id}')">${r.completed ? 'Reopen' : 'Mark Complete'}</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteRequest('${r.id}')">Delete</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function exportCSV() {
+    if (!requests.length) { showToast('No requests to export', ''); return; }
+    const headers = ['ID','Resident','Submitted By','Approved By','Changes','Discharge','Notes','Status','Created'];
+    const rows = requests.map(r => {
+      const dischargeStr = r.discharge
+        ? `Single:${r.discharge.single ? 'Yes' : 'No'}; Reason:${r.discharge.reason || ''}; Notice:${r.discharge.notice || ''}; Effective:${r.discharge.effective_date || ''}; Comments:${r.discharge.comments || ''}`
+        : '';
+      return [
+        r.id, r.resident, r.submitter, r.approver,
+        (r.changes || []).map(c => `${c.field}: ${c.old}→${c.new}`).join('; '),
+        dischargeStr,
+        r.notes, r.completed ? 'Completed' : r.inProgress ? 'In Progress' : 'Pending', r.createdAt
+      ].map(v => `"${String(v || '').replace(/"/g, '""')}"`);
+    });
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = `resident-requests-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    showToast('Exported', 'success');
+  }
+
+  function esc(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+  function fmtDateTime(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  let toastTimer;
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.className = 'toast show ' + (type || '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  loadRequests();
+</script>
+</body>
+</html>
 Thought for 10s
 
 <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Resident Change Requests</title> <style> * { box-sizing: border-box; margin: 0; padding: 0; } :root { --bg: #f8fafc; --surface: #ffffff; --surface2: #f
