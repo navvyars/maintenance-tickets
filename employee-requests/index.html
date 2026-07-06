@@ -16,24 +16,19 @@
     --radius: 12px; --radius-sm: 6px;
   }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; }
- 
   header { background: var(--accent); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 16px 32px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(15,52,78,0.1); }
   .header-back { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.25); border-radius: 6px; transition: all 0.2s; }
   .header-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
   header h1 { font-size: 18px; font-weight: 700; color: #fff; }
   .header-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
- 
   .page { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
- 
   .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: #e2e8f0; border-radius: var(--radius); padding: 4px; width: fit-content; }
   .tab { padding: 10px 24px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); border: none; background: none; transition: all 0.2s; }
   .tab.active { background: var(--surface); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
   .tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.5); }
   .panel { display: none; } .panel.active { display: block; }
- 
   .form-section { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
   .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--accent); padding-left: 10px; }
-  
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; color: var(--muted); text-transform: uppercase; }
   input, select, textarea { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 10px 12px; font-size: 14px; font-family: inherit; width: 100%; transition: all 0.2s; appearance: none; -webkit-appearance: none; }
@@ -42,11 +37,7 @@
   .select-wrap { position: relative; }
   .select-wrap::after { content: ''; position: absolute; right: 12px; top: 50%; width: 0; height: 0; margin-top: -2px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--muted); pointer-events: none; }
   .select-wrap select { padding-right: 32px; }
- 
-  /* Top meta row */
   .meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
- 
-  /* Change rows table */
   .change-table { width: 100%; border-collapse: collapse; }
   .change-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); padding: 0 8px 10px 8px; text-align: left; border-bottom: 2px solid var(--border); }
   .change-table td { padding: 8px; vertical-align: middle; }
@@ -57,501 +48,265 @@
   .group-row td { padding-top: 18px !important; border-bottom: none !important; }
   .group-row:first-child td { padding-top: 8px !important; }
   .group-title { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--accent); text-transform: uppercase; }
- 
-  /* Address block group */
   .address-group { display: flex; flex-direction: column; gap: 4px; }
-
-  /* col widths */
-  .col-field { width: 200px; }
-  .col-old { width: 22%; }
-  .col-new { width: 22%; }
-  .col-date { width: 18%; }
- 
+  .col-field { width: 200px; } .col-old { width: 22%; } .col-new { width: 22%; } .col-date { width: 18%; }
   .form-actions { display: flex; gap: 12px; margin-top: 8px; }
   .btn { padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-  .btn-primary { background: var(--accent); color: #ffffff; }
-  .btn-primary:hover { background: var(--accent-hover); }
-  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: var(--surface2); }
-  .btn-danger { background: #fff1f2; color: var(--urgent); border: 1px solid #fecdd3; }
-  .btn-danger:hover { background: #ffe4e6; }
+  .btn-primary { background: var(--accent); color: #ffffff; } .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); } .btn-secondary:hover { background: var(--surface2); }
+  .btn-danger { background: #fff1f2; color: var(--urgent); border: 1px solid #fecdd3; } .btn-danger:hover { background: #ffe4e6; }
   .btn-inprogress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
   .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; }
   header .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,0.3); box-shadow: none; }
   header .btn-secondary:hover { background: rgba(255,255,255,0.1); }
- 
-  /* Queue */
   .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
   .stat-card { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 18px; }
   .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
- 
   .queue-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
   .queue-header h2 { font-size: 18px; font-weight: 700; color: var(--accent); }
   .ticket-count { background: #e2e8f0; color: var(--accent); font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 20px; }
   .queue-filters { display: flex; gap: 8px; margin-left: auto; align-items: center; flex-wrap: wrap; }
   .filter-select { width: auto; padding: 8px 32px 8px 12px; font-size: 12px; background: var(--surface); border-radius: var(--radius-sm); }
   .divider-v { width: 1px; height: 24px; background: var(--border); }
- 
   .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); }
   .empty-state p { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
   .empty-state small { font-size: 12px; display: block; }
- 
-  /* Request cards container styling */
+  /* Queue cards */
   .req-card { background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--accent); border-radius: var(--radius); margin-bottom: 8px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
   .req-card:hover { border-color: #94a3b8; }
   .req-card.completed { opacity: 0.55; border-left-color: var(--low) !important; background: var(--surface2) !important; }
   .req-card.in-progress { border-left-color: var(--inprogress) !important; background: var(--inprogress-bg) !important; }
-  
-  /* Urgent Ticket Container Styling (Within 1 week) */
   .req-card.urgent-ticket { background: var(--urgent-bg) !important; border-color: var(--urgent-border) !important; border-left-color: var(--urgent) !important; }
-  .req-card.urgent-ticket .req-header { background: transparent !important; }
- 
-  /* Single-line header layout */
-  .req-header { display: grid; grid-template-columns: 24px 2fr 1.5fr 1.5fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
+  /* 5-col row: checkbox | name | submitted+count | effective | id+toggle */
+  .req-header { display: grid; grid-template-columns: 24px 2fr 2fr 1.2fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
   .req-header:hover { background: rgba(0,0,0,0.01); border-radius: var(--radius); }
- 
   .req-checkbox { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--muted); display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: var(--surface); flex-shrink: 0; cursor: pointer; }
   .req-checkbox:hover { border-color: var(--accent); }
   .req-card.completed .req-checkbox { background: var(--low); border-color: var(--low); }
   .req-checkbox .check { display: none; font-size: 10px; color: #fff; font-weight: 900; }
   .req-card.completed .req-checkbox .check { display: block; }
- 
-  /* Flat, Uniform Typography for Row Layout Elements */
-  .req-title { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
-  .req-card.completed .req-title { text-decoration: line-through; color: var(--muted); }
-  
-  .req-meta-item { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
- 
+  .req-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+  .req-card.completed .req-name { text-decoration: line-through; color: var(--muted); font-weight: 400; }
+  .req-submitted { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .req-submitted .lbl { font-weight: 700; }
+  .req-submitted .val { font-weight: 400; }
+  .req-effective { font-size: 13px; color: var(--text); white-space: nowrap; }
+  .req-effective .lbl { font-weight: 700; }
+  .req-effective .val { font-weight: 400; }
   .req-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; justify-content: flex-end; }
-  .req-date { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; }
-  .req-id { font-size: 13px; font-weight: 400; font-family: inherit; color: var(--text); }
-  
+  .req-id { font-size: 13px; font-weight: 400; color: var(--text); }
   .th-toggle { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; transition: transform 0.3s; font-family: monospace; }
   .req-card.expanded .th-toggle { transform: rotate(180deg); }
- 
-  .req-expanded { display: none; padding: 0 16px 16px 54px; border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 14px; }
+  .req-expanded { display: none; padding: 14px 16px 16px 54px; border-top: 1px dashed rgba(0,0,0,0.08); }
   .req-card.expanded .req-expanded { display: block; }
- 
   .changes-summary { background: rgba(0,0,0,0.02); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 14px; }
   .changes-summary-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 10px; display: block; }
   .change-row-summary { display: grid; grid-template-columns: 160px 1fr 1fr 130px; gap: 8px; padding: 6px 0; font-size: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); align-items: start; }
   .change-row-summary:last-child { border-bottom: none; }
-  .crs-field { font-weight: 700; color: var(--label); }
-  .crs-old { color: var(--muted); }
-  .crs-new { color: var(--text); font-weight: 600; }
-  .crs-date { color: var(--muted); font-size: 11px; }
+  .crs-field { font-weight: 700; color: var(--label); } .crs-old { color: var(--muted); } .crs-new { color: var(--text); font-weight: 600; } .crs-date { color: var(--muted); font-size: 11px; }
   .change-row-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 2px solid var(--border) !important; padding-bottom: 6px !important; }
- 
-  .expanded-actions { display: flex; gap: 8px; margin-top: 12px; }
-  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; margin-left: 6px; }
+  .expanded-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; margin-left: 4px; }
   .status-badge.in-progress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
- 
-  /* Comments */
   .comments-wrapper { margin-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px; }
   .comments-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
   .comment-item { background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-  .comment-text { flex: 1; color: var(--text); }
-  .comment-ts { font-size: 10px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .comment-text { flex: 1; color: var(--text); } .comment-ts { font-size: 10px; color: var(--muted); font-weight: 600; white-space: nowrap; }
   .section-title-sm { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; display: block; }
- 
   .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 20px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.08); transform: translateY(100px); opacity: 0; transition: all 0.2s; z-index: 999; max-width: 340px; display: flex; align-items: center; gap: 8px; }
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.success { border-left: 4px solid var(--low); }
-  .toast.error { border-left: 4px solid var(--urgent); }
- 
+  .toast.show { transform: translateY(0); opacity: 1; } .toast.success { border-left: 4px solid var(--low); } .toast.error { border-left: 4px solid var(--urgent); }
   @media (max-width: 800px) {
     .meta-grid { grid-template-columns: 1fr 1fr; }
     .col-old, .col-new, .col-date { display: none; }
     .change-row-summary { grid-template-columns: 1fr 1fr; }
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
     .req-header { grid-template-columns: 24px 1fr auto; }
-    .req-meta-item, .req-date { display: none; }
+    .req-submitted, .req-effective { display: none; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
- 
 <header>
   <a class="header-back" href="../index.html">← Hub</a>
   <h1>Employee Change Requests</h1>
-  <div class="header-right">
-    <button class="btn btn-secondary btn-sm" onclick="exportCSV()">Export CSV</button>
-  </div>
+  <div class="header-right"><button class="btn btn-secondary btn-sm" onclick="exportCSV()">Export CSV</button></div>
 </header>
- 
 <div class="page">
   <div class="tabs">
     <button class="tab active" onclick="switchTab('submit',this)">Submit Request</button>
     <button class="tab" onclick="switchTab('queue',this)">Request Queue <span id="queueTabCount"></span></button>
   </div>
- 
   <div class="panel active" id="panel-submit">
     <form id="reqForm" onsubmit="submitRequest(event)">
- 
       <div class="form-section">
         <div class="section-label">Request Info</div>
         <div class="meta-grid">
-          <div class="form-group">
-            <label>Employee Name <span style="color:var(--urgent)">*</span></label>
-            <input type="text" id="f-employee" required placeholder="Employee this change is for">
-          </div>
-          <div class="form-group">
-            <label>Submitted By <span style="color:var(--urgent)">*</span></label>
-            <input type="text" id="f-submitter" required placeholder="Manager submitting this form">
-          </div>
-          <div class="form-group">
-            <label>Approved By <span style="color:var(--urgent)">*</span></label>
-            <input type="text" id="f-approver" required placeholder="Approving manager">
-          </div>
+          <div class="form-group"><label>Employee Name <span style="color:var(--urgent)">*</span></label><input type="text" id="f-employee" required placeholder="Employee this change is for"></div>
+          <div class="form-group"><label>Submitted By <span style="color:var(--urgent)">*</span></label><input type="text" id="f-submitter" required placeholder="Manager submitting this form"></div>
+          <div class="form-group"><label>Approved By <span style="color:var(--urgent)">*</span></label><input type="text" id="f-approver" required placeholder="Approving manager"></div>
         </div>
       </div>
- 
       <div class="form-section">
-        <div class="section-label">Changes</div>
+        <div class="section-label">Changes — fill in only what is changing</div>
         <table class="change-table">
-          <thead>
-            <tr>
-              <th class="col-field">Change Type / Field</th>
-              <th class="col-old">Current</th>
-              <th class="col-new">New</th>
-              <th class="col-date">Effective Date</th>
-            </tr>
-          </thead>
+          <thead><tr><th class="col-field">Change Type / Field</th><th class="col-old">Current</th><th class="col-new">New</th><th class="col-date">Effective Date</th></tr></thead>
           <tbody>
- 
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in Contact Information</span></td></tr>
             <tr>
               <td class="change-label">Address</td>
-              <td>
-                <div class="address-group">
-                  <input type="text" id="f-addr-old-l1" placeholder="Line 1">
-                  <input type="text" id="f-addr-old-l2" placeholder="Line 2 (Optional)">
-                  <input type="text" id="f-addr-old-city" placeholder="City">
-                  <input type="text" id="f-addr-old-state" placeholder="State">
-                  <input type="text" id="f-addr-old-zip" placeholder="ZIP">
-                </div>
-              </td>
-              <td>
-                <div class="address-group">
-                  <input type="text" id="f-addr-new-l1" placeholder="Line 1">
-                  <input type="text" id="f-addr-new-l2" placeholder="Line 2 (Optional)">
-                  <input type="text" id="f-addr-new-city" placeholder="City">
-                  <input type="text" id="f-addr-new-state" placeholder="State">
-                  <input type="text" id="f-addr-new-zip" placeholder="ZIP">
-                </div>
-              </td>
+              <td><div class="address-group"><input type="text" id="f-addr-old-l1" placeholder="Line 1"><input type="text" id="f-addr-old-l2" placeholder="Line 2 (Optional)"><input type="text" id="f-addr-old-city" placeholder="City"><input type="text" id="f-addr-old-state" placeholder="State"><input type="text" id="f-addr-old-zip" placeholder="ZIP"></div></td>
+              <td><div class="address-group"><input type="text" id="f-addr-new-l1" placeholder="Line 1"><input type="text" id="f-addr-new-l2" placeholder="Line 2 (Optional)"><input type="text" id="f-addr-new-city" placeholder="City"><input type="text" id="f-addr-new-state" placeholder="State"><input type="text" id="f-addr-new-zip" placeholder="ZIP"></div></td>
               <td><input type="date" id="f-addr-date"></td>
             </tr>
-            <tr>
-              <td class="change-label">Telephone</td>
-              <td><input type="text" id="f-phone-old" placeholder="Current phone"></td>
-              <td><input type="text" id="f-phone-new" placeholder="New phone"></td>
-              <td><input type="date" id="f-phone-date"></td>
-            </tr>
- 
+            <tr><td class="change-label">Telephone</td><td><input type="text" id="f-phone-old" placeholder="Current phone"></td><td><input type="text" id="f-phone-new" placeholder="New phone"></td><td><input type="date" id="f-phone-date"></td></tr>
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in Job Information</span></td></tr>
-            <tr>
-              <td class="change-label">Primary Job Title</td>
-              <td><input type="text" id="f-title-old" placeholder="Current title"></td>
-              <td><input type="text" id="f-title-new" placeholder="New title"></td>
-              <td><input type="date" id="f-title-date"></td>
-            </tr>
-            <tr>
-              <td class="change-label">Primary Rate of Pay</td>
-              <td><input type="text" id="f-pay-old" placeholder="Current rate"></td>
-              <td><input type="text" id="f-pay-new" placeholder="New rate"></td>
-              <td><input type="date" id="f-pay-date"></td>
-            </tr>
+            <tr><td class="change-label">Primary Job Title</td><td><input type="text" id="f-title-old" placeholder="Current title"></td><td><input type="text" id="f-title-new" placeholder="New title"></td><td><input type="date" id="f-title-date"></td></tr>
+            <tr><td class="change-label">Primary Rate of Pay</td><td><input type="text" id="f-pay-old" placeholder="Current rate"></td><td><input type="text" id="f-pay-new" placeholder="New rate"></td><td><input type="date" id="f-pay-date"></td></tr>
             <tr>
               <td class="change-label">Classification</td>
-              <td>
-                <div class="select-wrap">
-                  <select id="f-class-old">
-                    <option value="">Current...</option>
-                    <option>Full Time</option>
-                    <option>Part Time</option>
-                    <option>PRN</option>
-                  </select>
-                </div>
-              </td>
-              <td>
-                <div class="select-wrap">
-                  <select id="f-class-new">
-                    <option value="">New...</option>
-                    <option>Full Time</option>
-                    <option>Part Time</option>
-                    <option>PRN</option>
-                  </select>
-                </div>
-              </td>
+              <td><div class="select-wrap"><select id="f-class-old"><option value="">Current...</option><option>Full Time</option><option>Part Time</option><option>PRN</option></select></div></td>
+              <td><div class="select-wrap"><select id="f-class-new"><option value="">New...</option><option>Full Time</option><option>Part Time</option><option>PRN</option></select></div></td>
               <td><input type="date" id="f-class-date"></td>
             </tr>
- 
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in Job Location</span></td></tr>
             <tr>
               <td class="change-label">Job Location</td>
-              <td>
-                <div class="select-wrap">
-                  <select id="f-loc-old">
-                    <option value="">Current...</option>
-                    <option>Frisco</option>
-                    <option>McKinney</option>
-                    <option>Both</option>
-                  </select>
-                </div>
-              </td>
-              <td>
-                <div class="select-wrap">
-                  <select id="f-loc-new">
-                    <option value="">New...</option>
-                    <option>Frisco</option>
-                    <option>McKinney</option>
-                    <option>Both</option>
-                  </select>
-                </div>
-              </td>
+              <td><div class="select-wrap"><select id="f-loc-old"><option value="">Current...</option><option>Frisco</option><option>McKinney</option><option>Both</option></select></div></td>
+              <td><div class="select-wrap"><select id="f-loc-new"><option value="">New...</option><option>Frisco</option><option>McKinney</option><option>Both</option></select></div></td>
               <td><input type="date" id="f-loc-date"></td>
             </tr>
- 
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in Bank Deposit Info</span></td></tr>
-            <tr>
-              <td class="change-label">Bank Name</td>
-              <td><input type="text" id="f-bank-old" placeholder="Current bank"></td>
-              <td><input type="text" id="f-bank-new" placeholder="New bank"></td>
-              <td><input type="date" id="f-bank-date"></td>
-            </tr>
-            <tr>
-              <td class="change-label">Routing Number</td>
-              <td><input type="text" id="f-routing-old" placeholder="Current routing #" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-              <td><input type="text" id="f-routing-new" placeholder="New routing #" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
-              <td><input type="date" id="f-routing-date"></td>
-            </tr>
-            <tr>
-              <td class="change-label">Account Number</td>
-              <td><input type="text" id="f-account-old" placeholder="Current account #"></td>
-              <td><input type="text" id="f-account-new" placeholder="New account #"></td>
-              <td><input type="date" id="f-account-date"></td>
-            </tr>
- 
+            <tr><td class="change-label">Bank Name</td><td><input type="text" id="f-bank-old" placeholder="Current bank"></td><td><input type="text" id="f-bank-new" placeholder="New bank"></td><td><input type="date" id="f-bank-date"></td></tr>
+            <tr><td class="change-label">Routing Number</td><td><input type="text" id="f-routing-old" placeholder="Current routing #" maxlength="9" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td><td><input type="text" id="f-routing-new" placeholder="New routing #" maxlength="9" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></td><td><input type="date" id="f-routing-date"></td></tr>
+            <tr><td class="change-label">Account Number</td><td><input type="text" id="f-account-old" placeholder="Current account #"></td><td><input type="text" id="f-account-new" placeholder="New account #"></td><td><input type="date" id="f-account-date"></td></tr>
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in W-4 Withholding</span></td></tr>
             <tr>
               <td class="change-label">W-4 Filing Status</td>
-              <td>
-                <div class="select-wrap">
-                  <select id="f-w4status-old">
-                    <option value="">Current...</option>
-                    <option>Single</option>
-                    <option>Married</option>
-                    <option>Married, withhold at higher single rate</option>
-                  </select>
-                </div>
-              </td>
-              <td>
-                <div class="select-wrap">
-                  <select id="f-w4status-new">
-                    <option value="">New...</option>
-                    <option>Single</option>
-                    <option>Married</option>
-                    <option>Married, withhold at higher single rate</option>
-                  </select>
-                </div>
-              </td>
+              <td><div class="select-wrap"><select id="f-w4status-old"><option value="">Current...</option><option>Single</option><option>Married</option><option>Married, withhold at higher single rate</option></select></div></td>
+              <td><div class="select-wrap"><select id="f-w4status-new"><option value="">New...</option><option>Single</option><option>Married</option><option>Married, withhold at higher single rate</option></select></div></td>
               <td><input type="date" id="f-w4status-date"></td>
             </tr>
-            <tr>
-              <td class="change-label">W-4 Allowances</td>
-              <td><input type="number" id="f-w4allow-old" placeholder="Current #" min="0"></td>
-              <td><input type="number" id="f-w4allow-new" placeholder="New #" min="0"></td>
-              <td><input type="date" id="f-w4allow-date"></td>
-            </tr>
- 
+            <tr><td class="change-label">W-4 Allowances</td><td><input type="number" id="f-w4allow-old" placeholder="Current #" min="0"></td><td><input type="number" id="f-w4allow-new" placeholder="New #" min="0"></td><td><input type="date" id="f-w4allow-date"></td></tr>
           </tbody>
         </table>
       </div>
- 
       <div class="form-section">
         <div class="section-label">Additional Notes</div>
-        <div class="form-group">
-          <label>Notes / Comments</label>
-          <textarea id="f-notes" placeholder="Any additional information..."></textarea>
-        </div>
+        <div class="form-group"><label>Notes / Comments</label><textarea id="f-notes" placeholder="Any additional information..."></textarea></div>
       </div>
- 
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Submit Request</button>
         <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
       </div>
     </form>
   </div>
- 
   <div class="panel" id="panel-queue">
     <div class="stats-bar">
-      <div class="stat-card">
-        <div class="stat-value" id="statTotal">0</div>
-        <div class="stat-label">Total</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statOpen" style="color:var(--accent)">0</div>
-        <div class="stat-label">Pending</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statInProgress" style="color:var(--inprogress)">0</div>
-        <div class="stat-label">In Progress</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statDone" style="color:var(--low)">0</div>
-        <div class="stat-label">Completed</div>
-      </div>
+      <div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total</div></div>
+      <div class="stat-card"><div class="stat-value" id="statOpen" style="color:var(--accent)">0</div><div class="stat-label">Pending</div></div>
+      <div class="stat-card"><div class="stat-value" id="statInProgress" style="color:var(--inprogress)">0</div><div class="stat-label">In Progress</div></div>
+      <div class="stat-card"><div class="stat-value" id="statDone" style="color:var(--low)">0</div><div class="stat-label">Completed</div></div>
     </div>
- 
     <div class="queue-header">
       <h2>All Requests</h2>
       <span class="ticket-count" id="visibleCount">0 requests</span>
       <div class="queue-filters">
         <button class="btn btn-secondary btn-sm" id="btnExpandAll" onclick="toggleAll()">Expand All</button>
         <div class="divider-v"></div>
-        <div class="select-wrap">
-          <select class="filter-select" id="filterStatus" onchange="renderQueue()">
-            <option value="">All statuses</option>
-            <option value="open">Pending</option>
-            <option value="in_progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </select>
-        </div>
+        <div class="select-wrap"><select class="filter-select" id="filterStatus" onchange="renderQueue()"><option value="">All statuses</option><option value="open">Pending</option><option value="in_progress">In Progress</option><option value="completed">Completed</option></select></div>
         <button class="btn btn-danger btn-sm" onclick="clearCompleted()">Clear Completed</button>
       </div>
     </div>
- 
     <div id="reqList"></div>
   </div>
 </div>
- 
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
- 
 <script>
   const SUPABASE_URL = 'https://dccvbgmqsojobkjtnkxm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
- 
-  let requests = [];
-  let expandedIds = new Set();
-  let isAllExpanded = false;
- 
+  let requests = [], expandedIds = new Set(), isAllExpanded = false;
+
   const CHANGE_FIELDS = [
-    { key: 'phone',     label: 'Telephone' },
-    { key: 'title',     label: 'Job Title' },
-    { key: 'pay',       label: 'Rate of Pay' },
-    { key: 'class',     label: 'Classification' },
-    { key: 'loc',       label: 'Job Location' },
-    { key: 'bank',      label: 'Bank Name' },
-    { key: 'routing',   label: 'Routing Number' },
-    { key: 'account',   label: 'Account Number' },
-    { key: 'w4status',  label: 'W-4 Filing Status' },
-    { key: 'w4allow',   label: 'W-4 Allowances' },
+    { key: 'phone', label: 'Telephone' }, { key: 'title', label: 'Job Title' },
+    { key: 'pay', label: 'Rate of Pay' }, { key: 'class', label: 'Classification' },
+    { key: 'loc', label: 'Job Location' }, { key: 'bank', label: 'Bank Name' },
+    { key: 'routing', label: 'Routing Number' }, { key: 'account', label: 'Account Number' },
+    { key: 'w4status', label: 'W-4 Filing Status' }, { key: 'w4allow', label: 'W-4 Allowances' },
   ];
- 
+
+  function getAddrStr(prefix) {
+    return [document.getElementById(`${prefix}-l1`)?.value.trim(), document.getElementById(`${prefix}-l2`)?.value.trim(),
+      document.getElementById(`${prefix}-city`)?.value.trim(), document.getElementById(`${prefix}-state`)?.value.trim(),
+      document.getElementById(`${prefix}-zip`)?.value.trim()].filter(Boolean).join(', ');
+  }
+
   function collectChanges() {
-    const changes = [];
-    const getAddressStr = (prefix) => {
-      const l1 = document.getElementById(`${prefix}-l1`)?.value.trim();
-      const l2 = document.getElementById(`${prefix}-l2`)?.value.trim();
-      const c  = document.getElementById(`${prefix}-city`)?.value.trim();
-      const s  = document.getElementById(`${prefix}-state`)?.value.trim();
-      const z  = document.getElementById(`${prefix}-zip`)?.value.trim();
-      const parts = [l1, l2, c, s, z].filter(Boolean);
-      return parts.length > 0 ? parts.join(', ') : '';
-    };
-
-    const oldAddr = getAddressStr('f-addr-old');
-    const newAddr = getAddressStr('f-addr-new');
-    const addrDate = document.getElementById('f-addr-date')?.value.trim();
-
-    if (newAddr && addrDate) {
-      changes.push({ field: 'Address', old: oldAddr, new: newAddr, effective_date: addrDate });
-    }
+    const changes = [], errors = [];
+    const oldAddr = getAddrStr('f-addr-old'), newAddr = getAddrStr('f-addr-new');
+    const addrDate = (document.getElementById('f-addr-date')?.value || '').trim();
+    if (newAddr && !addrDate) errors.push('Address: new value entered but no effective date');
+    if (addrDate && !newAddr) errors.push('Address: effective date entered but no new value');
+    if (newAddr && addrDate) changes.push({ field: 'Address', old: oldAddr, new: newAddr, effective_date: addrDate });
 
     CHANGE_FIELDS.forEach(f => {
-      const oldVal  = (document.getElementById(`f-${f.key}-old`)?.value || '').trim();
-      const newVal  = (document.getElementById(`f-${f.key}-new`)?.value || '').trim();
+      const newVal = (document.getElementById(`f-${f.key}-new`)?.value || '').trim();
+      const oldVal = (document.getElementById(`f-${f.key}-old`)?.value || '').trim();
       const effDate = (document.getElementById(`f-${f.key}-date`)?.value || '').trim();
-      
-      if (newVal && effDate) {
-        changes.push({ field: f.label, old: oldVal, new: newVal, effective_date: effDate });
-      }
+      if (newVal && !effDate) errors.push(`${f.label}: new value entered but no effective date`);
+      if (effDate && !newVal) errors.push(`${f.label}: effective date entered but no new value`);
+      if (newVal && effDate) changes.push({ field: f.label, old: oldVal, new: newVal, effective_date: effDate });
     });
-    return changes;
+    return { changes, errors };
   }
- 
+
   async function loadRequests() {
     const { data, error } = await sb.from('employee_requests').select('*').order('created_at', { ascending: false });
     if (error) { console.error(error); showToast('Could not load requests', 'error'); return; }
     requests = data.map(rowToRequest);
     renderQueue(); updateStats(); updateQueueTabCount();
   }
- 
+
   function rowToRequest(r) {
-    let comments = [];
-    try { comments = typeof r.comments === 'string' ? JSON.parse(r.comments) : (r.comments || []); } catch(e) {}
-    let changes = [];
-    try { changes = typeof r.changes === 'string' ? JSON.parse(r.changes) : (r.changes || []); } catch(e) {}
-    return {
-      id: r.request_code, employee: r.employee, submitter: r.submitter, approver: r.approver,
-      notes: r.notes, changes, comments,
-      completed: r.completed || false, inProgress: r.in_progress || false,
-      createdAt: r.created_at
-    };
+    let comments = []; try { comments = typeof r.comments === 'string' ? JSON.parse(r.comments) : (r.comments || []); } catch(e) {}
+    let changes = []; try { changes = typeof r.changes === 'string' ? JSON.parse(r.changes) : (r.changes || []); } catch(e) {}
+    return { id: r.request_code, employee: r.employee, submitter: r.submitter, approver: r.approver,
+      notes: r.notes, changes, comments, completed: r.completed || false, inProgress: r.in_progress || false, createdAt: r.created_at };
   }
- 
-  sb.channel('emp-req-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'employee_requests' }, loadRequests)
-    .subscribe();
- 
+
+  sb.channel('emp-req-changes').on('postgres_changes', { event: '*', schema: 'public', table: 'employee_requests' }, loadRequests).subscribe();
+
   async function submitRequest(e) {
     e.preventDefault();
-    const changes = collectChanges();
-    
-    if (changes.length === 0) {
-      showToast('Please provide both a new value and an effective date for at least one change row.', 'error');
-      return;
-    }
-
-    const payload = {
-      employee:  document.getElementById('f-employee').value.trim(),
-      submitter: document.getElementById('f-submitter').value.trim(),
-      approver:  document.getElementById('f-approver').value.trim(),
-      notes:     document.getElementById('f-notes').value.trim(),
-      changes,
-      completed: false, in_progress: false, comments: []
-    };
+    const { changes, errors } = collectChanges();
+    if (errors.length > 0) { showToast(errors[0], 'error'); return; }
+    if (changes.length === 0) { showToast('Please provide a new value and effective date for at least one change.', 'error'); return; }
+    const payload = { employee: document.getElementById('f-employee').value.trim(), submitter: document.getElementById('f-submitter').value.trim(),
+      approver: document.getElementById('f-approver').value.trim(), notes: document.getElementById('f-notes').value.trim(),
+      changes, completed: false, in_progress: false, comments: [] };
     const { error } = await sb.from('employee_requests').insert(payload).select();
     if (error) { console.error(error); showToast('Could not submit — Supabase may be unavailable', 'error'); return; }
-    
     showToast('Request submitted successfully', 'success');
-    resetForm();
-    loadRequests(); // Keeps database cache fresh behind the scenes without changing tabs
+    resetForm(); loadRequests();
   }
- 
-  function resetForm() {
-    document.getElementById('reqForm').reset();
-  }
- 
+
+  function resetForm() { document.getElementById('reqForm').reset(); }
+
   function switchTab(name, btn) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active'); document.getElementById('panel-' + name).classList.add('active');
     if (name === 'queue') renderQueue();
   }
- 
+
   function toggleCard(id) {
-    const card = document.getElementById('req-' + id);
-    if (!card) return;
+    const card = document.getElementById('req-' + id); if (!card) return;
     if (expandedIds.has(id)) { expandedIds.delete(id); card.classList.remove('expanded'); }
     else { expandedIds.add(id); card.classList.add('expanded'); }
   }
- 
+
   function toggleAll() {
     isAllExpanded = !isAllExpanded;
     document.getElementById('btnExpandAll').textContent = isAllExpanded ? 'Collapse All' : 'Expand All';
@@ -561,41 +316,35 @@
       else { expandedIds.delete(id); card.classList.remove('expanded'); }
     });
   }
- 
+
   async function toggleCompleted(id) {
-    const r = requests.find(r => r.id === id);
-    if (!r) return;
+    const r = requests.find(r => r.id === id); if (!r) return;
     const { error } = await sb.from('employee_requests').update({ completed: !r.completed, in_progress: false }).eq('request_code', id);
-    if (error) { showToast('Could not update', 'error'); return; }
-    loadRequests();
+    if (error) { showToast('Could not update', 'error'); return; } loadRequests();
   }
- 
+
   async function toggleInProgress(id) {
-    const r = requests.find(r => r.id === id);
-    if (!r || r.completed) return;
+    const r = requests.find(r => r.id === id); if (!r || r.completed) return;
     const { error } = await sb.from('employee_requests').update({ in_progress: !r.inProgress }).eq('request_code', id);
-    if (error) { showToast('Could not update', 'error'); return; }
-    loadRequests();
+    if (error) { showToast('Could not update', 'error'); return; } loadRequests();
   }
- 
+
   async function addComment(id) {
-    const text = prompt('Add a note or update for this request:');
-    if (!text || !text.trim()) return;
-    const r = requests.find(r => r.id === id);
-    if (!r) return;
+    const text = prompt('Add a note or update for this request:'); if (!text || !text.trim()) return;
+    const r = requests.find(r => r.id === id); if (!r) return;
     const updated = [...r.comments, { text: text.trim(), timestamp: new Date().toISOString() }];
     const { error } = await sb.from('employee_requests').update({ comments: updated }).eq('request_code', id);
     if (error) { showToast('Could not post comment', 'error'); return; }
     loadRequests(); showToast('Comment added', 'success');
   }
- 
+
   async function deleteRequest(id) {
     if (!confirm('Delete this request?')) return;
     const { error } = await sb.from('employee_requests').delete().eq('request_code', id);
     if (error) { showToast('Could not delete', 'error'); return; }
     loadRequests(); showToast('Request deleted', '');
   }
- 
+
   async function clearCompleted() {
     const n = requests.filter(r => r.completed).length;
     if (!n) { showToast('No completed requests to clear', ''); return; }
@@ -605,120 +354,82 @@
     if (error) { showToast('Could not clear', 'error'); return; }
     loadRequests(); showToast(`${n} request${n > 1 ? 's' : ''} cleared`, '');
   }
- 
+
   function updateStats() {
     document.getElementById('statTotal').textContent      = requests.length;
     document.getElementById('statOpen').textContent       = requests.filter(r => !r.completed && !r.inProgress).length;
     document.getElementById('statInProgress').textContent = requests.filter(r => r.inProgress && !r.completed).length;
     document.getElementById('statDone').textContent       = requests.filter(r => r.completed).length;
   }
- 
+
   function updateQueueTabCount() {
     const open = requests.filter(r => !r.completed).length;
     document.getElementById('queueTabCount').textContent = open ? `(${open})` : '';
   }
- 
+
   function renderQueue() {
     updateStats();
     const fs = document.getElementById('filterStatus')?.value || '';
     let filtered = requests.filter(r => {
-      if (fs === 'open'        && (r.completed || r.inProgress)) return false;
+      if (fs === 'open' && (r.completed || r.inProgress)) return false;
       if (fs === 'in_progress' && !r.inProgress) return false;
-      if (fs === 'completed'   && !r.completed) return false;
+      if (fs === 'completed' && !r.completed) return false;
       return true;
     });
- 
     const count = filtered.length;
     document.getElementById('visibleCount').textContent = count + ' request' + (count !== 1 ? 's' : '');
- 
     const list = document.getElementById('reqList');
     if (!filtered.length) {
       list.innerHTML = `<div class="empty-state"><p>${requests.length ? 'No requests match your filter.' : 'No requests yet.'}</p><small>${requests.length ? 'Try clearing the filter.' : 'Submit a request to get started.'}</small></div>`;
       return;
     }
- 
     list.innerHTML = filtered.map(r => {
       const isExp = expandedIds.has(r.id) ? 'expanded' : '';
       const statusClass = r.completed ? 'completed' : r.inProgress ? 'in-progress' : '';
       const ipBadge = r.inProgress && !r.completed ? `<span class="status-badge in-progress">In Progress</span>` : '';
-      const ipBtn   = !r.completed ? `<button class="btn ${r.inProgress ? 'btn-secondary' : 'btn-inprogress'} btn-sm" onclick="event.stopPropagation(); toggleInProgress('${r.id}')">${r.inProgress ? '⏸ Pause' : '▶ In Progress'}</button>` : '';
- 
-      let earliestDateHtml = '<span class="req-date">No effective date</span>';
+      const ipBtn = !r.completed ? `<button class="btn ${r.inProgress ? 'btn-secondary' : 'btn-inprogress'} btn-sm" onclick="event.stopPropagation(); toggleInProgress('${r.id}')">${r.inProgress ? '⏸ Pause' : '▶ In Progress'}</button>` : '';
+
+      let effectiveHtml = `<span class="req-effective"><span class="lbl">Effective:</span> <span class="val">—</span></span>`;
       let urgentClass = '';
-      
       if (r.changes && r.changes.length > 0) {
         const dates = r.changes.map(c => c.effective_date).filter(Boolean).sort();
         if (dates.length > 0) {
-          const earliest = dates[0];
-          const today = new Date();
-          today.setHours(0,0,0,0);
-          
-          const target = new Date(earliest);
-          target.setHours(0,0,0,0);
-          
-          const daysDiff = (target - today) / (1000 * 60 * 60 * 24);
-          
-          if (daysDiff <= 7 && !r.completed) {
-            urgentClass = 'urgent-ticket';
-          }
-          
-          earliestDateHtml = `<span class="req-date"><strong>Effective: ${fmtDate(earliest)}</strong></span>`;
+          const today = new Date(); today.setHours(0,0,0,0);
+          const target = new Date(dates[0]); target.setHours(0,0,0,0);
+          if ((target - today) / 86400000 <= 7 && !r.completed) urgentClass = 'urgent-ticket';
+          effectiveHtml = `<span class="req-effective"><span class="lbl">Effective:</span> <span class="val">${fmtDate(dates[0])}</span></span>`;
         }
       }
 
+      const changeCount = r.changes?.length || 0;
+      const changeSummary = changeCount > 0 ? `${changeCount} change${changeCount > 1 ? 's' : ''}` : 'No changes';
+
       let changesHtml = '';
       if (r.changes && r.changes.length > 0) {
-        changesHtml = `
-          <div class="changes-summary">
-            <span class="changes-summary-title">Changes Requested</span>
-            <div class="change-row-summary change-row-header">
-              <div class="crs-field">Field</div><div class="crs-old">Current</div><div class="crs-new">New</div><div class="crs-date">Effective</div>
-            </div>
-            ${r.changes.map(c => `
-              <div class="change-row-summary">
-                <div class="crs-field">${esc(c.field)}</div>
-                <div class="crs-old">${esc(c.old) || '—'}</div>
-                <div class="crs-new">${esc(c.new) || '—'}</div>
-                <div class="crs-date">${c.effective_date ? fmtDate(c.effective_date) : '—'}</div>
-              </div>`).join('')}
-          </div>`;
+        changesHtml = `<div class="changes-summary"><span class="changes-summary-title">Changes Requested</span>
+          <div class="change-row-summary change-row-header"><div class="crs-field">Field</div><div class="crs-old">Current</div><div class="crs-new">New</div><div class="crs-date">Effective</div></div>
+          ${r.changes.map(c => `<div class="change-row-summary"><div class="crs-field">${esc(c.field)}</div><div class="crs-old">${esc(c.old)||'—'}</div><div class="crs-new">${esc(c.new)||'—'}</div><div class="crs-date">${c.effective_date?fmtDate(c.effective_date):'—'}</div></div>`).join('')}
+        </div>`;
       }
- 
+
       const notesHtml = r.notes ? `<div style="margin-bottom:12px"><span class="section-title-sm">Notes</span><div style="font-size:13px;color:#334155;margin-top:4px;white-space:pre-wrap">${esc(r.notes)}</div></div>` : '';
- 
       const commentsHtml = r.comments.length > 0
         ? r.comments.map(c => `<div class="comment-item"><span class="comment-text">${esc(c.text)}</span><span class="comment-ts">${fmtDateTime(c.timestamp)}</span></div>`).join('')
         : `<div style="font-size:12px;color:var(--muted);font-style:italic">No comments yet.</div>`;
- 
-      const changeCount = r.changes?.length || 0;
-      const changeSummary = changeCount > 0 ? `${changeCount} change${changeCount > 1 ? 's' : ''}` : 'No changes';
- 
+
       return `
       <div class="req-card ${statusClass} ${urgentClass} ${isExp}" id="req-${r.id}">
-        
         <div class="req-header" onclick="toggleCard('${r.id}')">
-          <div class="req-checkbox" onclick="event.stopPropagation(); toggleCompleted('${r.id}')">
-            <span class="check">✓</span>
-          </div>
-          <div class="req-title"><strong>${esc(r.employee)}</strong> ${ipBadge}</div>
-          <div class="req-meta-item"><strong>Submitted By: ${esc(r.submitter)}</strong> &middot; ${changeSummary}</div>
-          ${earliestDateHtml}
-          <div class="req-right">
-            <span class="req-id">${r.id}</span>
-            <button class="th-toggle">▼</button>
-          </div>
+          <div class="req-checkbox" onclick="event.stopPropagation(); toggleCompleted('${r.id}')"><span class="check">✓</span></div>
+          <div class="req-name"><strong>${esc(r.employee)}</strong> ${ipBadge}</div>
+          <div class="req-submitted"><span class="lbl">Submitted By:</span> <span class="val">${esc(r.submitter)}</span> &middot; ${changeSummary}</div>
+          ${effectiveHtml}
+          <div class="req-right"><span class="req-id">${r.id}</span><button class="th-toggle">▼</button></div>
         </div>
-        
         <div class="req-expanded">
-          <div style="font-size: 12px; margin-bottom: 12px; margin-top: -6px;">
-             <span style="color:var(--muted)">Approved by:</span> <strong>${esc(r.approver)}</strong> &nbsp;|&nbsp; <span style="color:var(--muted)">Created:</span> ${fmtDate(r.createdAt)}
-          </div>
-          ${changesHtml}
-          ${notesHtml}
-          <div class="comments-wrapper">
-            <span class="section-title-sm">Comments</span>
-            <div class="comments-list">${commentsHtml}</div>
-          </div>
+          <div style="font-size:12px;margin-bottom:12px;margin-top:-6px;"><span style="color:var(--muted)">Approved by:</span> <strong>${esc(r.approver)}</strong> &nbsp;|&nbsp; <span style="color:var(--muted)">Created:</span> ${fmtDate(r.createdAt)}</div>
+          ${changesHtml}${notesHtml}
+          <div class="comments-wrapper"><span class="section-title-sm">Comments</span><div class="comments-list">${commentsHtml}</div></div>
           <div class="expanded-actions">
             <button class="btn btn-primary btn-sm" style="background:#2563eb" onclick="addComment('${r.id}')">+ Comment</button>
             ${ipBtn}
@@ -729,45 +440,30 @@
       </div>`;
     }).join('');
   }
- 
+
   function exportCSV() {
     if (!requests.length) { showToast('No requests to export', ''); return; }
     const headers = ['ID','Employee','Submitted By','Approved By','Changes','Notes','Status','Created'];
-    const rows = requests.map(r => [
-      r.id, r.employee, r.submitter, r.approver,
-      (r.changes || []).map(c => `${c.field}: ${c.old}→${c.new}`).join('; '),
-      r.notes, r.completed ? 'Completed' : r.inProgress ? 'In Progress' : 'Pending', r.createdAt
-    ].map(v => `"${String(v || '').replace(/"/g, '""')}"`));
-    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-    a.download = `employee-requests-${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
+    const rows = requests.map(r => [r.id, r.employee, r.submitter, r.approver,
+      (r.changes||[]).map(c=>`${c.field}: ${c.old}→${c.new} (eff. ${c.effective_date||'—'})`).join('; '),
+      r.notes, r.completed?'Completed':r.inProgress?'In Progress':'Pending', r.createdAt
+    ].map(v=>`"${String(v||'').replace(/"/g,'""')}"`));
+    const csv = [headers.join(','), ...rows.map(r=>r.join(','))].join('\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download = `employee-requests-${new Date().toISOString().slice(0,10)}.csv`; a.click();
     showToast('Exported', 'success');
   }
- 
-  function esc(s) {
-    if (!s) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function fmtDate(iso) {
-    if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
-  function fmtDateTime(iso) {
-    if (!iso) return '';
-    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-  }
- 
+
+  function esc(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function fmtDate(iso) { if (!iso) return '—'; return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+  function fmtDateTime(iso) { if (!iso) return ''; return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+
   let toastTimer;
   function showToast(msg, type) {
-    const t = document.getElementById('toast');
-    document.getElementById('toastMsg').textContent = msg;
-    t.className = 'toast show ' + (type || '');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    const t = document.getElementById('toast'); document.getElementById('toastMsg').textContent = msg;
+    t.className = 'toast show ' + (type||''); clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
   }
- 
   loadRequests();
 </script>
 </body>
