@@ -9,180 +9,142 @@
   :root {
     --bg: #f8fafc;
     --surface: #ffffff;
-    --surface2: #f1f5f9;
-    --border: #e2e8f0;
+    --border: #cbd5e1;
     --text: #0f172a;
     --muted: #64748b;
-    --label: #334155;
     --accent: #0f344e;
     --accent-hover: #174666;
-    --accent-dim: rgba(15,52,78,0.06);
     --radius: 12px;
-    --radius-sm: 6px;
   }
   body {
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
   header {
     background: var(--accent);
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    padding: 20px 32px;
+    padding: 20px 40px;
     display: flex;
     align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(15,52,78,0.1);
+    box-shadow: 0 4px 20px rgba(15,52,78,0.15);
   }
-  header h1 {
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: -0.2px;
-  }
+  header h1 { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  header p { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 2px; }
+
   .page {
-    max-width: 1100px;
-    width: 100%;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 48px 24px;
+    padding: 60px 24px;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .welcome-section {
-    margin-bottom: 36px;
+  .page-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--muted); margin-bottom: 48px;
   }
-  .welcome-section h2 {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.5px;
-    margin-bottom: 6px;
+  .page-heading {
+    font-size: 28px; font-weight: 800; color: var(--accent);
+    letter-spacing: -0.5px; margin-bottom: 8px; text-align: center;
   }
-  .welcome-section p {
-    font-size: 14px;
-    color: var(--muted);
+  .page-sub {
+    font-size: 14px; color: var(--muted); margin-bottom: 48px; text-align: center;
   }
+
   .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     width: 100%;
   }
+
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 28px;
+    padding: 32px 28px;
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    gap: 14px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    border-top: 4px solid var(--accent);
   }
   .card:hover {
-    transform: translateY(-2px);
-    border-color: #cbd5e1;
-    box-shadow: 0 10px 25px rgba(15,52,78,0.06);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(15,52,78,0.1);
+    border-color: var(--accent);
   }
   .card-icon {
-    width: 44px;
-    height: 44px;
-    background: var(--accent-dim);
+    width: 44px; height: 44px;
+    background: rgba(15,52,78,0.07);
     border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    color: var(--accent);
-  }
-  .card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
   }
   .card-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #0f172a;
-    letter-spacing: -0.2px;
+    font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: -0.2px;
   }
   .card-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.6;
+    font-size: 13px; color: var(--muted); line-height: 1.5;
   }
   .card-action {
     margin-top: auto;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding-top: 8px;
+    font-size: 12px; font-weight: 700;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 6px;
   }
-  .card:hover .card-action {
-    color: var(--accent-hover);
-  }
-  @media (max-width: 900px) {
-    .cards { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 640px) {
+
+  @media (max-width: 700px) {
     .cards { grid-template-columns: 1fr; }
-    .page { padding: 32px 20px; }
-    .welcome-section h2 { font-size: 20px; }
+    .page { padding: 36px 16px; }
+    .page-heading { font-size: 22px; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Operations Hub</h1>
+  <div>
+    <h1>Operations Hub</h1>
+  </div>
 </header>
 
 <div class="page">
-  <div class="welcome-section">
-    <h2>Welcome Back</h2>
-    <p>Select an operational module below to submit requests, view logs, or manage real-time tracking queues.</p>
-  </div>
+  <div class="page-title">Select a module below to submit or manage requests.</div>
 
   <div class="cards">
+
     <a class="card" href="./maintenance/index.html">
       <div class="card-icon">🔧</div>
-      <div class="card-content">
+      <div>
         <div class="card-title">Maintenance Tickets</div>
-        <div class="card-desc">Submit work orders, assign technicians, track dynamic priority status levels, and update completion logs.</div>
       </div>
-      <div class="card-action">Open Module →</div>
+      <div class="card-action">Open module →</div>
     </a>
 
     <a class="card" href="./employee-requests/index.html">
       <div class="card-icon">👤</div>
-      <div class="card-content">
+      <div>
         <div class="card-title">Employee Change Requests</div>
-        <div class="card-desc">Process shifts in job titles, pay adjustments, location assignments, bank deposits, and withholding values.</div>
       </div>
-      <div class="card-action">Open Module →</div>
+      <div class="card-action">Open module →</div>
     </a>
 
     <a class="card" href="./resident-requests/index.html">
       <div class="card-icon">🏠</div>
-      <div class="card-content">
+      <div>
         <div class="card-title">Resident Change Requests</div>
-        <div class="card-desc">Manage profiles, track upcoming status timelines, process service changes, and evaluate time-sensitive action items.</div>
       </div>
-      <div class="card-action">Open Module →</div>
+      <div class="card-action">Open module →</div>
     </a>
+
   </div>
 </div>
 
