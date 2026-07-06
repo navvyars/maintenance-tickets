@@ -87,16 +87,26 @@
     btn.disabled = true;
     err.style.display = 'none';
 
-    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    try {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      err.textContent = 'Invalid email or password.';
+      if (error) {
+        // Show the actual error message returning from Supabase
+        err.textContent = error.message; 
+        err.style.display = 'block';
+        btn.textContent = 'Log In';
+        btn.disabled = false;
+      } else if (data && data.session) {
+        // Success! Redirect to main hub
+        window.location.href = 'index.html';
+      }
+    } catch (catchErr) {
+      // Catch browser crashes (like local storage blocks or network failures)
+      console.error(catchErr);
+      err.textContent = 'Browser Error: ' + catchErr.message;
       err.style.display = 'block';
       btn.textContent = 'Log In';
       btn.disabled = false;
-    } else {
-      // Success! Redirect to main hub
-      window.location.href = 'index.html';
     }
   }
 </script>
