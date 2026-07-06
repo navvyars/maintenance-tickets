@@ -551,12 +551,16 @@
     }
 
     const payload = {
-      resident_name: document.getElementById('f-resident').value.trim(),
+      resident:      document.getElementById('f-resident').value.trim(), 
       submitter:     document.getElementById('f-submitter').value.trim(),
       approver:      document.getElementById('f-approver').value.trim(),
       notes:         document.getElementById('f-notes').value.trim(),
-      changes, discharge,
-      completed: false, in_progress: false, comments: []
+      changes, 
+      discharge,
+      completed: false, 
+      in_progress: false, 
+      comments: [],
+      version: 1 
     };
 
     const { error } = await sb.from('resident_requests').insert(payload).select();
