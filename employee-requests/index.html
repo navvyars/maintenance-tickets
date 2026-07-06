@@ -33,8 +33,7 @@
  
   .form-section { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
   .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--accent); padding-left: 10px; }
-  .section-sub { font-size: 11px; color: var(--muted); margin: -14px 0 18px 14px; max-width: 480px; line-height: 1.4; }
- 
+  
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; color: var(--muted); text-transform: uppercase; }
   input, select, textarea { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 10px 12px; font-size: 14px; font-family: inherit; width: 100%; transition: all 0.2s; appearance: none; -webkit-appearance: none; }
@@ -50,7 +49,6 @@
   /* Change rows table */
   .change-table { width: 100%; border-collapse: collapse; }
   .change-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); padding: 0 8px 10px 8px; text-align: left; border-bottom: 2px solid var(--border); }
-  .change-table th.center { text-align: center; }
   .change-table td { padding: 8px; vertical-align: middle; }
   .change-table tr:not(:last-child) td { border-bottom: 1px solid rgba(226,232,240,0.6); }
   .change-label { font-size: 12px; font-weight: 700; color: var(--label); white-space: nowrap; padding-right: 12px !important; min-width: 200px; }
@@ -60,6 +58,9 @@
   .group-row:first-child td { padding-top: 8px !important; }
   .group-title { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--accent); text-transform: uppercase; }
  
+  /* Address block group */
+  .address-group { display: flex; flex-direction: column; gap: 4px; }
+
   /* col widths */
   .col-field { width: 200px; }
   .col-old { width: 22%; }
@@ -102,7 +103,8 @@
   .req-card.completed { opacity: 0.55; border-left-color: var(--low) !important; background: var(--surface2) !important; }
   .req-card.in-progress { border-left-color: var(--inprogress) !important; background: var(--inprogress-bg) !important; }
  
-  .req-header { display: grid; grid-template-columns: 24px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
+  /* Single-line header adjustments */
+  .req-header { display: grid; grid-template-columns: 24px 2fr 1.5fr 1.5fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
   .req-header:hover { background: rgba(0,0,0,0.01); border-radius: var(--radius); }
  
   .req-checkbox { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--muted); display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: var(--surface); flex-shrink: 0; cursor: pointer; }
@@ -111,16 +113,17 @@
   .req-checkbox .check { display: none; font-size: 10px; color: #fff; font-weight: 900; }
   .req-card.completed .req-checkbox .check { display: block; }
  
-  .req-main { min-width: 0; }
-  .req-title { font-size: 14px; font-weight: 700; color: var(--accent); }
+  .req-title { font-size: 14px; font-weight: 700; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .req-card.completed .req-title { text-decoration: line-through; color: var(--muted); }
-  .req-meta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
-  .req-meta-item { font-size: 11px; color: var(--muted); }
+  
+  .req-meta-item { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .req-meta-item strong { color: var(--label); }
  
-  .req-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-  .req-date { font-size: 11px; color: var(--muted); white-space: nowrap; }
-  .req-id { font-size: 10px; font-family: monospace; color: var(--muted); }
+  .req-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; justify-content: flex-end; }
+  .req-date { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .req-date.urgent-date { color: var(--urgent); font-weight: 700; background: var(--urgent-bg); padding: 3px 8px; border-radius: 4px; border: 1px solid var(--urgent-border); }
+  
+  .req-id { font-size: 11px; font-family: monospace; color: var(--muted); }
   .th-toggle { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; transition: transform 0.3s; font-family: monospace; }
   .req-card.expanded .th-toggle { transform: rotate(180deg); }
  
@@ -138,7 +141,7 @@
   .change-row-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 2px solid var(--border) !important; padding-bottom: 6px !important; }
  
   .expanded-actions { display: flex; gap: 8px; margin-top: 12px; }
-  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; margin-left: 6px; }
   .status-badge.in-progress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
  
   /* Comments */
@@ -159,6 +162,8 @@
     .col-old, .col-new, .col-date { display: none; }
     .change-row-summary { grid-template-columns: 1fr 1fr; }
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .req-header { grid-template-columns: 24px 1fr auto; }
+    .req-meta-item, .req-date { display: none; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -179,11 +184,9 @@
     <button class="tab" onclick="switchTab('queue',this)">Request Queue <span id="queueTabCount"></span></button>
   </div>
  
-  <!-- SUBMIT PANEL -->
   <div class="panel active" id="panel-submit">
     <form id="reqForm" onsubmit="submitRequest(event)">
  
-      <!-- Submitter / Approver / Employee — required fields at top -->
       <div class="form-section">
         <div class="section-label">Request Info</div>
         <div class="meta-grid">
@@ -202,7 +205,6 @@
         </div>
       </div>
  
-      <!-- Change details — all optional, old/new/effective date columns -->
       <div class="form-section">
         <div class="section-label">Changes</div>
         <table class="change-table">
@@ -216,13 +218,28 @@
           </thead>
           <tbody>
  
-            <!-- Address / Telephone -->
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in Contact Information</span></td></tr>
             <tr>
               <td class="change-label">Address</td>
-              <td><input type="text" id="f-address-old" placeholder="Current address"></td>
-              <td><input type="text" id="f-address-new" placeholder="New address"></td>
-              <td><input type="date" id="f-address-date"></td>
+              <td>
+                <div class="address-group">
+                  <input type="text" id="f-addr-old-l1" placeholder="Line 1">
+                  <input type="text" id="f-addr-old-l2" placeholder="Line 2 (Optional)">
+                  <input type="text" id="f-addr-old-city" placeholder="City">
+                  <input type="text" id="f-addr-old-state" placeholder="State">
+                  <input type="text" id="f-addr-old-zip" placeholder="ZIP">
+                </div>
+              </td>
+              <td>
+                <div class="address-group">
+                  <input type="text" id="f-addr-new-l1" placeholder="Line 1">
+                  <input type="text" id="f-addr-new-l2" placeholder="Line 2 (Optional)">
+                  <input type="text" id="f-addr-new-city" placeholder="City">
+                  <input type="text" id="f-addr-new-state" placeholder="State">
+                  <input type="text" id="f-addr-new-zip" placeholder="ZIP">
+                </div>
+              </td>
+              <td><input type="date" id="f-addr-date"></td>
             </tr>
             <tr>
               <td class="change-label">Telephone</td>
@@ -231,7 +248,6 @@
               <td><input type="date" id="f-phone-date"></td>
             </tr>
  
-            <!-- Job Title / Pay / Classification -->
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in Job Information</span></td></tr>
             <tr>
               <td class="change-label">Primary Job Title</td>
@@ -270,7 +286,6 @@
               <td><input type="date" id="f-class-date"></td>
             </tr>
  
-            <!-- Job Location -->
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in Job Location</span></td></tr>
             <tr>
               <td class="change-label">Job Location</td>
@@ -297,7 +312,6 @@
               <td><input type="date" id="f-loc-date"></td>
             </tr>
  
-            <!-- Bank Deposit Info -->
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in Bank Deposit Info</span></td></tr>
             <tr>
               <td class="change-label">Bank Name</td>
@@ -307,8 +321,8 @@
             </tr>
             <tr>
               <td class="change-label">Routing Number</td>
-              <td><input type="text" id="f-routing-old" placeholder="Current routing #"></td>
-              <td><input type="text" id="f-routing-new" placeholder="New routing #"></td>
+              <td><input type="text" id="f-routing-old" placeholder="Current routing #" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
+              <td><input type="text" id="f-routing-new" placeholder="New routing #" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '')"></td>
               <td><input type="date" id="f-routing-date"></td>
             </tr>
             <tr>
@@ -318,7 +332,6 @@
               <td><input type="date" id="f-account-date"></td>
             </tr>
  
-            <!-- W-4 Withholding -->
             <tr class="group-row"><td colspan="4"><span class="group-title">Change in W-4 Withholding</span></td></tr>
             <tr>
               <td class="change-label">W-4 Filing Status</td>
@@ -355,7 +368,6 @@
         </table>
       </div>
  
-      <!-- Notes -->
       <div class="form-section">
         <div class="section-label">Additional Notes</div>
         <div class="form-group">
@@ -371,7 +383,6 @@
     </form>
   </div>
  
-  <!-- QUEUE PANEL -->
   <div class="panel" id="panel-queue">
     <div class="stats-bar">
       <div class="stat-card">
@@ -427,7 +438,6 @@
  
   // ── Field definitions for collecting form data ──
   const CHANGE_FIELDS = [
-    { key: 'address',   label: 'Address' },
     { key: 'phone',     label: 'Telephone' },
     { key: 'title',     label: 'Job Title' },
     { key: 'pay',       label: 'Rate of Pay' },
@@ -442,11 +452,34 @@
  
   function collectChanges() {
     const changes = [];
+
+    // Process Address Grouping
+    const getAddressStr = (prefix) => {
+      const l1 = document.getElementById(`${prefix}-l1`)?.value.trim();
+      const l2 = document.getElementById(`${prefix}-l2`)?.value.trim();
+      const c  = document.getElementById(`${prefix}-city`)?.value.trim();
+      const s  = document.getElementById(`${prefix}-state`)?.value.trim();
+      const z  = document.getElementById(`${prefix}-zip`)?.value.trim();
+      const parts = [l1, l2, c, s, z].filter(Boolean);
+      return parts.length > 0 ? parts.join(', ') : '';
+    };
+
+    const oldAddr = getAddressStr('f-addr-old');
+    const newAddr = getAddressStr('f-addr-new');
+    const addrDate = document.getElementById('f-addr-date')?.value.trim();
+
+    // Only log if a new value or effective date is provided
+    if (newAddr || addrDate) {
+      changes.push({ field: 'Address', old: oldAddr, new: newAddr, effective_date: addrDate });
+    }
+
+    // Process standard fields
     CHANGE_FIELDS.forEach(f => {
       const oldVal  = (document.getElementById(`f-${f.key}-old`)?.value || '').trim();
       const newVal  = (document.getElementById(`f-${f.key}-new`)?.value || '').trim();
       const effDate = (document.getElementById(`f-${f.key}-date`)?.value || '').trim();
-      if (oldVal || newVal || effDate) {
+      // Require at least new info or effective date for it to count as a change
+      if (newVal || effDate) {
         changes.push({ field: f.label, old: oldVal, new: newVal, effective_date: effDate });
       }
     });
@@ -480,6 +513,12 @@
   async function submitRequest(e) {
     e.preventDefault();
     const changes = collectChanges();
+    
+    if (changes.length === 0) {
+      showToast('Please provide at least one row of changes with new info or an effective date.', 'error');
+      return;
+    }
+
     const payload = {
       employee:  document.getElementById('f-employee').value.trim(),
       submitter: document.getElementById('f-submitter').value.trim(),
@@ -604,6 +643,22 @@
       const ipBadge = r.inProgress && !r.completed ? `<span class="status-badge in-progress">In Progress</span>` : '';
       const ipBtn   = !r.completed ? `<button class="btn ${r.inProgress ? 'btn-secondary' : 'btn-inprogress'} btn-sm" onclick="toggleInProgress('${r.id}')">${r.inProgress ? '⏸ Pause' : '▶ In Progress'}</button>` : '';
  
+      // Calculate Earliest Effective Date
+      let earliestDateHtml = '<span class="req-date">No effective date</span>';
+      if (r.changes && r.changes.length > 0) {
+        const dates = r.changes.map(c => c.effective_date).filter(Boolean).sort();
+        if (dates.length > 0) {
+          const earliest = dates[0];
+          const today = new Date();
+          const target = new Date(earliest);
+          // Highlight if difference is 7 days or less
+          const daysDiff = (target - today) / (1000 * 60 * 60 * 24);
+          const isUrgent = daysDiff <= 7 && daysDiff > -1;
+          
+          earliestDateHtml = `<span class="req-date ${isUrgent ? 'urgent-date' : ''}">Eff: ${fmtDate(earliest)}</span>`;
+        }
+      }
+
       // Changes summary rows
       let changesHtml = '';
       if (r.changes && r.changes.length > 0) {
@@ -629,31 +684,30 @@
         ? r.comments.map(c => `<div class="comment-item"><span class="comment-text">${esc(c.text)}</span><span class="comment-ts">${fmtDateTime(c.timestamp)}</span></div>`).join('')
         : `<div style="font-size:12px;color:var(--muted);font-style:italic">No comments yet.</div>`;
  
-      // Summary of what changed for the card row
+      // Summary of what changed for the card row (optional meta info)
       const changeCount = r.changes?.length || 0;
-      const changeSummary = changeCount > 0 ? `${changeCount} change${changeCount > 1 ? 's' : ''} requested` : 'No changes recorded';
+      const changeSummary = changeCount > 0 ? `${changeCount} change${changeCount > 1 ? 's' : ''}` : 'No changes';
  
       return `
       <div class="req-card ${statusClass} ${isExp}" id="req-${r.id}">
+        
         <div class="req-header" onclick="toggleCard('${r.id}')">
           <div class="req-checkbox" onclick="event.stopPropagation(); toggleCompleted('${r.id}')">
             <span class="check">✓</span>
           </div>
-          <div class="req-main">
-            <div class="req-title">${esc(r.employee)} ${ipBadge}</div>
-            <div class="req-meta-row">
-              <span class="req-meta-item"><strong>Submitted by:</strong> ${esc(r.submitter)}</span>
-              <span class="req-meta-item"><strong>Approved by:</strong> ${esc(r.approver)}</span>
-              <span class="req-meta-item">${changeSummary}</span>
-            </div>
-          </div>
+          <div class="req-title">${esc(r.employee)} ${ipBadge}</div>
+          <div class="req-meta-item">Sub: <strong>${esc(r.submitter)}</strong> &middot; ${changeSummary}</div>
+          ${earliestDateHtml}
           <div class="req-right">
             <span class="req-id">${r.id}</span>
-            <span class="req-date">${fmtDate(r.createdAt)}</span>
             <button class="th-toggle">▼</button>
           </div>
         </div>
+        
         <div class="req-expanded">
+          <div style="font-size: 12px; margin-bottom: 12px; margin-top: -6px;">
+             <span style="color:var(--muted)">Approved by:</span> <strong>${esc(r.approver)}</strong> &nbsp;|&nbsp; <span style="color:var(--muted)">Created:</span> ${fmtDate(r.createdAt)}
+          </div>
           ${changesHtml}
           ${notesHtml}
           <div class="comments-wrapper">
