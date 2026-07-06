@@ -46,7 +46,7 @@
 </head>
 <body>
 
-<div class="login-card">
+<div class="login-card" id="loginContainer">
   <h1>Operations Hub</h1>
   <p>Please log in to access the system.</p>
   
@@ -66,65 +66,59 @@
 </div>
 
 <script>
-    const SUPABASE_URL = 'https://dccvbgmqsojobkjtnkxm.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  
-    // 1. LOOP PROTECTOR: Stops the page from crashing if it spins endlessly
-    let loginLoop = parseInt(sessionStorage.getItem('login_loop_count') || '0');
-    if (loginLoop > 3) {
-      sessionStorage.removeItem('login_loop_count');
-      document.body.innerHTML = `
-        <div style="padding:40px; font-family:sans-serif; text-align:center; background:#fff; max-width:500px; margin:100px auto; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
-          <h2 style="color:#991b1b; margin-bottom:12px;">⚠️ Redirect Loop Stopped</h2>
-          <p style="color:#475569; margin-bottom:20px;">The login page thinks you are logged in, but your main page keeps kicking you back here.</p>
-          <button onclick="localStorage.clear(); sessionStorage.clear(); window.location.reload();" style="padding:12px 24px; background:#e8a33d; border:none; font-weight:bold; border-radius:6px; cursor:pointer;">Clear Corrupted Session & Retry</button>
-        </div>`;
-      throw new Error("Redirect loop blocked.");
+  const SUPABASE_URL = 'https://dccvbgmqsojobkjtnkxm.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // 1. NO MORE AUTO-REDIRECT. If logged in, just show a button.
+  sb.auth.getSession().then(({ data: { session } }) => {
+    if (session) {
+      document.getElementById('loginContainer').innerHTML = `
+        <h1>Operations Hub</h1>
+        <p style="color: #166534; font-weight: bold; margin-bottom: 20px;">✓ You are securely logged in.</p>
+        <button onclick="window.location.href='index.html'" class="btn" style="margin-bottom: 12px;">Go to Dashboard</button>
+        <button onclick="forceLogout()" class="btn" style="background: var(--surface2); border: 2px solid var(--border); color: var(--text);">Log Out & Reset</button>
+      `;
     }
-  
-    // 2. Automatically move to index if session is found
-    sb.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        sessionStorage.setItem('login_loop_count', loginLoop + 1);
-        window.location.href = 'index.html';
-      } else {
-        sessionStorage.removeItem('login_loop_count');
-      }
-    });
-  
-    // 3. Form Submission Logic
-    async function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const btn = document.getElementById('loginBtn');
-      const err = document.getElementById('errorMsg');
-      
-      btn.textContent = 'Logging in...';
-      btn.disabled = true;
-      err.style.display = 'none';
-  
-      try {
-        const { data, error } = await sb.auth.signInWithPassword({ email, password });
-  
-        if (error) {
-          err.textContent = error.message; 
-          err.style.display = 'block';
-          btn.textContent = 'Log In';
-          btn.disabled = false;
-        } else if (data && data.session) {
-          sessionStorage.clear(); // Clear loop trackers on fresh login
-          window.location.href = 'index.html';
-        }
-      } catch (catchErr) {
-        console.error(catchErr);
-        err.textContent = 'Browser Error: ' + catchErr.message;
+  });
+
+  async function forceLogout() {
+    await sb.auth.signOut();
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload();
+  }
+
+  // 2. Login Form Logic
+  async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('errorMsg');
+    
+    btn.textContent = 'Logging in...';
+    btn.disabled = true;
+    err.style.display = 'none';
+
+    try {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        err.textContent = error.message; 
         err.style.display = 'block';
         btn.textContent = 'Log In';
         btn.disabled = false;
+      } else if (data && data.session) {
+        window.location.href = 'index.html';
       }
+    } catch (catchErr) {
+      err.textContent = 'Browser Error: ' + catchErr.message;
+      err.style.display = 'block';
+      btn.textContent = 'Log In';
+      btn.disabled = false;
     }
-  </script>
+  }
+</script>
 </body>
 </html>
