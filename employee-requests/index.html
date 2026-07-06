@@ -107,7 +107,7 @@
   .req-card.urgent-ticket { background: var(--urgent-bg) !important; border-color: var(--urgent-border) !important; border-left-color: var(--urgent) !important; }
   .req-card.urgent-ticket .req-header { background: transparent !important; }
  
-  /* Single-line header adjustments */
+  /* Single-line header layout */
   .req-header { display: grid; grid-template-columns: 24px 2fr 1.5fr 1.5fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
   .req-header:hover { background: rgba(0,0,0,0.01); border-radius: var(--radius); }
  
@@ -122,7 +122,6 @@
   .req-card.completed .req-title { text-decoration: line-through; color: var(--muted); }
   
   .req-meta-item { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .req-meta-item strong { color: var(--text); font-weight: 400; }
  
   .req-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; justify-content: flex-end; }
   .req-date { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; }
@@ -469,7 +468,7 @@
     const newAddr = getAddressStr('f-addr-new');
     const addrDate = document.getElementById('f-addr-date')?.value.trim();
 
-    if (newAddr || addrDate) {
+    if (newAddr && addrDate) {
       changes.push({ field: 'Address', old: oldAddr, new: newAddr, effective_date: addrDate });
     }
 
@@ -477,7 +476,8 @@
       const oldVal  = (document.getElementById(`f-${f.key}-old`)?.value || '').trim();
       const newVal  = (document.getElementById(`f-${f.key}-new`)?.value || '').trim();
       const effDate = (document.getElementById(`f-${f.key}-date`)?.value || '').trim();
-      if (newVal || effDate) {
+      
+      if (newVal && effDate) {
         changes.push({ field: f.label, old: oldVal, new: newVal, effective_date: effDate });
       }
     });
@@ -513,7 +513,7 @@
     const changes = collectChanges();
     
     if (changes.length === 0) {
-      showToast('Please provide at least one row of changes with new info or an effective date.', 'error');
+      showToast('Please provide both a new value and an effective date for at least one change row.', 'error');
       return;
     }
 
@@ -527,10 +527,10 @@
     };
     const { error } = await sb.from('employee_requests').insert(payload).select();
     if (error) { console.error(error); showToast('Could not submit — Supabase may be unavailable', 'error'); return; }
+    
     showToast('Request submitted successfully', 'success');
     resetForm();
-    switchTab('queue', document.querySelectorAll('.tab')[1]);
-    loadRequests();
+    loadRequests(); // Keeps database cache fresh behind the scenes without changing tabs
   }
  
   function resetForm() {
@@ -643,7 +643,6 @@
       const ipBadge = r.inProgress && !r.completed ? `<span class="status-badge in-progress">In Progress</span>` : '';
       const ipBtn   = !r.completed ? `<button class="btn ${r.inProgress ? 'btn-secondary' : 'btn-inprogress'} btn-sm" onclick="event.stopPropagation(); toggleInProgress('${r.id}')">${r.inProgress ? '⏸ Pause' : '▶ In Progress'}</button>` : '';
  
-      // Calculate Earliest Effective Date & Whole Container Urgency Flag
       let earliestDateHtml = '<span class="req-date">No effective date</span>';
       let urgentClass = '';
       
@@ -659,16 +658,14 @@
           
           const daysDiff = (target - today) / (1000 * 60 * 60 * 24);
           
-          // Flag the row as urgent if date is within 7 days out (and ticket isn't completed)
           if (daysDiff <= 7 && !r.completed) {
             urgentClass = 'urgent-ticket';
           }
           
-          earliestDateHtml = `<span class="req-date">Effective: ${fmtDate(earliest)}</span>`;
+          earliestDateHtml = `<span class="req-date"><strong>Effective: ${fmtDate(earliest)}</strong></span>`;
         }
       }
 
-      // Changes summary rows
       let changesHtml = '';
       if (r.changes && r.changes.length > 0) {
         changesHtml = `
@@ -703,8 +700,8 @@
           <div class="req-checkbox" onclick="event.stopPropagation(); toggleCompleted('${r.id}')">
             <span class="check">✓</span>
           </div>
-          <div class="req-title">${esc(r.employee)} ${ipBadge}</div>
-          <div class="req-meta-item">Submitted By: <strong>${esc(r.submitter)}</strong> &middot; ${changeSummary}</div>
+          <div class="req-title"><strong>${esc(r.employee)}</strong> ${ipBadge}</div>
+          <div class="req-meta-item"><strong>Submitted By: ${esc(r.submitter)}</strong> &middot; ${changeSummary}</div>
           ${earliestDateHtml}
           <div class="req-right">
             <span class="req-id">${r.id}</span>

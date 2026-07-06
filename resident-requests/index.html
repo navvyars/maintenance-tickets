@@ -16,25 +16,25 @@
     --radius: 12px; --radius-sm: 6px;
   }
   body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 1.5; min-height: 100vh; }
- 
+
   header { background: var(--accent); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 16px 32px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(15,52,78,0.1); }
   .header-back { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.25); border-radius: 6px; transition: all 0.2s; }
   .header-back:hover { background: rgba(255,255,255,0.1); color: #fff; }
   header h1 { font-size: 18px; font-weight: 700; color: #fff; }
   .header-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
- 
+
   .page { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
- 
+
   .tabs { display: flex; gap: 4px; margin-bottom: 28px; background: #e2e8f0; border-radius: var(--radius); padding: 4px; width: fit-content; }
   .tab { padding: 10px 24px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); border: none; background: none; transition: all 0.2s; }
   .tab.active { background: var(--surface); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
   .tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.5); }
   .panel { display: none; } .panel.active { display: block; }
- 
+
   .form-section { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
   .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--accent); text-transform: uppercase; margin-bottom: 20px; border-left: 3px solid var(--accent); padding-left: 10px; }
-  .section-sub { font-size: 11px; color: var(--muted); margin: -14px 0 18px 14px; max-width: 480px; line-height: 1.4; }
- 
+  .section-sub { font-size: 11px; color: var(--muted); margin: -14px 0 18px 14px; line-height: 1.4; }
+
   .form-group { display: flex; flex-direction: column; gap: 8px; }
   .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; color: var(--muted); text-transform: uppercase; }
   input, select, textarea { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 10px 12px; font-size: 14px; font-family: inherit; width: 100%; transition: all 0.2s; appearance: none; -webkit-appearance: none; }
@@ -44,11 +44,10 @@
   .select-wrap { position: relative; }
   .select-wrap::after { content: ''; position: absolute; right: 12px; top: 50%; width: 0; height: 0; margin-top: -2px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid var(--muted); pointer-events: none; }
   .select-wrap select { padding-right: 32px; }
- 
-  /* Top meta row */
+
   .meta-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
- 
-  /* Change rows table */
+
+  /* Change table */
   .change-table { width: 100%; border-collapse: collapse; }
   .change-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); padding: 0 8px 10px 8px; text-align: left; border-bottom: 2px solid var(--border); }
   .change-table td { padding: 8px; vertical-align: middle; }
@@ -60,29 +59,20 @@
   .group-row td { padding-top: 18px !important; border-bottom: none !important; }
   .group-row:first-child td { padding-top: 8px !important; }
   .group-title { font-size: 10px; font-weight: 800; letter-spacing: 0.8px; color: var(--accent); text-transform: uppercase; }
- 
-  /* col widths */
   .col-field { width: 240px; }
   .col-old { width: 30%; }
   .col-new { width: 30%; }
- 
-  /* Discharge fields */
+
+  /* Address stacked inputs */
+  .address-group { display: flex; flex-direction: column; gap: 4px; }
+
+  /* Discharge */
   .discharge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .discharge-checkbox-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-  .discharge-checkbox-row input[type="checkbox"] { 
-    width: 18px; 
-    height: 18px; 
-    accent-color: var(--accent); 
-    cursor: pointer; 
-    appearance: auto;
-    -webkit-appearance: auto;
-    padding: 0;
-    background: revert;
-    border-radius: 3px;
-  }
+  .discharge-checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; appearance: auto; -webkit-appearance: auto; padding: 0; background: revert; border-radius: 3px; }
   .discharge-checkbox-row label { font-size: 13px; font-weight: 600; color: var(--label); text-transform: none; letter-spacing: normal; cursor: pointer; }
   .span-2 { grid-column: span 2; }
- 
+
   .form-actions { display: flex; gap: 12px; margin-top: 8px; }
   .btn { padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
   .btn-primary { background: var(--accent); color: #ffffff; }
@@ -95,55 +85,54 @@
   .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; }
   header .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,0.3); box-shadow: none; }
   header .btn-secondary:hover { background: rgba(255,255,255,0.1); }
- 
-  /* Queue */
+
+  /* Queue stats */
   .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
   .stat-card { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 18px; }
   .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
- 
+
   .queue-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
   .queue-header h2 { font-size: 18px; font-weight: 700; color: var(--accent); }
   .ticket-count { background: #e2e8f0; color: var(--accent); font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 20px; }
   .queue-filters { display: flex; gap: 8px; margin-left: auto; align-items: center; flex-wrap: wrap; }
   .filter-select { width: auto; padding: 8px 32px 8px 12px; font-size: 12px; background: var(--surface); border-radius: var(--radius-sm); }
   .divider-v { width: 1px; height: 24px; background: var(--border); }
- 
+
   .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); }
   .empty-state p { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
   .empty-state small { font-size: 12px; display: block; }
- 
-  /* Request cards */
+
+  /* ── Queue cards — matches employee condensed style ── */
   .req-card { background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--accent); border-radius: var(--radius); margin-bottom: 8px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
   .req-card:hover { border-color: #94a3b8; }
   .req-card.completed { opacity: 0.55; border-left-color: var(--low) !important; background: var(--surface2) !important; }
   .req-card.in-progress { border-left-color: var(--inprogress) !important; background: var(--inprogress-bg) !important; }
- 
-  .req-header { display: grid; grid-template-columns: 24px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
+
+  /* 5-column condensed row — same as employee */
+  .req-header { display: grid; grid-template-columns: 24px 2fr 1.5fr 1.5fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
   .req-header:hover { background: rgba(0,0,0,0.01); border-radius: var(--radius); }
- 
+
   .req-checkbox { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--muted); display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: var(--surface); flex-shrink: 0; cursor: pointer; }
   .req-checkbox:hover { border-color: var(--accent); }
   .req-card.completed .req-checkbox { background: var(--low); border-color: var(--low); }
   .req-checkbox .check { display: none; font-size: 10px; color: #fff; font-weight: 900; }
   .req-card.completed .req-checkbox .check { display: block; }
- 
-  .req-main { min-width: 0; }
-  .req-title { font-size: 14px; font-weight: 700; color: var(--accent); }
+
+  /* Uniform flat text — same as employee */
+  .req-title { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
   .req-card.completed .req-title { text-decoration: line-through; color: var(--muted); }
-  .req-meta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
-  .req-meta-item { font-size: 11px; color: var(--muted); }
-  .req-meta-item strong { color: var(--label); }
- 
-  .req-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-  .req-date { font-size: 11px; color: var(--muted); white-space: nowrap; }
-  .req-id { font-size: 10px; font-family: monospace; color: var(--muted); }
+  .req-meta-item { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .req-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; justify-content: flex-end; }
+  .req-date { font-size: 13px; font-weight: 400; color: var(--text); white-space: nowrap; }
+  .req-id { font-size: 13px; font-weight: 400; font-family: inherit; color: var(--text); }
   .th-toggle { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; transition: transform 0.3s; font-family: monospace; }
   .req-card.expanded .th-toggle { transform: rotate(180deg); }
- 
-  .req-expanded { display: none; padding: 0 16px 16px 54px; border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 14px; }
+
+  /* Expanded content */
+  .req-expanded { display: none; padding: 14px 16px 16px 54px; border-top: 1px dashed rgba(0,0,0,0.08); }
   .req-card.expanded .req-expanded { display: block; }
- 
+
   .changes-summary { background: rgba(0,0,0,0.02); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 14px; }
   .changes-summary-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 10px; display: block; }
   .change-row-summary { display: grid; grid-template-columns: 180px 1fr 1fr; gap: 8px; padding: 6px 0; font-size: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); align-items: start; }
@@ -152,30 +141,29 @@
   .crs-old { color: var(--muted); }
   .crs-new { color: var(--text); font-weight: 600; }
   .change-row-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 2px solid var(--border) !important; padding-bottom: 6px !important; }
- 
+
   .discharge-summary { background: var(--urgent-bg); border: 1px solid var(--urgent-border); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 14px; }
   .discharge-summary-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--urgent); margin-bottom: 8px; display: block; }
   .discharge-row { font-size: 12px; color: var(--text); margin-top: 4px; }
   .discharge-row strong { color: var(--label); }
- 
-  .expanded-actions { display: flex; gap: 8px; margin-top: 12px; }
-  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+  .expanded-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; margin-left: 4px; }
   .status-badge.in-progress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
   .status-badge.discharge { background: var(--urgent-bg); color: var(--urgent); border: 1px solid var(--urgent-border); }
- 
-  /* Comments */
+
   .comments-wrapper { margin-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px; }
   .comments-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
   .comment-item { background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
   .comment-text { flex: 1; color: var(--text); }
   .comment-ts { font-size: 10px; color: var(--muted); font-weight: 600; white-space: nowrap; }
   .section-title-sm { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; display: block; }
- 
+
   .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 20px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.08); transform: translateY(100px); opacity: 0; transition: all 0.2s; z-index: 999; max-width: 340px; display: flex; align-items: center; gap: 8px; }
   .toast.show { transform: translateY(0); opacity: 1; }
   .toast.success { border-left: 4px solid var(--low); }
   .toast.error { border-left: 4px solid var(--urgent); }
- 
+
   @media (max-width: 800px) {
     .meta-grid { grid-template-columns: 1fr 1fr; }
     .col-old, .col-new { display: none; }
@@ -183,12 +171,14 @@
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
     .discharge-grid { grid-template-columns: 1fr; }
     .span-2 { grid-column: span 1; }
+    .req-header { grid-template-columns: 24px 1fr auto; }
+    .req-meta-item, .req-date { display: none; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
- 
+
 <header>
   <a class="header-back" href="../index.html">← Hub</a>
   <h1>Resident Change Requests</h1>
@@ -196,18 +186,17 @@
     <button class="btn btn-secondary btn-sm" onclick="exportCSV()">Export CSV</button>
   </div>
 </header>
- 
+
 <div class="page">
   <div class="tabs">
     <button class="tab active" onclick="switchTab('submit',this)">Submit Request</button>
     <button class="tab" onclick="switchTab('queue',this)">Request Queue <span id="queueTabCount"></span></button>
   </div>
- 
+
   <!-- SUBMIT PANEL -->
   <div class="panel active" id="panel-submit">
     <form id="reqForm" onsubmit="submitRequest(event)">
- 
-      <!-- Resident / Submitter / Approver -->
+
       <div class="form-section">
         <div class="section-label">Request Info</div>
         <div class="meta-grid">
@@ -225,10 +214,10 @@
           </div>
         </div>
       </div>
- 
-      <!-- Change details — old/new columns -->
+
       <div class="form-section">
         <div class="section-label">Changes</div>
+        <div class="section-sub">Fill in only what is changing. At least one change or a discharge must be provided.</div>
         <table class="change-table">
           <thead>
             <tr>
@@ -238,8 +227,7 @@
             </tr>
           </thead>
           <tbody>
- 
-            <!-- Room / Location -->
+
             <tr class="group-row"><td colspan="3"><span class="group-title">Change in Location</span></td></tr>
             <tr>
               <td class="change-label">Room #</td>
@@ -247,28 +235,27 @@
               <td><input type="text" id="f-room-new" placeholder="New room #"></td>
             </tr>
             <tr>
-                <td class="change-label">Building</td>
-                <td>
-                    <div class="select-wrap">
-                      <select id="f-loc-old">
-                        <option value="">Current...</option>
-                        <option>Frisco</option>
-                        <option>McKinney</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="select-wrap">
-                      <select id="f-loc-new">
-                        <option value="">New...</option>
-                        <option>Frisco</option>
-                        <option>McKinney</option>
-                      </select>
-                    </div>
-                  </td>
-              </tr>
- 
-            <!-- Rate -->
+              <td class="change-label">Building</td>
+              <td>
+                <div class="select-wrap">
+                  <select id="f-loc-old">
+                    <option value="">Current...</option>
+                    <option>Frisco</option>
+                    <option>McKinney</option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <div class="select-wrap">
+                  <select id="f-loc-new">
+                    <option value="">New...</option>
+                    <option>Frisco</option>
+                    <option>McKinney</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+
             <tr class="group-row"><td colspan="3"><span class="group-title">Change in Rate</span></td></tr>
             <tr>
               <td class="change-label">Monthly Rate</td>
@@ -280,8 +267,7 @@
               <td><input type="text" id="f-fees-old" placeholder="Current fees/deposit"></td>
               <td><input type="text" id="f-fees-new" placeholder="New fees/deposit"></td>
             </tr>
- 
-            <!-- POA -->
+
             <tr class="group-row"><td colspan="3"><span class="group-title">POA Change</span></td></tr>
             <tr>
               <td class="change-label">POA Name</td>
@@ -289,9 +275,25 @@
               <td><input type="text" id="f-poaname-new" placeholder="New POA name"></td>
             </tr>
             <tr>
-              <td class="change-label">POA Address</td>
-              <td><input type="text" id="f-poaaddress-old" placeholder="Current POA address"></td>
-              <td><input type="text" id="f-poaaddress-new" placeholder="New POA address"></td>
+              <td class="change-label">POA Address<div class="change-sublabel">Street, City, State, ZIP</div></td>
+              <td>
+                <div class="address-group">
+                  <input type="text" id="f-poaaddr-old-l1" placeholder="Street address">
+                  <input type="text" id="f-poaaddr-old-l2" placeholder="Line 2 (optional)">
+                  <input type="text" id="f-poaaddr-old-city" placeholder="City">
+                  <input type="text" id="f-poaaddr-old-state" placeholder="State">
+                  <input type="text" id="f-poaaddr-old-zip" placeholder="ZIP">
+                </div>
+              </td>
+              <td>
+                <div class="address-group">
+                  <input type="text" id="f-poaaddr-new-l1" placeholder="Street address">
+                  <input type="text" id="f-poaaddr-new-l2" placeholder="Line 2 (optional)">
+                  <input type="text" id="f-poaaddr-new-city" placeholder="City">
+                  <input type="text" id="f-poaaddr-new-state" placeholder="State">
+                  <input type="text" id="f-poaaddr-new-zip" placeholder="ZIP">
+                </div>
+              </td>
             </tr>
             <tr>
               <td class="change-label">POA Phone Number</td>
@@ -303,21 +305,19 @@
               <td><input type="text" id="f-poaemail-old" placeholder="Current POA email"></td>
               <td><input type="text" id="f-poaemail-new" placeholder="New POA email"></td>
             </tr>
- 
+
           </tbody>
         </table>
       </div>
- 
-      <!-- Discharge — no old/new, standalone -->
+
+      <!-- Discharge -->
       <div class="form-section">
         <div class="section-label">Discharge</div>
-        <div class="section-sub">Fill in only if this request involves a resident discharge</div>
- 
+        <div class="section-sub">Fill in only if this request involves a resident discharge.</div>
         <div class="discharge-checkbox-row">
           <input type="checkbox" id="f-discharge-single">
           <label for="f-discharge-single">Single occupancy room (for discharge)</label>
         </div>
- 
         <div class="discharge-grid">
           <div class="form-group">
             <label>Notice Given</label>
@@ -343,8 +343,7 @@
           </div>
         </div>
       </div>
- 
-      <!-- Notes -->
+
       <div class="form-section">
         <div class="section-label">Additional Notes</div>
         <div class="form-group">
@@ -352,14 +351,14 @@
           <textarea id="f-notes" placeholder="Any additional information..."></textarea>
         </div>
       </div>
- 
+
       <div class="form-actions">
         <button type="submit" class="btn btn-primary">Submit Request</button>
         <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear</button>
       </div>
     </form>
   </div>
- 
+
   <!-- QUEUE PANEL -->
   <div class="panel" id="panel-queue">
     <div class="stats-bar">
@@ -380,7 +379,7 @@
         <div class="stat-label">Completed</div>
       </div>
     </div>
- 
+
     <div class="queue-header">
       <h2>All Requests</h2>
       <span class="ticket-count" id="visibleCount">0 requests</span>
@@ -398,45 +397,61 @@
         <button class="btn btn-danger btn-sm" onclick="clearCompleted()">Clear Completed</button>
       </div>
     </div>
- 
+
     <div id="reqList"></div>
   </div>
 </div>
- 
+
 <div class="toast" id="toast"><span id="toastMsg"></span></div>
- 
+
 <script>
   const SUPABASE_URL = 'https://dccvbgmqsojobkjtnkxm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
- 
+
   let requests = [];
   let expandedIds = new Set();
   let isAllExpanded = false;
- 
-  // ── Field definitions for collecting old/new change data ──
+
   const CHANGE_FIELDS = [
-    { key: 'room',       label: 'Room #/Location' },
-    { key: 'rate',       label: 'Monthly Rate' },
-    { key: 'fees',       label: 'Community Fees/Deposit' },
-    { key: 'poaname',    label: 'POA Name' },
-    { key: 'poaaddress', label: 'POA Address' },
-    { key: 'poaphone',   label: 'POA Phone Number' },
-    { key: 'poaemail',   label: 'POA Email' },
+    { key: 'room',      label: 'Room #' },
+    { key: 'loc',       label: 'Building' },
+    { key: 'rate',      label: 'Monthly Rate' },
+    { key: 'fees',      label: 'Community Fees/Deposit' },
+    { key: 'poaname',   label: 'POA Name' },
+    { key: 'poaphone',  label: 'POA Phone Number' },
+    { key: 'poaemail',  label: 'POA Email' },
   ];
- 
+
+  function getAddrStr(prefix) {
+    const parts = [
+      document.getElementById(`${prefix}-l1`)?.value.trim(),
+      document.getElementById(`${prefix}-l2`)?.value.trim(),
+      document.getElementById(`${prefix}-city`)?.value.trim(),
+      document.getElementById(`${prefix}-state`)?.value.trim(),
+      document.getElementById(`${prefix}-zip`)?.value.trim(),
+    ].filter(Boolean);
+    return parts.join(', ');
+  }
+
   function collectChanges() {
     const changes = [];
+
+    // Simple old/new fields
     CHANGE_FIELDS.forEach(f => {
       const oldVal = (document.getElementById(`f-${f.key}-old`)?.value || '').trim();
       const newVal = (document.getElementById(`f-${f.key}-new`)?.value || '').trim();
-      if (oldVal || newVal) {
-        changes.push({ field: f.label, old: oldVal, new: newVal });
-      }
+      if (oldVal || newVal) changes.push({ field: f.label, old: oldVal, new: newVal });
     });
+
+    // POA Address (expanded)
+    const oldAddr = getAddrStr('f-poaaddr-old');
+    const newAddr = getAddrStr('f-poaaddr-new');
+    if (oldAddr || newAddr) changes.push({ field: 'POA Address', old: oldAddr, new: newAddr });
+
     return changes;
   }
- 
+
   function collectDischarge() {
     const single   = document.getElementById('f-discharge-single').checked;
     const reason   = document.getElementById('f-discharge-reason').value.trim();
@@ -446,14 +461,14 @@
     if (!single && !reason && !notice && !effDate && !comments) return null;
     return { single, reason, notice, effective_date: effDate, comments };
   }
- 
+
   async function loadRequests() {
     const { data, error } = await sb.from('resident_requests').select('*').order('created_at', { ascending: false });
     if (error) { console.error(error); showToast('Could not load requests', 'error'); return; }
     requests = data.map(rowToRequest);
     renderQueue(); updateStats(); updateQueueTabCount();
   }
- 
+
   function rowToRequest(r) {
     let comments = [];
     try { comments = typeof r.comments === 'string' ? JSON.parse(r.comments) : (r.comments || []); } catch(e) {}
@@ -462,41 +477,50 @@
     let discharge = null;
     try { discharge = typeof r.discharge === 'string' ? JSON.parse(r.discharge) : (r.discharge || null); } catch(e) {}
     return {
-      id: r.request_code, resident: r.resident, submitter: r.submitter, approver: r.approver,
+      id: r.request_code,
+      resident: r.resident_name || r.resident,
+      submitter: r.submitter, approver: r.approver,
       notes: r.notes, changes, discharge, comments,
       completed: r.completed || false, inProgress: r.in_progress || false,
       createdAt: r.created_at
     };
   }
- 
+
   sb.channel('resident-req-changes')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'resident_requests' }, loadRequests)
     .subscribe();
- 
+
   async function submitRequest(e) {
     e.preventDefault();
-    const changes = collectChanges();
+    const changes  = collectChanges();
     const discharge = collectDischarge();
+
+    // Validation: must have at least one change OR a discharge
+    if (changes.length === 0 && !discharge) {
+      showToast('Please fill in at least one change or complete the discharge section.', 'error');
+      return;
+    }
+
     const payload = {
-      resident:  document.getElementById('f-resident').value.trim(),
-      submitter: document.getElementById('f-submitter').value.trim(),
-      approver:  document.getElementById('f-approver').value.trim(),
-      notes:     document.getElementById('f-notes').value.trim(),
-      changes,
-      discharge,
+      resident_name: document.getElementById('f-resident').value.trim(),
+      submitter:     document.getElementById('f-submitter').value.trim(),
+      approver:      document.getElementById('f-approver').value.trim(),
+      notes:         document.getElementById('f-notes').value.trim(),
+      changes, discharge,
       completed: false, in_progress: false, comments: []
     };
+
     const { error } = await sb.from('resident_requests').insert(payload).select();
     if (error) { console.error(error); showToast('Could not submit — Supabase may be unavailable', 'error'); return; }
     showToast('Request submitted successfully', 'success');
     resetForm();
     loadRequests();
   }
- 
+
   function resetForm() {
     document.getElementById('reqForm').reset();
   }
- 
+
   function switchTab(name, btn) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -504,14 +528,14 @@
     document.getElementById('panel-' + name).classList.add('active');
     if (name === 'queue') renderQueue();
   }
- 
+
   function toggleCard(id) {
     const card = document.getElementById('req-' + id);
     if (!card) return;
     if (expandedIds.has(id)) { expandedIds.delete(id); card.classList.remove('expanded'); }
     else { expandedIds.add(id); card.classList.add('expanded'); }
   }
- 
+
   function toggleAll() {
     isAllExpanded = !isAllExpanded;
     document.getElementById('btnExpandAll').textContent = isAllExpanded ? 'Collapse All' : 'Expand All';
@@ -521,7 +545,7 @@
       else { expandedIds.delete(id); card.classList.remove('expanded'); }
     });
   }
- 
+
   async function toggleCompleted(id) {
     const r = requests.find(r => r.id === id);
     if (!r) return;
@@ -529,7 +553,7 @@
     if (error) { showToast('Could not update', 'error'); return; }
     loadRequests();
   }
- 
+
   async function toggleInProgress(id) {
     const r = requests.find(r => r.id === id);
     if (!r || r.completed) return;
@@ -537,7 +561,7 @@
     if (error) { showToast('Could not update', 'error'); return; }
     loadRequests();
   }
- 
+
   async function addComment(id) {
     const text = prompt('Add a note or update for this request:');
     if (!text || !text.trim()) return;
@@ -548,14 +572,14 @@
     if (error) { showToast('Could not post comment', 'error'); return; }
     loadRequests(); showToast('Comment added', 'success');
   }
- 
+
   async function deleteRequest(id) {
     if (!confirm('Delete this request?')) return;
     const { error } = await sb.from('resident_requests').delete().eq('request_code', id);
     if (error) { showToast('Could not delete', 'error'); return; }
     loadRequests(); showToast('Request deleted', '');
   }
- 
+
   async function clearCompleted() {
     const n = requests.filter(r => r.completed).length;
     if (!n) { showToast('No completed requests to clear', ''); return; }
@@ -564,19 +588,19 @@
     if (error) { showToast('Could not clear', 'error'); return; }
     loadRequests(); showToast(`${n} request${n > 1 ? 's' : ''} cleared`, '');
   }
- 
+
   function updateStats() {
     document.getElementById('statTotal').textContent      = requests.length;
     document.getElementById('statOpen').textContent       = requests.filter(r => !r.completed && !r.inProgress).length;
     document.getElementById('statInProgress').textContent = requests.filter(r => r.inProgress && !r.completed).length;
     document.getElementById('statDone').textContent       = requests.filter(r => r.completed).length;
   }
- 
+
   function updateQueueTabCount() {
     const open = requests.filter(r => !r.completed).length;
     document.getElementById('queueTabCount').textContent = open ? `(${open})` : '';
   }
- 
+
   function renderQueue() {
     updateStats();
     const fs = document.getElementById('filterStatus')?.value || '';
@@ -586,24 +610,27 @@
       if (fs === 'completed'   && !r.completed) return false;
       return true;
     });
- 
+
     const count = filtered.length;
     document.getElementById('visibleCount').textContent = count + ' request' + (count !== 1 ? 's' : '');
- 
+
     const list = document.getElementById('reqList');
     if (!filtered.length) {
       list.innerHTML = `<div class="empty-state"><p>${requests.length ? 'No requests match your filter.' : 'No requests yet.'}</p><small>${requests.length ? 'Try clearing the filter.' : 'Submit a request to get started.'}</small></div>`;
       return;
     }
- 
+
     list.innerHTML = filtered.map(r => {
       const isExp = expandedIds.has(r.id) ? 'expanded' : '';
       const statusClass = r.completed ? 'completed' : r.inProgress ? 'in-progress' : '';
       const ipBadge = r.inProgress && !r.completed ? `<span class="status-badge in-progress">In Progress</span>` : '';
       const dischargeBadge = r.discharge ? `<span class="status-badge discharge">Discharge</span>` : '';
-      const ipBtn   = !r.completed ? `<button class="btn ${r.inProgress ? 'btn-secondary' : 'btn-inprogress'} btn-sm" onclick="toggleInProgress('${r.id}')">${r.inProgress ? '⏸ Pause' : '▶ In Progress'}</button>` : '';
- 
-      // Changes summary rows
+      const ipBtn = !r.completed ? `<button class="btn ${r.inProgress ? 'btn-secondary' : 'btn-inprogress'} btn-sm" onclick="event.stopPropagation(); toggleInProgress('${r.id}')">${r.inProgress ? '⏸ Pause' : '▶ In Progress'}</button>` : '';
+
+      const changeCount = r.changes?.length || 0;
+      let changeSummary = changeCount > 0 ? `${changeCount} change${changeCount > 1 ? 's' : ''}` : 'No changes';
+      if (r.discharge) changeSummary += (changeCount > 0 ? ' + ' : '') + 'discharge';
+
       let changesHtml = '';
       if (r.changes && r.changes.length > 0) {
         changesHtml = `
@@ -620,8 +647,7 @@
               </div>`).join('')}
           </div>`;
       }
- 
-      // Discharge summary
+
       let dischargeHtml = '';
       if (r.discharge) {
         const d = r.discharge;
@@ -629,45 +655,36 @@
           <div class="discharge-summary">
             <span class="discharge-summary-title">Discharge Details</span>
             <div class="discharge-row"><strong>Single occupancy:</strong> ${d.single ? 'Yes' : 'No'}</div>
-            ${d.reason ? `<div class="discharge-row"><strong>Reason:</strong> ${esc(d.reason)}</div>` : ''}
-            ${d.notice ? `<div class="discharge-row"><strong>Notice given:</strong> ${esc(d.notice)}</div>` : ''}
+            ${d.reason       ? `<div class="discharge-row"><strong>Reason:</strong> ${esc(d.reason)}</div>` : ''}
+            ${d.notice       ? `<div class="discharge-row"><strong>Notice given:</strong> ${esc(d.notice)}</div>` : ''}
             ${d.effective_date ? `<div class="discharge-row"><strong>Effective date:</strong> ${fmtDate(d.effective_date)}</div>` : ''}
-            ${d.comments ? `<div class="discharge-row"><strong>Comments:</strong> ${esc(d.comments)}</div>` : ''}
+            ${d.comments     ? `<div class="discharge-row"><strong>Comments:</strong> ${esc(d.comments)}</div>` : ''}
           </div>`;
       }
- 
+
       const notesHtml = r.notes ? `<div style="margin-bottom:12px"><span class="section-title-sm">Notes</span><div style="font-size:13px;color:#334155;margin-top:4px;white-space:pre-wrap">${esc(r.notes)}</div></div>` : '';
- 
       const commentsHtml = r.comments.length > 0
         ? r.comments.map(c => `<div class="comment-item"><span class="comment-text">${esc(c.text)}</span><span class="comment-ts">${fmtDateTime(c.timestamp)}</span></div>`).join('')
         : `<div style="font-size:12px;color:var(--muted);font-style:italic">No comments yet.</div>`;
- 
-      // Summary of what changed for the card row
-      const changeCount = r.changes?.length || 0;
-      let changeSummary = changeCount > 0 ? `${changeCount} change${changeCount > 1 ? 's' : ''} requested` : 'No changes recorded';
-      if (r.discharge) changeSummary = changeCount > 0 ? changeSummary + ' + discharge' : 'Discharge request';
- 
+
       return `
       <div class="req-card ${statusClass} ${isExp}" id="req-${r.id}">
         <div class="req-header" onclick="toggleCard('${r.id}')">
           <div class="req-checkbox" onclick="event.stopPropagation(); toggleCompleted('${r.id}')">
             <span class="check">✓</span>
           </div>
-          <div class="req-main">
-            <div class="req-title">${esc(r.resident)} ${ipBadge} ${dischargeBadge}</div>
-            <div class="req-meta-row">
-              <span class="req-meta-item"><strong>Submitted by:</strong> ${esc(r.submitter)}</span>
-              <span class="req-meta-item"><strong>Approved by:</strong> ${esc(r.approver)}</span>
-              <span class="req-meta-item">${changeSummary}</span>
-            </div>
-          </div>
+          <div class="req-title"><strong>${esc(r.resident)}</strong> ${ipBadge} ${dischargeBadge}</div>
+          <div class="req-meta-item"><strong>Submitted By: ${esc(r.submitter)}</strong> &middot; ${changeSummary}</div>
+          <span class="req-date">${fmtDate(r.createdAt)}</span>
           <div class="req-right">
             <span class="req-id">${r.id}</span>
-            <span class="req-date">${fmtDate(r.createdAt)}</span>
             <button class="th-toggle">▼</button>
           </div>
         </div>
         <div class="req-expanded">
+          <div style="font-size:12px;margin-bottom:12px;margin-top:-6px;">
+            <span style="color:var(--muted)">Approved by:</span> <strong>${esc(r.approver)}</strong> &nbsp;|&nbsp; <span style="color:var(--muted)">Created:</span> ${fmtDate(r.createdAt)}
+          </div>
           ${changesHtml}
           ${dischargeHtml}
           ${notesHtml}
@@ -678,14 +695,14 @@
           <div class="expanded-actions">
             <button class="btn btn-primary btn-sm" style="background:#2563eb" onclick="addComment('${r.id}')">+ Comment</button>
             ${ipBtn}
-            <button class="btn btn-secondary btn-sm" onclick="toggleCompleted('${r.id}')">${r.completed ? 'Reopen' : 'Mark Complete'}</button>
+            <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); toggleCompleted('${r.id}')">${r.completed ? 'Reopen' : 'Mark Complete'}</button>
             <button class="btn btn-danger btn-sm" onclick="deleteRequest('${r.id}')">Delete</button>
           </div>
         </div>
       </div>`;
     }).join('');
   }
- 
+
   function exportCSV() {
     if (!requests.length) { showToast('No requests to export', ''); return; }
     const headers = ['ID','Resident','Submitted By','Approved By','Changes','Discharge','Notes','Status','Created'];
@@ -696,8 +713,9 @@
       return [
         r.id, r.resident, r.submitter, r.approver,
         (r.changes || []).map(c => `${c.field}: ${c.old}→${c.new}`).join('; '),
-        dischargeStr,
-        r.notes, r.completed ? 'Completed' : r.inProgress ? 'In Progress' : 'Pending', r.createdAt
+        dischargeStr, r.notes,
+        r.completed ? 'Completed' : r.inProgress ? 'In Progress' : 'Pending',
+        r.createdAt
       ].map(v => `"${String(v || '').replace(/"/g, '""')}"`);
     });
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -707,7 +725,7 @@
     a.click();
     showToast('Exported', 'success');
   }
- 
+
   function esc(s) {
     if (!s) return '';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -720,7 +738,7 @@
     if (!iso) return '';
     return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
- 
+
   let toastTimer;
   function showToast(msg, type) {
     const t = document.getElementById('toast');
@@ -729,7 +747,7 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
   }
- 
+
   loadRequests();
 </script>
 </body>
