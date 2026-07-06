@@ -71,6 +71,22 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  async function checkAuth() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      // If no session is found, kick them to the login page
+      window.location.replace('login.html'); 
+    } else {
+      // If a session IS found, load the dashboard!
+      // (Make sure this matches your actual data-fetching function name)
+      if (typeof fetchTickets === 'function') {
+        fetchTickets();
+      }
+    }
+  }
+  
+  // 3. RUN THE GUARD
+  checkAuth();
   // Check if already logged in, redirect to hub if true
   sb.auth.getSession().then(({ data: { session } }) => {
     if (session) window.location.href = 'index.html';
