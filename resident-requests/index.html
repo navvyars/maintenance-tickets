@@ -218,6 +218,7 @@
   <h1>Resident Change Requests</h1>
   <div class="header-right">
     <button class="btn btn-secondary btn-sm" onclick="exportCSV()">Export CSV</button>
+    <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
   </div>
 </header>
 
@@ -445,6 +446,17 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  // --- AUTH GUARD ---
+  // Note: Adjust the path to login.html depending on which folder the current file is in!
+  // Use 'login.html' for the main hub, and '../login.html' for module pages.
+  async function checkAuth() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      window.location.replace('../login.html'); // Redirects out if not logged in
+    }
+  }
+  checkAuth();
+
   let requests = [];
   let expandedIds = new Set();
   let isAllExpanded = false;
@@ -518,7 +530,8 @@
       submitter: r.submitter, approver: r.approver,
       notes: r.notes, changes, discharge, comments,
       completed: r.completed || false, inProgress: r.in_progress || false,
-      createdAt: r.created_at
+      createdAt: r.created_at,
+      version: r.version || 1
     };
   }
 
@@ -585,16 +598,41 @@
   async function toggleCompleted(id) {
     const r = requests.find(r => r.id === id);
     if (!r) return;
-    const { error } = await sb.from('resident_requests').update({ completed: !r.completed, in_progress: false }).eq('request_code', id);
+    
+    const { data, error } = await sb.from('resident_requests').update({ 
+      completed: !r.completed, 
+      in_progress: false,
+      version: r.version + 1
+    })
+    .eq('request_code', id)
+    .eq('version', r.version)
+    .select();
+    
     if (error) { showToast('Could not update', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this request! Refreshing...', 'error');
+      loadRequests(); return;
+    }
     loadRequests();
   }
 
   async function toggleInProgress(id) {
     const r = requests.find(r => r.id === id);
     if (!r || r.completed) return;
-    const { error } = await sb.from('resident_requests').update({ in_progress: !r.inProgress }).eq('request_code', id);
+    
+    const { data, error } = await sb.from('resident_requests').update({ 
+      in_progress: !r.inProgress,
+      version: r.version + 1
+    })
+    .eq('request_code', id)
+    .eq('version', r.version)
+    .select();
+    
     if (error) { showToast('Could not update', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this request! Refreshing...', 'error');
+      loadRequests(); return;
+    }
     loadRequests();
   }
 
@@ -603,16 +641,39 @@
     if (!text || !text.trim()) return;
     const r = requests.find(r => r.id === id);
     if (!r) return;
+    
     const updated = [...r.comments, { text: text.trim(), timestamp: new Date().toISOString() }];
-    const { error } = await sb.from('resident_requests').update({ comments: updated }).eq('request_code', id);
+    const { data, error } = await sb.from('resident_requests').update({ 
+      comments: updated,
+      version: r.version + 1
+    })
+    .eq('request_code', id)
+    .eq('version', r.version)
+    .select();
+    
     if (error) { showToast('Could not post comment', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this request! Refreshing...', 'error');
+      loadRequests(); return;
+    }
     loadRequests(); showToast('Comment added', 'success');
   }
 
   async function deleteRequest(id) {
     if (!confirm('Delete this request?')) return;
-    const { error } = await sb.from('resident_requests').delete().eq('request_code', id);
+    const r = requests.find(r => r.id === id); 
+    if (!r) return;
+    
+    const { data, error } = await sb.from('resident_requests').delete()
+      .eq('request_code', id)
+      .eq('version', r.version)
+      .select();
+      
     if (error) { showToast('Could not delete', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this request! Refreshing...', 'error');
+      loadRequests(); return;
+    }
     loadRequests(); showToast('Request deleted', '');
   }
 
@@ -786,6 +847,12 @@
   }
 
   loadRequests();
+
+  async function logout() {
+    await sb.auth.signOut();
+    // Use '../login.html' for module pages to step back up to the root folder
+    window.location.href = '../login.html'; 
+  }
 </script>
 </body>
 </html>

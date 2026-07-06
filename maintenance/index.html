@@ -407,6 +407,7 @@
   <div class="header-right">
     <span class="badge-count" id="urgentBadge">0 Urgent</span>
     <button class="btn btn-secondary btn-sm" onclick="exportCSV()">Export CSV</button>
+    <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
   </div>
 </header>
  
@@ -612,6 +613,17 @@
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
  
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // --- AUTH GUARD ---
+  // Note: Adjust the path to login.html depending on which folder the current file is in!
+  // Use 'login.html' for the main hub, and '../login.html' for module pages.
+  async function checkAuth() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      window.location.replace('../login.html'); // Redirects out if not logged in
+    }
+  }
+  checkAuth();
  
   const BUILDINGS = {
     'Beehive Homes - Frisco': [
@@ -684,7 +696,8 @@
       inProgress: r.in_progress || false,
       assignedTo: r.assigned_to || '',
       createdAt: r.created_at,
-      comments: Array.isArray(parsedComments) ? parsedComments : []
+      comments: Array.isArray(parsedComments) ? parsedComments : [],
+      version: r.version || 1
     };
   }
  
@@ -780,11 +793,21 @@
     const t = tickets.find(t => t.id === id);
     if (!t) return;
     const nowResolved = !t.resolved;
-    const { error } = await sb.from('tickets').update({
+    
+    const { data, error } = await sb.from('tickets').update({
       resolved: nowResolved,
-      in_progress: nowResolved ? false : t.inProgress
-    }).eq('ticket_code', id);
+      in_progress: nowResolved ? false : t.inProgress,
+      version: t.version + 1
+    })
+    .eq('ticket_code', id)
+    .eq('version', t.version)
+    .select();
+    
     if (error) { console.error(error); showToast('Could not update ticket', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this ticket! Refreshing...', 'error');
+      loadTickets(); return;
+    }
     loadTickets();
   }
  
@@ -792,8 +815,20 @@
     const t = tickets.find(t => t.id === id);
     if (!t) return;
     if (t.resolved) { showToast('Reopen the ticket before marking in progress', ''); return; }
-    const { error } = await sb.from('tickets').update({ in_progress: !t.inProgress }).eq('ticket_code', id);
+    
+    const { data, error } = await sb.from('tickets').update({ 
+      in_progress: !t.inProgress,
+      version: t.version + 1
+    })
+    .eq('ticket_code', id)
+    .eq('version', t.version)
+    .select();
+    
     if (error) { console.error(error); showToast('Could not update ticket', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this ticket! Refreshing...', 'error');
+      loadTickets(); return;
+    }
     loadTickets();
   }
  
@@ -802,8 +837,20 @@
     if (!t) return;
     const name = prompt('Assign this ticket to:', t.assignedTo || '');
     if (name === null) return;
-    const { error } = await sb.from('tickets').update({ assigned_to: name.trim() || null }).eq('ticket_code', id);
+    
+    const { data, error } = await sb.from('tickets').update({ 
+      assigned_to: name.trim() || null,
+      version: t.version + 1
+    })
+    .eq('ticket_code', id)
+    .eq('version', t.version)
+    .select();
+    
     if (error) { console.error(error); showToast('Could not update assignment', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this ticket! Refreshing...', 'error');
+      loadTickets(); return;
+    }
     loadTickets();
     showToast(name.trim() ? 'Ticket assigned' : 'Assignment cleared', 'success');
   }
@@ -813,17 +860,42 @@
     if (!text || !text.trim()) return;
     const t = tickets.find(t => t.id === id);
     if (!t) return;
+    
     const updatedComments = [...t.comments, { text: text.trim(), timestamp: new Date().toISOString() }];
-    const { error } = await sb.from('tickets').update({ comments: updatedComments }).eq('ticket_code', id);
+    const { data, error } = await sb.from('tickets').update({ 
+      comments: updatedComments,
+      version: t.version + 1
+    })
+    .eq('ticket_code', id)
+    .eq('version', t.version)
+    .select();
+    
     if (error) { console.error(error); showToast('Could not post comment', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this ticket! Refreshing...', 'error');
+      loadTickets(); return;
+    }
     loadTickets();
     showToast('Comment added', 'success');
   }
  
   async function removeTicket(id) {
     if (!confirm('Are you sure you want to delete this ticket?')) return;
-    const { error } = await sb.from('tickets').delete().eq('ticket_code', id);
+    
+    const t = tickets.find(t => t.id === id);
+    if (!t) return;
+
+    const { data, error } = await sb.from('tickets')
+      .delete()
+      .eq('ticket_code', id)
+      .eq('version', t.version)
+      .select(); // We still need select() here to check if it actually deleted something
+      
     if (error) { console.error(error); showToast('Could not delete ticket', 'error'); return; }
+    if (data && data.length === 0) {
+      showToast('Error: Someone else modified this ticket! Refreshing...', 'error');
+      loadTickets(); return;
+    }
     loadTickets();
     showToast('Ticket removed', '');
   }
@@ -1038,6 +1110,12 @@
   }
  
   loadTickets();
+
+  async function logout() {
+    await sb.auth.signOut();
+    // Use '../login.html' for module pages to step back up to the root folder
+    window.location.href = '../login.html'; 
+  }
 </script>
 </body>
 </html>
