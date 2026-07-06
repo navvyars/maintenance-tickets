@@ -38,6 +38,10 @@
     --inprogress: #1d4ed8;
     --inprogress-bg: #eff6ff;
     --inprogress-border: #bfdbfe;
+
+    --assigned: #6d28d9;
+    --assigned-bg: #ede9fe;
+    --assigned-border: #ddd6fe;
     
     --radius: 12px;
     --radius-sm: 6px;
@@ -134,6 +138,7 @@
   input::placeholder, textarea::placeholder { color: #a1a1aa; }
   input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); }
   textarea { min-height: 120px; resize: vertical; }
+  select:disabled { background: var(--surface2); color: var(--muted); cursor: not-allowed; }
  
   .select-wrap { position: relative; }
   .select-wrap::after {
@@ -184,7 +189,7 @@
  
   /* TICKET QUEUE DISPLAY AREA */
   .queue-header {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
   }
   .queue-header h2 { font-size: 18px; font-weight: 700; color: var(--accent); }
   .ticket-count {
@@ -192,7 +197,7 @@
     font-size: 12px; font-weight: 600;
     padding: 3px 12px; border-radius: 20px;
   }
-  .queue-filters { display: flex; gap: 8px; margin-left: auto; align-items: center; }
+  .queue-filters { display: flex; gap: 8px; margin-left: auto; align-items: center; flex-wrap: wrap; }
   .filter-select { width: auto; padding: 8px 32px 8px 12px; font-size: 12px; background: var(--surface); border-radius: var(--radius-sm); }
   .divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
  
@@ -230,7 +235,7 @@
   /* Layout configuration mapping perfectly to column adjustments */
   .table-grid {
     display: grid;
-    grid-template-columns: 24px 65px 70px minmax(170px, 2fr) 175px 95px minmax(130px, 1.2fr) 90px 65px 24px;
+    grid-template-columns: 24px 65px 70px minmax(170px, 2fr) 150px 150px 95px minmax(130px, 1.2fr) 90px 65px 24px;
     gap: 12px;
     align-items: center;
   }
@@ -292,7 +297,7 @@
     margin-bottom: 10px;
   }
   .expanded-main { flex: 1; min-width: 0; }
-  .expanded-actions { flex-shrink: 0; display: flex; gap: 8px; align-items: center; }
+  .expanded-actions { flex-shrink: 0; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
  
   .pill {
     font-size: 10px; font-weight: 700; 
@@ -349,6 +354,7 @@
     white-space: nowrap;
   }
   .status-badge.in-progress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
+  .status-badge.assigned { background: var(--assigned-bg); color: var(--assigned); border: 1px solid var(--assigned-border); text-transform: none; letter-spacing: 0; }
  
   /* TOAST */
   .toast {
@@ -380,13 +386,13 @@
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
  
   @media (max-width: 1150px) {
-    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 160px 80px minmax(100px, 1fr) 65px 24px; }
+    .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 130px 130px 80px minmax(100px, 1fr) 65px 24px; }
     .col-reporter { display: none; }
     .stats-bar { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 950px) {
     .table-grid { grid-template-columns: 24px 65px 70px minmax(150px, 2fr) 160px 80px 24px; }
-    .col-area, .col-date { display: none; }
+    .col-area, .col-date, .col-building { display: none; }
     .queue-table-header { display: none; }
   }
   @media (max-width: 700px) {
@@ -429,7 +435,7 @@
           <div class="form-group">
             <label>Property</label>
             <div class="select-wrap">
-              <select id="f-property" required>
+              <select id="f-property" required onchange="updateBuildingOptions()">
                 <option value="">Select property...</option>
                 <option>Beehive Homes - Frisco</option>
                 <option>Beehive Homes - McKinney</option>
@@ -437,14 +443,23 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Unit / Room #</label>
-            <input type="text" id="f-unit" placeholder="e.g. 102, Common Area">
+            <label>Building</label>
+            <div class="select-wrap">
+              <select id="f-building" required disabled>
+                <option value="">Select property first...</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <label>Area</label>
+            <label>Unit / Room #</label>
+            <input type="text" id="f-unit" required placeholder="e.g. 102, Common Area">
+          </div>
+          <div class="form-group">
+            <label>Work Needed</label>
             <div class="select-wrap">
-              <select id="f-area" required>
-                <option value="">Select area...</option>
+              <select id="f-area" required onchange="toggleAreaOther()">
+                <option value="">Select option...</option>
+                <option>Make Room Ready</option>
                 <option>HVAC / Heating & Cooling</option>
                 <option>Plumbing</option>
                 <option>Electrical</option>
@@ -458,9 +473,12 @@
               </select>
             </div>
           </div>
+          <div class="form-group" id="areaOtherGroup" style="display:none;">
+            <label>Please Specify</label>
+            <input type="text" id="f-area-other" placeholder="Describe the work needed">
+          </div>
           <div class="form-group">
             <label>Reported By</label>
-            <!-- required attribute added -->
             <input type="text" id="f-reporter" required placeholder="Your name">
           </div>
         </div>
@@ -473,16 +491,16 @@
           <input type="text" id="f-summary" placeholder="Brief description of the problem" required>
         </div>
         <div class="form-group" style="margin-bottom:20px">
-          <label>Full Description</label>
+          <label>Full Description <span style="font-weight:400; text-transform:none; letter-spacing:0;">(optional)</span></label>
           <textarea id="f-description" placeholder="Include when it started, how often it occurs, and any safety concerns..."></textarea>
         </div>
         <div class="form-group">
           <label>Priority</label>
           <div class="priority-grid" id="priorityGrid">
-            <button type="button" class="priority-btn" data-p="Low" onclick="selectPriority(this)">Low</button>
-            <button type="button" class="priority-btn" data-p="Medium" onclick="selectPriority(this)">Medium</button>
-            <button type="button" class="priority-btn" data-p="High" onclick="selectPriority(this)">High</button>
             <button type="button" class="priority-btn" data-p="Urgent" onclick="selectPriority(this)">Urgent</button>
+            <button type="button" class="priority-btn" data-p="High" onclick="selectPriority(this)">High</button>
+            <button type="button" class="priority-btn" data-p="Medium" onclick="selectPriority(this)">Medium</button>
+            <button type="button" class="priority-btn" data-p="Low" onclick="selectPriority(this)">Low</button>
           </div>
         </div>
         <input type="hidden" id="f-priority" value="">
@@ -494,7 +512,7 @@
           <div class="form-group">
             <label>Best Time for Access</label>
             <div class="select-wrap">
-              <select id="f-access">
+              <select id="f-access" required>
                 <option>Any time</option>
                 <option>Morning (8am-12pm)</option>
                 <option>Afternoon (12pm-5pm)</option>
@@ -507,7 +525,7 @@
           <div class="form-group">
             <label>Entry Permission</label>
             <div class="select-wrap">
-              <select id="f-entry">
+              <select id="f-entry" required>
                 <option>Enter without notice</option>
                 <option>Call 30 min ahead</option>
                 <option>Resident must be present</option>
@@ -578,6 +596,12 @@
             <option>Beehive Homes - McKinney</option>
           </select>
         </div>
+        <div class="select-wrap">
+          <select class="filter-select" id="filterAssigned" onchange="renderQueue()">
+            <option value="">All assignees</option>
+            <option value="__unassigned__">Unassigned</option>
+          </select>
+        </div>
         <button class="btn btn-danger btn-sm" onclick="clearResolved()">Clear Resolved</button>
       </div>
     </div>
@@ -596,15 +620,56 @@
  
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
  
+  const BUILDINGS = {
+    'Beehive Homes - Frisco': [
+      'Frisco - Memory Care - BLD - 1',
+      'Frisco - Assisted Living - BLD - 2',
+      'Frisco - High Acuity - BLD - 3'
+    ],
+    'Beehive Homes - McKinney': [
+      'McKinney - AL/High Acuity - BLD - 1',
+      'McKinney - Memory Care - BLD - 2'
+    ]
+  };
+ 
   let tickets = [];
   let selectedPriority = '';
   let expandedTickets = new Set();
   let isAllExpanded = false;
  
+  function updateBuildingOptions() {
+    const property = document.getElementById('f-property').value;
+    const buildingSelect = document.getElementById('f-building');
+    const options = BUILDINGS[property];
+    if (!options) {
+      buildingSelect.innerHTML = '<option value="">Select property first...</option>';
+      buildingSelect.disabled = true;
+      return;
+    }
+    buildingSelect.disabled = false;
+    buildingSelect.innerHTML = '<option value="">Select building...</option>' +
+      options.map(b => `<option>${b}</option>`).join('');
+  }
+ 
+  function toggleAreaOther() {
+    const val = document.getElementById('f-area').value;
+    const group = document.getElementById('areaOtherGroup');
+    const otherInput = document.getElementById('f-area-other');
+    if (val === 'Other') {
+      group.style.display = 'flex';
+      otherInput.setAttribute('required', 'required');
+    } else {
+      group.style.display = 'none';
+      otherInput.removeAttribute('required');
+      otherInput.value = '';
+    }
+  }
+ 
   async function loadTickets() {
     const { data, error } = await sb.from('tickets').select('*').order('created_at', { ascending: false });
     if (error) { console.error(error); showToast('Could not load tickets', 'error'); return; }
     tickets = data.map(rowToTicket);
+    populateAssignedFilter();
     renderQueue();
     updateBadge();
     updateQueueTabCount();
@@ -619,11 +684,12 @@
     }
     return {
       id: r.ticket_code,
-      property: r.property, unit: r.unit, area: r.area, reporter: r.reporter,
+      property: r.property, building: r.building, unit: r.unit, area: r.area, reporter: r.reporter,
       summary: r.summary, description: r.description, priority: r.priority,
       access: r.access, entry: r.entry,
       resolved: r.resolved,
-      inProgress: r.in_progress || false,   // ← new field
+      inProgress: r.in_progress || false,
+      assignedTo: r.assigned_to || '',
       createdAt: r.created_at,
       comments: Array.isArray(parsedComments) ? parsedComments : []
     };
@@ -644,21 +710,32 @@
  
   async function submitTicket(e) {
     e.preventDefault();
+
+    if (!selectedPriority) {
+      showToast('Please select a priority', 'error');
+      return;
+    }
+ 
     const property  = document.getElementById('f-property').value;
+    const building  = document.getElementById('f-building').value;
     const unit      = document.getElementById('f-unit').value;
-    const area      = document.getElementById('f-area').value;
+    let   area      = document.getElementById('f-area').value;
+    if (area === 'Other') {
+      area = document.getElementById('f-area-other').value.trim();
+    }
     const reporter  = document.getElementById('f-reporter').value;
     const summary   = document.getElementById('f-summary').value;
     const description = document.getElementById('f-description').value;
-    const priority  = selectedPriority || 'Medium';
+    const priority  = selectedPriority;
     const access    = document.getElementById('f-access').value;
     const entry     = document.getElementById('f-entry').value;
  
     const { data, error } = await sb.from('tickets').insert({
-      property, unit, area, reporter, summary, description,
+      property, building, unit, area, reporter, summary, description,
       priority, access, entry,
       resolved: false,
       in_progress: false,
+      assigned_to: null,
       comments: []
     }).select();
  
@@ -672,6 +749,8 @@
     document.getElementById('ticketForm').reset();
     document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('selected'));
     selectedPriority = '';
+    updateBuildingOptions();
+    toggleAreaOther();
   }
  
   function switchTab(name, btn) {
@@ -708,7 +787,6 @@
     const t = tickets.find(t => t.id === id);
     if (!t) return;
     const nowResolved = !t.resolved;
-    // Resolving a ticket clears in-progress
     const { error } = await sb.from('tickets').update({
       resolved: nowResolved,
       in_progress: nowResolved ? false : t.inProgress
@@ -724,6 +802,17 @@
     const { error } = await sb.from('tickets').update({ in_progress: !t.inProgress }).eq('ticket_code', id);
     if (error) { console.error(error); showToast('Could not update ticket', 'error'); return; }
     loadTickets();
+  }
+ 
+  async function assignTicket(id) {
+    const t = tickets.find(t => t.id === id);
+    if (!t) return;
+    const name = prompt('Assign this ticket to:', t.assignedTo || '');
+    if (name === null) return;
+    const { error } = await sb.from('tickets').update({ assigned_to: name.trim() || null }).eq('ticket_code', id);
+    if (error) { console.error(error); showToast('Could not update assignment', 'error'); return; }
+    loadTickets();
+    showToast(name.trim() ? 'Ticket assigned' : 'Assignment cleared', 'success');
   }
  
   async function addComment(id) {
@@ -767,10 +856,20 @@
     return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   }
  
+  function populateAssignedFilter() {
+    const sel = document.getElementById('filterAssigned');
+    const current = sel.value;
+    const names = [...new Set(tickets.map(t => t.assignedTo).filter(Boolean))].sort();
+    sel.innerHTML = '<option value="">All assignees</option><option value="__unassigned__">Unassigned</option>' +
+      names.map(n => `<option>${esc(n)}</option>`).join('');
+    if ([...sel.options].some(o => o.value === current)) sel.value = current;
+  }
+ 
   function renderQueue() {
     const fp  = document.getElementById('filterPriority').value;
     const fs  = document.getElementById('filterStatus').value;
     const fpr = document.getElementById('filterProperty').value;
+    const fa  = document.getElementById('filterAssigned').value;
  
     let filtered = tickets.filter(t => {
       if (fp && t.priority !== fp) return false;
@@ -778,6 +877,8 @@
       if (fs === 'in_progress' && !t.inProgress) return false;
       if (fs === 'resolved'    && !t.resolved) return false;
       if (fpr && t.property !== fpr) return false;
+      if (fa === '__unassigned__' && t.assignedTo) return false;
+      if (fa && fa !== '__unassigned__' && t.assignedTo !== fa) return false;
       return true;
     });
  
@@ -803,8 +904,8 @@
     let html = `
       <div class="table-grid queue-table-header">
         <div></div><div>ID</div><div>Priority</div><div>Summary</div>
-        <div class="col-bldg">Building</div><div class="col-room">Room</div>
-        <div class="col-area">Area</div><div class="col-reporter">Reporter</div>
+        <div class="col-bldg">Property</div><div class="col-building">Building</div><div class="col-room">Room</div>
+        <div class="col-area">Work Needed</div><div class="col-reporter">Reporter</div>
         <div class="col-date" style="text-align:right">Date</div><div></div>
       </div>`;
  
@@ -812,12 +913,16 @@
       const isExp = expandedTickets.has(t.id) ? 'expanded' : '';
       const statusClass = t.resolved ? 'resolved' : t.inProgress ? 'in-progress' : '';
       const displayRoom = t.unit ? esc(t.unit) : '—';
+      const displayBuilding = t.building ? esc(t.building) : '—';
  
       const inProgressBtnLabel = t.inProgress ? '⏸ Pause' : '▶ In Progress';
       const inProgressBtnClass = t.inProgress ? 'btn-secondary' : 'btn-inprogress';
  
       const inProgressBadge = t.inProgress && !t.resolved
         ? `<span class="status-badge in-progress">In Progress</span>`
+        : '';
+      const assignedBadge = t.assignedTo
+        ? `<span class="status-badge assigned">👤 ${esc(t.assignedTo)}</span>`
         : '';
  
       let commentsHtml = '';
@@ -839,8 +944,9 @@
           </div>
           <div class="cell cell-id">${t.id}</div>
           <div><span class="pill ${priorityClass(t.priority)}">${t.priority}</span></div>
-          <div class="cell cell-summary" title="${esc(t.summary)}">${esc(t.summary)} ${inProgressBadge}</div>
+          <div class="cell cell-summary" title="${esc(t.summary)}">${esc(t.summary)} ${inProgressBadge} ${assignedBadge}</div>
           <div class="cell col-bldg" title="${esc(t.property)}">${esc(t.property)}</div>
+          <div class="cell col-building" title="${displayBuilding}">${displayBuilding}</div>
           <div class="cell col-room" title="${displayRoom}">${displayRoom}</div>
           <div class="cell col-area" title="${esc(t.area)}">${esc(t.area)}</div>
           <div class="cell col-reporter" title="${esc(t.reporter)}">${esc(t.reporter)}</div>
@@ -853,16 +959,19 @@
             <div class="expanded-main">
               <div class="ticket-meta">
                 <span class="meta-item"><strong>Property:</strong> ${esc(t.property)}</span>
+                <span class="meta-item"><strong>Building:</strong> ${displayBuilding}</span>
                 ${t.unit ? `<span class="meta-item"><strong>Unit / Room:</strong> ${esc(t.unit)}</span>` : ''}
-                <span class="meta-item"><strong>Area:</strong> ${esc(t.area)}</span>
+                <span class="meta-item"><strong>Work Needed:</strong> ${esc(t.area)}</span>
                 ${t.reporter ? `<span class="meta-item"><strong>By:</strong> ${esc(t.reporter)}</span>` : ''}
                 <span class="meta-item"><strong>Access:</strong> ${esc(t.access)}</span>
                 <span class="meta-item"><strong>Entry:</strong> ${esc(t.entry)}</span>
+                ${t.assignedTo ? `<span class="meta-item"><strong>Assigned to:</strong> ${esc(t.assignedTo)}</span>` : ''}
                 <span class="meta-item"><strong>Created:</strong> ${fmtDateTime(t.createdAt)}</span>
               </div>
             </div>
             <div class="expanded-actions">
               <button class="btn btn-primary btn-sm" style="background-color:#2563eb" onclick="addComment('${t.id}')">+ Comment</button>
+              <button class="btn btn-secondary btn-sm" onclick="assignTicket('${t.id}')">${t.assignedTo ? 'Reassign' : 'Assign'}</button>
               ${!t.resolved ? `<button class="btn ${inProgressBtnClass} btn-sm" onclick="toggleInProgress('${t.id}')">${inProgressBtnLabel}</button>` : ''}
               <button class="btn btn-secondary btn-sm" onclick="toggleResolved('${t.id}')">${t.resolved ? 'Reopen' : 'Resolve'}</button>
               <button class="btn btn-danger btn-sm" onclick="removeTicket('${t.id}')">Delete</button>
@@ -892,10 +1001,10 @@
  
   function exportCSV() {
     if (!tickets.length) { showToast('No tickets to export', ''); return; }
-    const headers = ['ID','Property','Unit/Room','Area','Reporter','Summary','Description','Priority','Access','Entry Permission','Status','Created'];
+    const headers = ['ID','Property','Building','Unit/Room','Work Needed','Reporter','Summary','Description','Priority','Access','Entry Permission','Assigned To','Status','Created'];
     const rows = tickets.map(t => [
-      t.id, t.property, t.unit, t.area, t.reporter, t.summary, t.description,
-      t.priority, t.access, t.entry,
+      t.id, t.property, t.building, t.unit, t.area, t.reporter, t.summary, t.description,
+      t.priority, t.access, t.entry, t.assignedTo,
       t.resolved ? 'Resolved' : t.inProgress ? 'In Progress' : 'Open',
       t.createdAt
     ].map(v => `"${String(v || '').replace(/"/g, '""')}"`));
