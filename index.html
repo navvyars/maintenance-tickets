@@ -7,32 +7,45 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f8fafc;
-    --surface: #ffffff;
-    --border: #cbd5e1;
-    --text: #0f172a;
-    --muted: #64748b;
-    --accent: #0f344e;
-    --accent-hover: #174666;
-    --radius: 12px;
+    /* Updated Color Scheme: Navy Blue & Warm Yellow */
+    --bg: #f4f7f6; 
+    --surface: #ffffff; 
+    --surface2: #f8fafc;
+    --border: #cbd5e1; 
+    --text: #1e293b; 
+    --muted: #475569; 
+    --label: #0f172a;
+    --accent: #193652; /* Dark Navy Blue */
+    --accent-hover: #12273b; 
+    --accent-dim: rgba(25, 54, 82, 0.08);
+    --highlight: #e8a33d; /* Warm Yellow/Orange */
+    --highlight-hover: #cf8d2b;
+    --radius: 8px; 
+    --radius-sm: 6px;
   }
+  
+  /* Increased base font size for better readability */
   body {
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
   }
+  
   header {
     background: var(--accent);
-    padding: 20px 40px;
+    border-bottom: 4px solid var(--highlight);
+    padding: 20px 32px;
     display: flex;
     align-items: center;
-    box-shadow: 0 4px 20px rgba(15,52,78,0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   }
-  header h1 { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-  header p { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 2px; }
+  header h1 { color: #fff; font-size: 22px; font-weight: 700; }
+  header p { color: rgba(255,255,255,0.8); font-size: 14px; margin-top: 2px; }
 
   .page {
     max-width: 900px;
@@ -44,15 +57,15 @@
     align-items: center;
   }
   .page-title {
-    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    font-size: 15px; font-weight: 700; text-transform: uppercase;
     letter-spacing: 1px; color: var(--muted); margin-bottom: 48px;
   }
   .page-heading {
-    font-size: 28px; font-weight: 800; color: var(--accent);
+    font-size: 32px; font-weight: 800; color: var(--accent);
     letter-spacing: -0.5px; margin-bottom: 8px; text-align: center;
   }
   .page-sub {
-    font-size: 14px; color: var(--muted); margin-bottom: 48px; text-align: center;
+    font-size: 16px; color: var(--muted); margin-bottom: 48px; text-align: center;
   }
 
   .cards {
@@ -64,8 +77,7 @@
 
   .card {
     background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 5px solid var(--accent);
+    border: 1px solid rgba(226,232,240,0.8);
     border-radius: var(--radius);
     padding: 32px 28px;
     text-decoration: none;
@@ -74,29 +86,30 @@
     flex-direction: column;
     gap: 14px;
     transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    border-top: 4px solid var(--accent);
   }
   .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(15,52,78,0.1);
-    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(25, 54, 82, 0.1);
+    border-color: var(--border);
   }
   .card-icon {
-    width: 44px; height: 44px;
-    background: rgba(15,52,78,0.07);
-    border-radius: 10px;
+    width: 48px; height: 48px;
+    background: var(--accent-dim);
+    border-radius: var(--radius-sm);
     display: flex; align-items: center; justify-content: center;
-    color: var(--accent);
+    font-size: 24px;
   }
   .card-title {
-    font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: -0.2px;
+    font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: -0.2px;
   }
   .card-desc {
-    font-size: 13px; color: var(--muted); line-height: 1.5;
+    font-size: 15px; color: var(--muted); line-height: 1.5;
   }
   .card-action {
     margin-top: auto;
-    font-size: 12px; font-weight: 700;
+    font-size: 14px; font-weight: 700;
     color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px;
     display: flex; align-items: center; gap: 6px;
   }
@@ -104,7 +117,7 @@
   @media (max-width: 700px) {
     .cards { grid-template-columns: 1fr; }
     .page { padding: 36px 16px; }
-    .page-heading { font-size: 22px; }
+    .page-heading { font-size: 24px; }
   }
 </style>
 </head>
@@ -122,11 +135,7 @@
   <div class="cards">
 
     <a class="card" href="./maintenance/index.html">
-      <div class="card-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-        </svg>
-      </div>
+      <div class="card-icon">🔧</div>
       <div>
         <div class="card-title">Maintenance Tickets</div>
       </div>
@@ -134,12 +143,7 @@
     </a>
 
     <a class="card" href="./employee-requests/index.html">
-      <div class="card-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-      </div>
+      <div class="card-icon">👤</div>
       <div>
         <div class="card-title">Employee Change Requests</div>
       </div>
@@ -147,12 +151,7 @@
     </a>
 
     <a class="card" href="./resident-requests/index.html">
-      <div class="card-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-      </div>
+      <div class="card-icon">🏠</div>
       <div>
         <div class="card-title">Resident Change Requests</div>
       </div>
