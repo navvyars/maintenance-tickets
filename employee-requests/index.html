@@ -54,9 +54,9 @@
   .btn { padding: 10px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
   .btn-primary { background: var(--accent); color: #ffffff; } .btn-primary:hover { background: var(--accent-hover); }
   .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); } .btn-secondary:hover { background: var(--surface2); }
-  .btn-danger { background: #fff1f2; color: var(--urgent); border: 1px solid #fecdd3; } .btn-danger:hover { background: #ffe4e6; }
+  .btn-danger { background: #fee2e2; color: var(--urgent); border: 1px solid #fecdd3; } .btn-danger:hover { background: #fca5a5; }
   .btn-inprogress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
-  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; }
+  .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
   header .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,0.3); box-shadow: none; }
   header .btn-secondary:hover { background: rgba(255,255,255,0.1); }
   .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
@@ -64,54 +64,54 @@
   .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
   .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
   .queue-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-  .queue-header h2 { font-size: 18px; font-weight: 700; color: var(--accent); }
-  .ticket-count { background: #e2e8f0; color: var(--accent); font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 20px; }
+  .queue-header h2 { font-size: 22px; font-weight: 700; color: #0f172a; }
+  .ticket-count { background: #e2e8f0; color: #475569; font-size: 12px; font-weight: 600; padding: 3px 12px; border-radius: 20px; }
   .queue-filters { display: flex; gap: 8px; margin-left: auto; align-items: center; flex-wrap: wrap; }
-  .filter-select { width: auto; padding: 8px 32px 8px 12px; font-size: 12px; background: var(--surface); border-radius: var(--radius-sm); }
-  .divider-v { width: 1px; height: 24px; background: var(--border); }
+  .filter-select { width: auto; padding: 6px 32px 6px 12px; font-size: 13px; background: var(--surface); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+  .divider-v { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
   .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); }
   .empty-state p { font-size: 15px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
   .empty-state small { font-size: 12px; display: block; }
-  /* Queue cards */
-  .req-card { background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--accent); border-radius: var(--radius); margin-bottom: 8px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-  .req-card:hover { border-color: #94a3b8; }
-  .req-card.completed { opacity: 0.55; border-left-color: var(--low) !important; background: var(--surface2) !important; }
-  .req-card.in-progress { border-left-color: var(--inprogress) !important; background: var(--inprogress-bg) !important; }
+  /* Queue cards layout based on image_eba0c8.png */
+  .req-card { background: var(--surface); border: 1px solid #e2e8f0; border-left: 5px solid var(--accent); border-radius: var(--radius); margin-bottom: 10px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.01); }
+  .req-card:hover { border-color: #cbd5e1; }
+  .req-card.completed { border-left-color: #166534 !important; background: #f8fafc !important; }
+  .req-card.in-progress { border-left-color: var(--inprogress) !important; }
   .req-card.urgent-ticket { background: var(--urgent-bg) !important; border-color: var(--urgent-border) !important; border-left-color: var(--urgent) !important; }
-  /* 5-col row: checkbox | name | submitted+count | effective | id+toggle */
-  .req-header { display: grid; grid-template-columns: 24px 2fr 2fr 1.2fr auto; gap: 14px; align-items: center; padding: 14px 16px; cursor: pointer; }
-  .req-header:hover { background: rgba(0,0,0,0.01); border-radius: var(--radius); }
-  .req-checkbox { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--muted); display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: var(--surface); flex-shrink: 0; cursor: pointer; }
-  .req-checkbox:hover { border-color: var(--accent); }
-  .req-card.completed .req-checkbox { background: var(--low); border-color: var(--low); }
-  .req-checkbox .check { display: none; font-size: 10px; color: #fff; font-weight: 900; }
+  /* 5-col row layout matching resident layout */
+  .req-header { display: grid; grid-template-columns: 24px 2fr 3fr 1fr auto; gap: 16px; align-items: center; padding: 18px 20px; cursor: pointer; }
+  .req-checkbox { width: 18px; height: 18px; border-radius: 4px; border: 2px solid #94a3b8; display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: var(--surface); flex-shrink: 0; cursor: pointer; }
+  .req-card.completed .req-checkbox { background: #166534; border-color: #166534; }
+  .req-checkbox .check { display: none; font-size: 11px; color: #fff; font-weight: 900; }
   .req-card.completed .req-checkbox .check { display: block; }
-  .req-name { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
-  .req-card.completed .req-name { text-decoration: line-through; color: var(--muted); font-weight: 400; }
-  .req-submitted { font-size: 13px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .req-submitted .lbl { font-weight: 700; }
-  .req-submitted .val { font-weight: 400; }
-  .req-effective { font-size: 13px; color: var(--text); white-space: nowrap; }
-  .req-effective .lbl { font-weight: 700; }
-  .req-effective .val { font-weight: 400; }
-  .req-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; justify-content: flex-end; }
-  .req-id { font-size: 13px; font-weight: 400; color: var(--text); }
-  .th-toggle { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; transition: transform 0.3s; font-family: monospace; }
+  .req-name { font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+  .req-card.completed .req-name { color: #94a3b8; text-decoration: line-through; font-weight: 500; }
+  .req-submitted { font-size: 13px; color: #334155; }
+  .req-submitted .lbl { font-weight: 700; color: #0f172a; }
+  .req-submitted .val { font-weight: 400; color: #475569; }
+  .req-effective { font-size: 13px; color: #475569; font-weight: 500; text-align: right; padding-right: 8px; }
+  .req-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; justify-content: flex-end; }
+  .req-id { font-size: 13px; font-weight: 500; color: #334155; font-family: monospace; letter-spacing: -0.2px; }
+  .th-toggle { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: #64748b; font-size: 9px; cursor: pointer; transition: transform 0.2s; }
   .req-card.expanded .th-toggle { transform: rotate(180deg); }
-  .req-expanded { display: none; padding: 14px 16px 16px 54px; border-top: 1px dashed rgba(0,0,0,0.08); }
+  .req-expanded { display: none; padding: 16px 20px 20px 60px; border-top: 1px dashed #e2e8f0; }
   .req-card.expanded .req-expanded { display: block; }
-  .changes-summary { background: rgba(0,0,0,0.02); border-radius: var(--radius-sm); padding: 12px 16px; margin-bottom: 14px; }
+  .changes-summary { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm); padding: 14px; margin-bottom: 14px; }
   .changes-summary-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 10px; display: block; }
-  .change-row-summary { display: grid; grid-template-columns: 160px 1fr 1fr 130px; gap: 8px; padding: 6px 0; font-size: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); align-items: start; }
+  .change-row-summary { display: grid; grid-template-columns: 160px 1fr 1fr 130px; gap: 8px; padding: 8px 0; font-size: 13px; border-bottom: 1px solid #f1f5f9; align-items: start; }
   .change-row-summary:last-child { border-bottom: none; }
-  .crs-field { font-weight: 700; color: var(--label); } .crs-old { color: var(--muted); } .crs-new { color: var(--text); font-weight: 600; } .crs-date { color: var(--muted); font-size: 11px; }
-  .change-row-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 2px solid var(--border) !important; padding-bottom: 6px !important; }
-  .expanded-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; margin-left: 4px; }
-  .status-badge.in-progress { background: var(--inprogress-bg); color: var(--inprogress); border: 1px solid var(--inprogress-border); }
-  .comments-wrapper { margin-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 12px; }
+  .crs-field { font-weight: 700; color: var(--label); } .crs-old { color: var(--muted); } .crs-new { color: var(--text); font-weight: 600; } .crs-date { color: var(--muted); font-size: 12px; }
+  .change-row-header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); border-bottom: 2px solid var(--border) !important; padding-bottom: 6px !important; }
+  .expanded-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  
+  /* Status Badges */
+  .status-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; }
+  .status-badge.in-progress { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .status-badge.urgent-badge { background: #fee2e2; color: #b91c1c; border: 1px solid #fecdd3; }
+  
+  .comments-wrapper { margin-top: 14px; border-top: 1px solid #f1f5f9; padding-top: 14px; }
   .comments-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
-  .comment-item { background: rgba(0,0,0,0.02); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .comment-item { background: #f8fafc; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: var(--radius-sm); font-size: 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
   .comment-text { flex: 1; color: var(--text); } .comment-ts { font-size: 10px; color: var(--muted); font-weight: 600; white-space: nowrap; }
   .section-title-sm { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; display: block; }
   .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 20px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.08); transform: translateY(100px); opacity: 0; transition: all 0.2s; z-index: 999; max-width: 340px; display: flex; align-items: center; gap: 8px; }
@@ -214,8 +214,8 @@
       <span class="ticket-count" id="visibleCount">0 requests</span>
       <div class="queue-filters">
         <button class="btn btn-secondary btn-sm" id="btnExpandAll" onclick="toggleAll()">Expand All</button>
-        <div class="divider-v"></div>
         <div class="select-wrap"><select class="filter-select" id="filterStatus" onchange="renderQueue()"><option value="">All statuses</option><option value="open">Pending</option><option value="in_progress">In Progress</option><option value="completed">Completed</option></select></div>
+        <div class="divider-v"></div>
         <button class="btn btn-danger btn-sm" onclick="clearCompleted()">Clear Completed</button>
       </div>
     </div>
@@ -325,7 +325,7 @@
 
   async function toggleInProgress(id) {
     const r = requests.find(r => r.id === id); if (!r || r.completed) return;
-    const { error } = await sb.from('employee_requests').update({ in_progress: !r.inProgress }).eq('request_code', id);
+    const { error = null } = await sb.from('employee_requests').update({ in_progress: !r.inProgress }).eq('request_code', id);
     if (error) { showToast('Could not update', 'error'); return; } loadRequests();
   }
 
@@ -389,15 +389,19 @@
       const ipBadge = r.inProgress && !r.completed ? `<span class="status-badge in-progress">In Progress</span>` : '';
       const ipBtn = !r.completed ? `<button class="btn ${r.inProgress ? 'btn-secondary' : 'btn-inprogress'} btn-sm" onclick="event.stopPropagation(); toggleInProgress('${r.id}')">${r.inProgress ? '⏸ Pause' : '▶ In Progress'}</button>` : '';
 
-      let effectiveHtml = `<span class="req-effective"><span class="lbl">Effective:</span> <span class="val">—</span></span>`;
+      let effectiveHtml = `<span class="req-effective">—</span>`;
       let urgentClass = '';
+      let urgentBadge = '';
       if (r.changes && r.changes.length > 0) {
         const dates = r.changes.map(c => c.effective_date).filter(Boolean).sort();
         if (dates.length > 0) {
           const today = new Date(); today.setHours(0,0,0,0);
           const target = new Date(dates[0]); target.setHours(0,0,0,0);
-          if ((target - today) / 86400000 <= 7 && !r.completed) urgentClass = 'urgent-ticket';
-          effectiveHtml = `<span class="req-effective"><span class="lbl">Effective:</span> <span class="val">${fmtDate(dates[0])}</span></span>`;
+          if ((target - today) / 86400000 <= 7 && !r.completed) {
+            urgentClass = 'urgent-ticket';
+            urgentBadge = `<span class="status-badge urgent-badge">URGENT</span>`;
+          }
+          effectiveHtml = `<span class="req-effective">${fmtDate(dates[0])}</span>`;
         }
       }
 
@@ -421,8 +425,8 @@
       <div class="req-card ${statusClass} ${urgentClass} ${isExp}" id="req-${r.id}">
         <div class="req-header" onclick="toggleCard('${r.id}')">
           <div class="req-checkbox" onclick="event.stopPropagation(); toggleCompleted('${r.id}')"><span class="check">✓</span></div>
-          <div class="req-name"><strong>${esc(r.employee)}</strong> ${ipBadge}</div>
-          <div class="req-submitted"><span class="lbl">Submitted By:</span> <span class="val">${esc(r.submitter)}</span> &middot; ${changeSummary}</div>
+          <div class="req-name"><strong>${esc(r.employee)}</strong> ${ipBadge} ${urgentBadge}</div>
+          <div class="req-submitted"><span class="lbl">Submitted By:</span> <span class="val">${esc(r.submitter)}</span> &middot; <span class="val">${changeSummary}</span></div>
           ${effectiveHtml}
           <div class="req-right"><span class="req-id">${r.id}</span><button class="th-toggle">▼</button></div>
         </div>
