@@ -390,7 +390,7 @@
           </div>
           <div class="form-group">
             <label>Target Admit Date</label>
-            <input type="text" id="f-admit-date" placeholder="e.g. ASAP, 8/1/2026">
+            <input type="date" id="f-admit-date">
           </div>
         </div>
       </div>
@@ -523,7 +523,7 @@
       clinical_status:    v(`${prefix}clinical-status`),
       paperwork_status:   v(`${prefix}paperwork-status`),
       medical_status:     v(`${prefix}medical-status`),
-      admit_date:         v(`${prefix}admit-date`),
+      admit_date:         v(`${prefix}admit-date`) || null,
       sales_owner:        v(`${prefix}sales-owner`),
     };
   }
@@ -550,7 +550,7 @@
     let notes = [];
     try { notes = typeof r.contact_notes === 'string' ? JSON.parse(r.contact_notes) : (r.contact_notes || []); } catch(e) {}
     return {
-      id: r.id,
+      id: r.tour_code,
       residentName: r.resident_name, campus: r.campus, poaName: r.poa_name,
       poaPhone: r.poa_phone, poaEmail: r.poa_email, referralSource: r.referral_source,
       organic: r.organic, tourDate: r.tour_date, touredBy: r.toured_by,
@@ -619,7 +619,7 @@
     setEv(id, 'clinical-status', p.clinicalStatus);
     setEv(id, 'paperwork-status', p.paperworkStatus);
     setEv(id, 'medical-status', p.medicalStatus);
-    setEv(id, 'admit-date', p.admitDate);
+    setEv(id, 'admit-date', p.admitDate || '');
     setEv(id, 'sales-owner', p.salesOwner);
   }
 
@@ -663,10 +663,10 @@
       clinical_status:   gEv(id,'clinical-status'),
       paperwork_status:  gEv(id,'paperwork-status'),
       medical_status:    gEv(id,'medical-status'),
-      admit_date:        gEv(id,'admit-date'),
+      admit_date:        gEv(id,'admit-date') || null,
       sales_owner:       gEv(id,'sales-owner'),
     };
-    const { error } = await sb.from('tour_prospects').update(payload).eq('id', id);
+    const { error } = await sb.from('tour_prospects').update(payload).eq('tour_code', id);
     if (error) { console.error(error); showToast('Could not save changes', 'error'); return; }
     showToast('Changes saved', 'success');
     hideEditForm(id);
@@ -680,7 +680,7 @@
     const p = prospects.find(p => p.id === id);
     if (!p) return;
     const updated = [...p.contactNotes, { text: text.trim(), timestamp: new Date().toISOString() }];
-    const { error } = await sb.from('tour_prospects').update({ contact_notes: updated }).eq('id', id);
+    const { error } = await sb.from('tour_prospects').update({ contact_notes: updated }).eq('tour_code', id);
     if (error) { showToast('Could not add note', 'error'); return; }
     loadProspects(); showToast('Note added', 'success');
   }
@@ -688,7 +688,7 @@
   // ── Delete ───────────────────────────────────────────────────────────────────
   async function deleteProspect(id) {
     if (!confirm('Delete this prospect record?')) return;
-    const { error } = await sb.from('tour_prospects').delete().eq('id', id);
+    const { error } = await sb.from('tour_prospects').delete().eq('tour_code', id);
     if (error) { showToast('Could not delete', 'error'); return; }
     loadProspects(); showToast('Record deleted', '');
   }
@@ -773,54 +773,54 @@
         <div class="edit-form-wrap" id="edit-wrap-${p.id}">
           <div class="edit-section-title">Prospect / Family</div>
           <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Resident Name</label>${ef(p.id+'-resident-name'.replace(p.id+'-',''),'text')}</div>
-            <div class="form-group"><label style="font-size:12px">Campus</label>${ef(p.id+'-campus','text',['','Frisco','McKinney'])}</div>
-            <div class="form-group"><label style="font-size:12px">POA / Decision-Maker</label>${ef(p.id+'-poa-name')}</div>
-            <div class="form-group"><label style="font-size:12px">POA Phone</label>${ef(p.id+'-poa-phone')}</div>
-            <div class="form-group"><label style="font-size:12px">POA Email</label>${ef(p.id+'-poa-email','email')}</div>
-            <div class="form-group"><label style="font-size:12px">Referral Source</label>${ef(p.id+'-referral-source')}</div>
-            <div class="form-group"><label style="font-size:12px">Organic</label>${ef(p.id+'-organic','text',['','Organic','Non-Organic'])}</div>
-            <div class="form-group"><label style="font-size:12px">Tour Date</label>${ef(p.id+'-tour-date','date')}</div>
-            <div class="form-group"><label style="font-size:12px">Toured By</label>${ef(p.id+'-toured-by')}</div>
+            <div class="form-group"><label style="font-size:12px">Resident Name</label>${ef('resident-name','text')}</div>
+            <div class="form-group"><label style="font-size:12px">Campus</label>${ef('campus','text',['','Frisco','McKinney'])}</div>
+            <div class="form-group"><label style="font-size:12px">POA / Decision-Maker</label>${ef('poa-name')}</div>
+            <div class="form-group"><label style="font-size:12px">POA Phone</label>${ef('poa-phone')}</div>
+            <div class="form-group"><label style="font-size:12px">POA Email</label>${ef('poa-email','email')}</div>
+            <div class="form-group"><label style="font-size:12px">Referral Source</label>${ef('referral-source')}</div>
+            <div class="form-group"><label style="font-size:12px">Organic</label>${ef('organic','text',['','Organic','Non-Organic'])}</div>
+            <div class="form-group"><label style="font-size:12px">Tour Date</label>${ef('tour-date','date')}</div>
+            <div class="form-group"><label style="font-size:12px">Toured By</label>${ef('toured-by')}</div>
           </div>
           <div class="edit-section-title">Status &amp; Follow-Up</div>
           <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Stage</label>${ef(p.id+'-stage','text',['','Toured','Deposit Pending','Deposit Received','Move-In Scheduled','Closed - Won','Closed - Lost'])}</div>
-            <div class="form-group"><label style="font-size:12px">Next Follow-Up Date</label>${ef(p.id+'-followup-date','date')}</div>
-            <div class="form-group"><label style="font-size:12px">Lost Reason</label>${ef(p.id+'-lost-reason')}</div>
+            <div class="form-group"><label style="font-size:12px">Stage</label>${ef('stage','text',['','Toured','Deposit Pending','Deposit Received','Move-In Scheduled','Closed - Won','Closed - Lost'])}</div>
+            <div class="form-group"><label style="font-size:12px">Next Follow-Up Date</label>${ef('followup-date','date')}</div>
+            <div class="form-group"><label style="font-size:12px">Lost Reason</label>${ef('lost-reason')}</div>
           </div>
           <div class="edit-section-title">Deal Terms</div>
           <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Room / Unit</label>${ef(p.id+'-room')}</div>
-            <div class="form-group"><label style="font-size:12px">Quoted Rate</label>${ef(p.id+'-quoted-rate')}</div>
-            <div class="form-group"><label style="font-size:12px">Standard Community Fee</label>${ef(p.id+'-standard-fee')}</div>
-            <div class="form-group"><label style="font-size:12px">Agreed Community Fee</label>${ef(p.id+'-agreed-fee')}</div>
-            <div class="form-group"><label style="font-size:12px">Concession Amount</label>${ef(p.id+'-concession-amount')}</div>
-            <div class="form-group"><label style="font-size:12px">Concession Reason</label>${ef(p.id+'-concession-reason')}</div>
+            <div class="form-group"><label style="font-size:12px">Room / Unit</label>${ef('room')}</div>
+            <div class="form-group"><label style="font-size:12px">Quoted Rate</label>${ef('quoted-rate')}</div>
+            <div class="form-group"><label style="font-size:12px">Standard Community Fee</label>${ef('standard-fee')}</div>
+            <div class="form-group"><label style="font-size:12px">Agreed Community Fee</label>${ef('agreed-fee')}</div>
+            <div class="form-group"><label style="font-size:12px">Concession Amount</label>${ef('concession-amount')}</div>
+            <div class="form-group"><label style="font-size:12px">Concession Reason</label>${ef('concession-reason')}</div>
           </div>
           <div class="edit-section-title">Admissions Pipeline</div>
           <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Deposit Received</label>${ef(p.id+'-deposit-received','text',['','Y','N'])}</div>
-            <div class="form-group"><label style="font-size:12px">Deposit Date</label>${ef(p.id+'-deposit-date','date')}</div>
-            <div class="form-group"><label style="font-size:12px">TB Test Status</label>${ef(p.id+'-tb-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
-            <div class="form-group"><label style="font-size:12px">Clinical Assessment</label>${ef(p.id+'-clinical-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
-            <div class="form-group"><label style="font-size:12px">Admissions Paperwork</label>${ef(p.id+'-paperwork-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
-            <div class="form-group"><label style="font-size:12px">Medical Notes/Scripts</label>${ef(p.id+'-medical-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
-            <div class="form-group"><label style="font-size:12px">Target Admit Date</label>${ef(p.id+'-admit-date')}</div>
+            <div class="form-group"><label style="font-size:12px">Deposit Received</label>${ef('deposit-received','text',['','Y','N'])}</div>
+            <div class="form-group"><label style="font-size:12px">Deposit Date</label>${ef('deposit-date','date')}</div>
+            <div class="form-group"><label style="font-size:12px">TB Test Status</label>${ef('tb-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
+            <div class="form-group"><label style="font-size:12px">Clinical Assessment</label>${ef('clinical-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
+            <div class="form-group"><label style="font-size:12px">Admissions Paperwork</label>${ef('paperwork-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
+            <div class="form-group"><label style="font-size:12px">Medical Notes/Scripts</label>${ef('medical-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
+            <div class="form-group"><label style="font-size:12px">Target Admit Date</label>${ef('admit-date','date')}</div>
           </div>
           <div class="edit-section-title">Ownership</div>
           <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Sales Owner</label>${ef(p.id+'-sales-owner')}</div>
+            <div class="form-group"><label style="font-size:12px">Sales Owner</label>${ef('sales-owner')}</div>
           </div>
           <div class="edit-actions">
-            <button class="btn btn-primary btn-sm" onclick="saveEdit(${p.id})">Save Changes</button>
-            <button class="btn btn-secondary btn-sm" onclick="hideEditForm(${p.id})">Cancel</button>
+            <button class="btn btn-primary btn-sm" onclick="saveEdit('${p.id}')">Save Changes</button>
+            <button class="btn btn-secondary btn-sm" onclick="hideEditForm('${p.id}')">Cancel</button>
           </div>
         </div>`;
 
       return `
       <div class="prospect-card ${stageKey} ${isExp}" id="pc-${p.id}">
-        <div class="prospect-header-row" onclick="toggleCard(${p.id})">
+        <div class="prospect-header-row" onclick="toggleCard('${p.id}')">
           <div class="p-name">${esc(p.residentName)} ${stagePillHtml}</div>
           <div class="p-campus">${esc(p.campus) || '—'}</div>
           <div class="p-stage-wrap">${stagePillHtml}</div>
@@ -834,9 +834,9 @@
 
         <div class="prospect-expanded">
           <div class="expanded-actions">
-            <button class="btn btn-edit btn-sm" onclick="showEditForm(${p.id}); event.stopPropagation()">✏️ Edit</button>
-            <button class="btn btn-secondary btn-sm" onclick="addNote(${p.id}); event.stopPropagation()">+ Contact Note</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteProspect(${p.id}); event.stopPropagation()">Delete</button>
+            <button class="btn btn-edit btn-sm" onclick="showEditForm('${p.id}'); event.stopPropagation()">✏️ Edit</button>
+            <button class="btn btn-secondary btn-sm" onclick="addNote('${p.id}'); event.stopPropagation()">+ Contact Note</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteProspect('${p.id}'); event.stopPropagation()">Delete</button>
           </div>
 
           ${editFormHtml}
@@ -879,7 +879,7 @@
             <div class="pipeline-item"><div class="pipeline-item-label">Clinical Assessment</div><div class="pipeline-item-value ${pvClass(p.clinicalStatus)}">${esc(p.clinicalStatus)||'—'}</div></div>
             <div class="pipeline-item"><div class="pipeline-item-label">Admissions Paperwork</div><div class="pipeline-item-value ${pvClass(p.paperworkStatus)}">${esc(p.paperworkStatus)||'—'}</div></div>
             <div class="pipeline-item"><div class="pipeline-item-label">Medical Notes/Scripts</div><div class="pipeline-item-value ${pvClass(p.medicalStatus)}">${esc(p.medicalStatus)||'—'}</div></div>
-            <div class="pipeline-item"><div class="pipeline-item-label">Target Admit Date</div><div class="pipeline-item-value">${esc(p.admitDate)||'—'}</div></div>
+            <div class="pipeline-item"><div class="pipeline-item-label">Target Admit Date</div><div class="pipeline-item-value">${p.admitDate ? fmtDate(p.admitDate) : '—'}</div></div>
           </div>
 
           <div class="notes-wrapper">
