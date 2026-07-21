@@ -230,7 +230,7 @@
           </div>
           <div class="form-group">
             <label>POA Phone</label>
-            <input type="text" id="f-poa-phone" placeholder="(000) 000-0000">
+            <input type="text" id="f-poa-phone" maxlength="14" placeholder="(000) 000-0000">
           </div>
           <div class="form-group">
             <label>POA Email</label>
@@ -477,6 +477,21 @@
 
   let prospects = [];
   let expandedIds = new Set();
+
+  // ── Phone auto-formatting: (XXX) XXX-XXXX, capped at 10 digits ──────────────
+  function formatPhone(value) {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+    const len = digits.length;
+    if (len === 0) return '';
+    if (len < 4) return `(${digits}`;
+    if (len < 7) return `(${digits.slice(0,3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+  }
+  document.addEventListener('input', (e) => {
+    if (e.target.id === 'f-poa-phone' || e.target.id.endsWith('-poa-phone')) {
+      e.target.value = formatPhone(e.target.value);
+    }
+  });
 
   // ── Submit ──────────────────────────────────────────────────────────────────
   async function submitProspect(e) {
