@@ -283,7 +283,7 @@
             <input type="date" id="f-followup-date">
           </div>
           <div class="form-group span-2">
-            <label>Initial Contact Note</label>
+            <label>Last Contact Notes</label>
             <textarea id="f-initial-note" placeholder="Add an initial note about this prospect..."></textarea>
           </div>
           <div class="form-group">
@@ -390,7 +390,13 @@
           </div>
           <div class="form-group">
             <label>Target Admit Date</label>
-            <input type="date" id="f-admit-date">
+            <div class="select-wrap">
+              <select id="f-admit-date-mode" onchange="toggleAdmitDateMode('f-')">
+                <option value="date">Specific Date</option>
+                <option value="asap">ASAP</option>
+              </select>
+            </div>
+            <input type="date" id="f-admit-date" style="margin-top:8px;">
           </div>
         </div>
       </div>
@@ -487,9 +493,22 @@
     if (len < 7) return `(${digits.slice(0,3)}) ${digits.slice(3)}`;
     return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
   }
+
+  // ── Currency auto-formatting: $0,000 ─────────────────────────────────────────
+  function formatCurrency(value) {
+    const digits = value.replace(/[^\d]/g, '');
+    if (!digits) return '';
+    return '$' + Number(digits).toLocaleString('en-US');
+  }
+  const MONEY_FIELDS = ['quoted-rate', 'standard-fee', 'agreed-fee', 'concession-amount'];
+
   document.addEventListener('input', (e) => {
     if (e.target.id === 'f-poa-phone' || e.target.id.endsWith('-poa-phone')) {
       e.target.value = formatPhone(e.target.value);
+      return;
+    }
+    if (MONEY_FIELDS.some(f => e.target.id === `f-${f}` || e.target.id.endsWith(`-${f}`))) {
+      e.target.value = formatCurrency(e.target.value);
     }
   });
 
@@ -548,7 +567,30 @@
     return el ? el.value.trim() : '';
   }
 
-  function resetForm() { document.getElementById('prospectForm').reset(); }
+  function resetForm() {
+    document.getElementById('prospectForm').reset();
+    document.getElementById('f-admit-date-mode').value = 'date';
+    toggleAdmitDateMode('f-');
+  }
+
+  function toggleAdmitDateMode(prefix) {
+    const mode = document.getElementById(`${prefix}admit-date-mode`)?.value;
+    const dateInput = document.getElementById(`${prefix}admit-date`);
+    if (!dateInput) return;
+    if (mode === 'asap') {
+      dateInput.style.display = 'none';
+      dateInput.value = '';
+    } else {
+      dateInput.style.display = '';
+    }
+  }
+
+  function displayAdmitDate(val) {
+    if (!val) return '—';
+    if (val === 'ASAP') return 'ASAP';
+    if (/^\d{4}-\d{2}-\d{2}/.test(val)) return fmtDate(val);
+    return esc(val);
+  }
 
   // ── Load ────────────────────────────────────────────────────────────────────
   async function loadProspects() {
