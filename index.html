@@ -3,185 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Post Tour Tracker</title>
+<title>Operations Hub</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #f4f7f6; --surface: #ffffff; --surface2: #f8fafc;
-    --border: #cbd5e1; --text: #1e293b; --muted: #475569; --label: #0f172a;
-    --accent: #193652; --accent-hover: #12273b; --accent-dim: rgba(25,54,82,0.08);
-    --highlight: #e8a33d; --highlight-hover: #cf8d2b;
-    --low: #166534; --low-bg: #f0fdf4; --low-border: #bbf7d0;
-    --urgent: #991b1b; --urgent-bg: #fef2f2; --urgent-border: #fecdd3;
-    --inprogress: #1d4ed8; --inprogress-bg: #eff6ff; --inprogress-border: #bfdbfe;
-    --stage-toured: #0369a1; --stage-toured-bg: #e0f2fe;
-    --stage-deposit-pending: #b45309; --stage-deposit-pending-bg: #fef9c3;
-    --stage-deposit-received: #166534; --stage-deposit-received-bg: #dcfce7;
-    --stage-move-in: #7c3aed; --stage-move-in-bg: #ede9fe;
-    --stage-won: #166534; --stage-won-bg: #f0fdf4;
-    --stage-lost: #991b1b; --stage-lost-bg: #fef2f2;
-    --radius: 12px; --radius-sm: 8px;
+    --bg: #f4f7f6; 
+    --surface: #ffffff; 
+    --surface2: #f8fafc;
+    --border: #cbd5e1; 
+    --text: #1e293b; 
+    --muted: #475569; 
+    --label: #0f172a;
+    --accent: #193652; 
+    --accent-hover: #12273b; 
+    --accent-dim: rgba(25, 54, 82, 0.08);
+    --highlight: #e8a33d; 
+    --highlight-hover: #cf8d2b;
+    --radius: 8px; 
+    --radius-sm: 6px;
   }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; line-height: 1.6; min-height: 100vh; }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  header {
+    background: var(--accent);
+    border-bottom: 4px solid var(--highlight);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  header h1 { color: #fff; font-size: 22px; font-weight: 700; }
+  
+  .header-right { margin-left: auto; display: flex; align-items: center; }
+  .btn-logout {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+  }
 
-  header { background: var(--accent); border-bottom: 4px solid var(--highlight); padding: 20px 32px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-  .header-back { color: rgba(255,255,255,0.9); text-decoration: none; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; transition: all 0.2s; }
-  .header-back:hover { background: rgba(255,255,255,0.2); color: #fff; }
-  header h1 { font-size: 22px; font-weight: 700; color: #fff; }
-  .header-right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .page-title {
+    font-size: 15px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--muted); margin-bottom: 48px;
+  }
 
-  .page { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
-
-  .tabs { display: flex; gap: 8px; margin-bottom: 32px; background: #e2e8f0; border-radius: var(--radius); padding: 6px; width: fit-content; }
-  .tab { padding: 12px 28px; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; color: var(--muted); border: none; background: none; transition: all 0.2s; }
-  .tab.active { background: var(--surface); color: var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-  .tab:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.6); }
-  .panel { display: none; } .panel.active { display: block; }
-
-  .form-section { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); }
-  .section-label { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; color: var(--accent); text-transform: uppercase; margin-bottom: 24px; border-left: 4px solid var(--highlight); padding-left: 12px; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
-  .span-2 { grid-column: span 2; }
-  .form-group { display: flex; flex-direction: column; gap: 8px; }
-  .form-group label { font-size: 14px; font-weight: 700; letter-spacing: 0.5px; color: var(--label); text-transform: uppercase; }
-
-  input, select, textarea { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 14px 16px; font-size: 16px; font-family: inherit; width: 100%; transition: all 0.2s; appearance: none; -webkit-appearance: none; }
-  input::placeholder, textarea::placeholder { color: #94a3b8; }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-dim); }
-  textarea { min-height: 100px; resize: vertical; }
-  .select-wrap { position: relative; }
-  .select-wrap::after { content: ''; position: absolute; right: 16px; top: 50%; width: 0; height: 0; margin-top: -3px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid var(--muted); pointer-events: none; }
-  .select-wrap select { padding-right: 40px; }
-
-  .form-actions { display: flex; gap: 16px; margin-top: 16px; }
-  .btn { padding: 14px 28px; border-radius: var(--radius-sm); font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-  .btn-primary { background: var(--highlight); color: #000; }
-  .btn-primary:hover { background: var(--highlight-hover); transform: translateY(-1px); }
-  .btn-secondary { background: var(--surface); color: var(--text); border: 2px solid var(--border); box-shadow: none; }
-  .btn-secondary:hover { background: var(--surface2); border-color: var(--muted); }
-  .btn-danger { background: #fff1f2; color: var(--urgent); border: 2px solid #fecdd3; box-shadow: none; }
-  .btn-danger:hover { background: #ffe4e6; }
-  .btn-edit { background: var(--accent-dim); color: var(--accent); border: 2px solid rgba(25,54,82,0.2); box-shadow: none; }
-  .btn-edit:hover { background: rgba(25,54,82,0.15); }
-  .btn-sm { padding: 8px 16px; font-size: 14px; border-radius: 6px; }
-  header .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,0.4); box-shadow: none; }
-  header .btn-secondary:hover { background: rgba(255,255,255,0.15); }
-
-  /* Stats */
-  .stats-bar { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 32px; }
-  .stat-card { background: var(--surface); border: 1px solid rgba(226,232,240,0.8); border-radius: var(--radius); padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-  .stat-value { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--accent); }
-  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-
-  /* Queue header */
-  .queue-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-  .queue-header h2 { font-size: 24px; font-weight: 700; color: var(--accent); }
-  .record-count { background: #e2e8f0; color: var(--accent); font-size: 14px; font-weight: 700; padding: 4px 16px; border-radius: 20px; }
-  .queue-filters { display: flex; gap: 12px; margin-left: auto; align-items: center; flex-wrap: wrap; }
-  .filter-select { width: auto; padding: 10px 40px 10px 16px; font-size: 14px; background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-sm); font-weight: 600; }
-  .divider { width: 2px; height: 32px; background: var(--border); }
-
-  .empty-state { text-align: center; padding: 80px 20px; color: var(--muted); background: var(--surface); border: 2px dashed var(--border); border-radius: var(--radius); }
-  .empty-state p { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
-  .empty-state small { font-size: 15px; display: block; }
-
-  /* Prospect cards */
-  .prospect-card { background: var(--surface); border: 1px solid var(--border); border-left: 6px solid var(--accent); border-radius: var(--radius); margin-bottom: 12px; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.04); }
-  .prospect-card:hover { border-color: #94a3b8; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-  .prospect-card.stage-toured          { border-left-color: var(--stage-toured); }
-  .prospect-card.stage-deposit-pending { border-left-color: var(--stage-deposit-pending); }
-  .prospect-card.stage-deposit-received{ border-left-color: var(--stage-deposit-received); }
-  .prospect-card.stage-move-in         { border-left-color: var(--stage-move-in); }
-  .prospect-card.stage-won             { border-left-color: var(--stage-won); }
-  .prospect-card.stage-lost            { border-left-color: #9ca3af; opacity: 0.65; }
-
-  /* Condensed header row — shows blue-highlighted fields */
-  .prospect-header-row {
+  .cards {
     display: grid;
-    grid-template-columns: minmax(200px, 2fr) minmax(120px,1fr) minmax(160px,1.4fr) minmax(150px,1.2fr) minmax(140px,1fr) auto;
-    gap: 16px; align-items: center; padding: 16px 20px; cursor: pointer;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
   }
-  .prospect-header-row:hover { background: rgba(0,0,0,0.02); border-radius: var(--radius); }
 
-  .p-name { font-size: 17px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .p-campus { font-size: 15px; color: var(--muted); font-weight: 600; }
-  .p-stage-wrap { }
-  .p-followup-label { font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
-  .p-followup-date { font-size: 15px; font-weight: 700; color: var(--text); margin-top: 2px; }
-  .p-followup-date.overdue { color: var(--urgent); }
-  .p-followup-date.soon { color: var(--stage-deposit-pending); }
-  .p-owner { font-size: 14px; color: var(--muted); }
-  .p-owner strong { color: var(--label); display: block; font-size: 15px; }
-
-  .stage-pill {
-    font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
-    text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; display: inline-block;
+  .card {
+    background: var(--surface);
+    border: 1px solid rgba(226,232,240,0.8);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+    border-top: 4px solid var(--accent);
   }
-  .stage-toured           { background: var(--stage-toured-bg); color: var(--stage-toured); }
-  .stage-deposit-pending  { background: var(--stage-deposit-pending-bg); color: var(--stage-deposit-pending); }
-  .stage-deposit-received { background: var(--stage-deposit-received-bg); color: var(--stage-deposit-received); }
-  .stage-move-in          { background: var(--stage-move-in-bg); color: var(--stage-move-in); }
-  .stage-won              { background: var(--stage-won-bg); color: var(--stage-won); }
-  .stage-lost             { background: #f3f4f6; color: #6b7280; }
-
-  .th-toggle { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--text); font-size: 14px; font-weight: bold; cursor: pointer; transition: transform 0.3s; }
-  .prospect-card.expanded .th-toggle { transform: rotate(180deg); }
-
-  /* Expanded content */
-  .prospect-expanded { display: none; padding: 0 20px 24px 20px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 20px; }
-  .prospect-card.expanded .prospect-expanded { display: block; }
-
-  .expanded-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; }
-
-  /* Edit form overlay inside the card */
-  .edit-form-wrap { display: none; background: var(--surface2); border: 2px solid var(--accent-dim); border-radius: var(--radius-sm); padding: 24px; margin-bottom: 20px; }
-  .edit-form-wrap.visible { display: block; }
-  .edit-section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent); margin: 20px 0 14px; border-left: 3px solid var(--highlight); padding-left: 10px; }
-  .edit-section-title:first-child { margin-top: 0; }
-  .edit-actions { display: flex; gap: 10px; margin-top: 20px; }
-
-  /* Detail sections */
-  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; background: rgba(0,0,0,0.02); padding: 16px 20px; border-radius: var(--radius-sm); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 16px; }
-  .detail-item { font-size: 14px; color: var(--muted); }
-  .detail-item strong { color: var(--label); font-weight: 700; display: block; margin-bottom: 2px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
-  .detail-item span { font-size: 15px; color: var(--text); }
-
-  .detail-section-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin: 18px 0 10px; }
-
-  /* Pipeline checklist */
-  .pipeline-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 10px; margin-bottom: 16px; }
-  .pipeline-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
-  .pipeline-item-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); }
-  .pipeline-item-value { font-size: 14px; font-weight: 700; }
-  .pv-pending   { color: var(--stage-deposit-pending); }
-  .pv-scheduled { color: var(--stage-toured); }
-  .pv-completed { color: var(--low); }
-  .pv-na        { color: #9ca3af; }
-
-  /* Comments / Last Contact Notes */
-  .notes-wrapper { margin-top: 16px; }
-  .notes-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-  .note-item { background: rgba(0,0,0,0.03); padding: 12px 16px; border-radius: var(--radius-sm); font-size: 15px; color: var(--text); display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-left: 3px solid var(--muted); }
-  .note-text { flex: 1; }
-  .note-ts { font-size: 13px; color: var(--muted); font-weight: 600; white-space: nowrap; }
-
-  .section-title-sm { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.5px; display: block; }
-
-  .toast { position: fixed; bottom: 32px; right: 32px; background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 16px 24px; font-size: 16px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.15); transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 999; max-width: 400px; display: flex; align-items: center; gap: 12px; }
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast.success { border-left: 6px solid var(--low); }
-  .toast.error { border-left: 6px solid var(--urgent); }
-
-  @media (max-width: 1000px) {
-    .stats-bar { grid-template-columns: repeat(3, 1fr); }
-    .prospect-header-row { grid-template-columns: 1fr 1fr auto; gap: 12px; padding: 14px 16px; }
-    .p-campus, .p-followup-wrap, .p-owner { display: none; }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(25, 54, 82, 0.1);
+    border-color: var(--border);
   }
-  @media (max-width: 600px) {
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
-    .span-2 { grid-column: span 1; }
-    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .card-icon {
+    width: 48px; height: 48px;
+    background: var(--accent-dim);
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .card-title {
+    font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: -0.2px;
+  }
+  .card-action {
+    margin-top: auto;
+    font-size: 14px; font-weight: 700;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  @media (max-width: 700px) {
+    .cards { grid-template-columns: 1fr; }
+    .page { padding: 36px 16px; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -189,769 +128,73 @@
 <body>
 
 <header>
-  <a class="header-back" href="../index.html">← Hub</a>
-  <h1>Post Tour Tracker</h1>
+  <div>
+    <h1>Operations Hub</h1>
+  </div>
   <div class="header-right">
-    <button class="btn btn-secondary btn-sm" onclick="exportCSV()">Export CSV</button>
-    <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+    <button class="btn-logout" onclick="logout()">Logout</button>
   </div>
 </header>
 
 <div class="page">
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('submit',this)">Add Prospect</button>
-    <button class="tab" onclick="switchTab('queue',this)">Tracker <span id="queueTabCount"></span></button>
-  </div>
+  <div class="page-title">Select a module below to submit or manage requests.</div>
 
-  <!-- SUBMIT PANEL -->
-  <div class="panel active" id="panel-submit">
-    <form id="prospectForm" onsubmit="submitProspect(event)">
-
-      <div class="form-section">
-        <div class="section-label">Prospect / Family</div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Resident Name <span style="color:var(--urgent)">*</span></label>
-            <input type="text" id="f-resident-name" required placeholder="Full name">
-          </div>
-          <div class="form-group">
-            <label>Campus <span style="color:var(--urgent)">*</span></label>
-            <div class="select-wrap">
-              <select id="f-campus" required>
-                <option value="">Select campus...</option>
-                <option>Frisco</option>
-                <option>McKinney</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>POA / Decision-Maker</label>
-            <input type="text" id="f-poa-name" placeholder="Name">
-          </div>
-          <div class="form-group">
-            <label>POA Phone</label>
-            <input type="text" id="f-poa-phone" placeholder="(000) 000-0000">
-          </div>
-          <div class="form-group">
-            <label>POA Email</label>
-            <input type="email" id="f-poa-email" placeholder="email@example.com">
-          </div>
-          <div class="form-group">
-            <label>Referral Source</label>
-            <input type="text" id="f-referral-source" placeholder="e.g. The Oxford Grand McKinney">
-          </div>
-          <div class="form-group">
-            <label>Organic / Non-Organic</label>
-            <div class="select-wrap">
-              <select id="f-organic">
-                <option value="">Select...</option>
-                <option>Organic</option>
-                <option>Non-Organic</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Tour Date</label>
-            <input type="date" id="f-tour-date">
-          </div>
-          <div class="form-group">
-            <label>Toured By</label>
-            <input type="text" id="f-toured-by" placeholder="Staff member name">
-          </div>
-        </div>
+  <div class="cards">
+    <a class="card" href="./maintenance/index.html">
+      <div class="card-icon">🔧</div>
+      <div>
+        <div class="card-title">Maintenance Tickets</div>
       </div>
+      <div class="card-action">Open module →</div>
+    </a>
 
-      <div class="form-section">
-        <div class="section-label">Status &amp; Follow-Up</div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Stage <span style="color:var(--urgent)">*</span></label>
-            <div class="select-wrap">
-              <select id="f-stage" required>
-                <option value="">Select stage...</option>
-                <option>Toured</option>
-                <option>Deposit Pending</option>
-                <option>Deposit Received</option>
-                <option>Move-In Scheduled</option>
-                <option>Closed - Won</option>
-                <option>Closed - Lost</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Next Follow-Up Date</label>
-            <input type="date" id="f-followup-date">
-          </div>
-          <div class="form-group span-2">
-            <label>Initial Contact Note</label>
-            <textarea id="f-initial-note" placeholder="Add an initial note about this prospect..."></textarea>
-          </div>
-          <div class="form-group">
-            <label>Lost Reason</label>
-            <input type="text" id="f-lost-reason" placeholder="If applicable">
-          </div>
-        </div>
+    <a class="card" href="./employee-requests/index.html">
+      <div class="card-icon">👤</div>
+      <div>
+        <div class="card-title">Employee Change Requests</div>
       </div>
+      <div class="card-action">Open module →</div>
+    </a>
 
-      <div class="form-section">
-        <div class="section-label">Deal Terms</div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Room / Unit</label>
-            <input type="text" id="f-room" placeholder="e.g. 101, TBD">
-          </div>
-          <div class="form-group">
-            <label>Quoted Rate</label>
-            <input type="text" id="f-quoted-rate" placeholder="$0,000">
-          </div>
-          <div class="form-group">
-            <label>Standard Community Fee</label>
-            <input type="text" id="f-standard-fee" placeholder="$0,000">
-          </div>
-          <div class="form-group">
-            <label>Agreed Community Fee</label>
-            <input type="text" id="f-agreed-fee" placeholder="$0,000">
-          </div>
-          <div class="form-group">
-            <label>Concession Amount</label>
-            <input type="text" id="f-concession-amount" placeholder="$0,000">
-          </div>
-          <div class="form-group">
-            <label>Concession Reason</label>
-            <input type="text" id="f-concession-reason" placeholder="e.g. Move-in incentive">
-          </div>
-        </div>
+    <a class="card" href="./resident-requests/index.html">
+      <div class="card-icon">🏠</div>
+      <div>
+        <div class="card-title">Resident Change Requests</div>
       </div>
+      <div class="card-action">Open module →</div>
+    </a>
 
-      <div class="form-section">
-        <div class="section-label">Admissions Pipeline</div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Deposit Received</label>
-            <div class="select-wrap">
-              <select id="f-deposit-received">
-                <option value="">Select...</option>
-                <option>Y</option>
-                <option>N</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Deposit Received Date</label>
-            <input type="date" id="f-deposit-date">
-          </div>
-          <div class="form-group">
-            <label>TB Test Status</label>
-            <div class="select-wrap">
-              <select id="f-tb-status">
-                <option value="">Select...</option>
-                <option>Pending</option>
-                <option>Scheduled</option>
-                <option>Completed</option>
-                <option>N/A</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Clinical Assessment Status</label>
-            <div class="select-wrap">
-              <select id="f-clinical-status">
-                <option value="">Select...</option>
-                <option>Pending</option>
-                <option>Scheduled</option>
-                <option>Completed</option>
-                <option>N/A</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Admissions Paperwork Status</label>
-            <div class="select-wrap">
-              <select id="f-paperwork-status">
-                <option value="">Select...</option>
-                <option>Pending</option>
-                <option>Scheduled</option>
-                <option>Completed</option>
-                <option>N/A</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Medical Notes/Scripts Received</label>
-            <div class="select-wrap">
-              <select id="f-medical-status">
-                <option value="">Select...</option>
-                <option>Pending</option>
-                <option>Scheduled</option>
-                <option>Completed</option>
-                <option>N/A</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Target Admit Date</label>
-            <input type="text" id="f-admit-date" placeholder="e.g. ASAP, 8/1/2026">
-          </div>
-        </div>
+    <a class="card" href="./post-tour-tracker/index.html">
+      <div class="card-icon">📝</div>
+      <div>
+        <div class="card-title">Post Tour Tracker</div>
       </div>
-
-      <div class="form-section">
-        <div class="section-label">Ownership</div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label>Sales Owner <span style="color:var(--urgent)">*</span></label>
-            <input type="text" id="f-sales-owner" required placeholder="Name of sales owner">
-          </div>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Add Prospect</button>
-        <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear Form</button>
-      </div>
-    </form>
-  </div>
-
-  <!-- QUEUE/TRACKER PANEL -->
-  <div class="panel" id="panel-queue">
-    <div class="stats-bar">
-      <div class="stat-card"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total</div></div>
-      <div class="stat-card"><div class="stat-value" id="statToured" style="color:var(--stage-toured)">0</div><div class="stat-label">Toured</div></div>
-      <div class="stat-card"><div class="stat-value" id="statDepositPending" style="color:var(--stage-deposit-pending)">0</div><div class="stat-label">Deposit Pending</div></div>
-      <div class="stat-card"><div class="stat-value" id="statDepositReceived" style="color:var(--stage-deposit-received)">0</div><div class="stat-label">Deposit Received</div></div>
-      <div class="stat-card"><div class="stat-value" id="statMoveIn" style="color:var(--stage-move-in)">0</div><div class="stat-label">Move-In Sched.</div></div>
-      <div class="stat-card"><div class="stat-value" id="statWon" style="color:var(--low)">0</div><div class="stat-label">Closed Won</div></div>
-    </div>
-
-    <div class="queue-header">
-      <h2>All Prospects</h2>
-      <span class="record-count" id="visibleCount">0 records</span>
-      <div class="queue-filters">
-        <div class="select-wrap">
-          <select class="filter-select" id="filterStage" onchange="renderQueue()">
-            <option value="">All stages</option>
-            <option>Toured</option>
-            <option>Deposit Pending</option>
-            <option>Deposit Received</option>
-            <option>Move-In Scheduled</option>
-            <option>Closed - Won</option>
-            <option>Closed - Lost</option>
-          </select>
-        </div>
-        <div class="select-wrap">
-          <select class="filter-select" id="filterCampus" onchange="renderQueue()">
-            <option value="">All campuses</option>
-            <option>Frisco</option>
-            <option>McKinney</option>
-          </select>
-        </div>
-        <div class="select-wrap">
-          <select class="filter-select" id="filterOwner" onchange="renderQueue()">
-            <option value="">All owners</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div id="prospectList"></div>
+      <div class="card-action">Open module →</div>
+    </a>
   </div>
 </div>
 
-<div class="toast" id="toast"><span id="toastMsg"></span></div>
-
 <script>
+  // 1. Initialize Supabase
   const SUPABASE_URL = 'https://dccvbgmqsojobkjtnkxm.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRjY3ZiZ21xc29qb2JranRua3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzA1MTQsImV4cCI6MjA5NzgwNjUxNH0.x6ZJNFa02mXxamFTCRUsfV_KfPPpCKZU5EYFvpdI1og';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  // 2. Auth Guard: If not logged in, kick to login.html
   async function checkAuth() {
     const { data: { session } } = await sb.auth.getSession();
-    if (!session) window.location.replace('../login.html');
+    if (!session) {
+      window.location.replace('login.html'); 
+    }
   }
   checkAuth();
 
+  // 3. Logout function
   async function logout() {
     await sb.auth.signOut();
-    window.location.href = '../login.html';
+    window.location.href = 'login.html'; 
   }
-
-  let prospects = [];
-  let expandedIds = new Set();
-
-  // ── Submit ──────────────────────────────────────────────────────────────────
-  async function submitProspect(e) {
-    e.preventDefault();
-    const initialNote = document.getElementById('f-initial-note').value.trim();
-    const contactNotes = initialNote
-      ? [{ text: initialNote, timestamp: new Date().toISOString() }]
-      : [];
-
-    const payload = buildPayloadFromForm('f-');
-    payload.contact_notes = contactNotes;
-    delete payload.initial_note;
-
-    const { error } = await sb.from('tour_prospects').insert(payload).select();
-    if (error) { console.error(error); showToast('Could not save — check Supabase connection', 'error'); return; }
-    showToast('Prospect added successfully', 'success');
-    resetForm();
-    loadProspects();
-  }
-
-  function buildPayloadFromForm(prefix) {
-    return {
-      resident_name:      v(`${prefix}resident-name`),
-      campus:             v(`${prefix}campus`),
-      poa_name:           v(`${prefix}poa-name`),
-      poa_phone:          v(`${prefix}poa-phone`),
-      poa_email:          v(`${prefix}poa-email`),
-      referral_source:    v(`${prefix}referral-source`),
-      organic:            v(`${prefix}organic`),
-      tour_date:          v(`${prefix}tour-date`) || null,
-      toured_by:          v(`${prefix}toured-by`),
-      stage:              v(`${prefix}stage`),
-      followup_date:      v(`${prefix}followup-date`) || null,
-      lost_reason:        v(`${prefix}lost-reason`),
-      room:               v(`${prefix}room`),
-      quoted_rate:        v(`${prefix}quoted-rate`),
-      standard_fee:       v(`${prefix}standard-fee`),
-      agreed_fee:         v(`${prefix}agreed-fee`),
-      concession_amount:  v(`${prefix}concession-amount`),
-      concession_reason:  v(`${prefix}concession-reason`),
-      deposit_received:   v(`${prefix}deposit-received`),
-      deposit_date:       v(`${prefix}deposit-date`) || null,
-      tb_status:          v(`${prefix}tb-status`),
-      clinical_status:    v(`${prefix}clinical-status`),
-      paperwork_status:   v(`${prefix}paperwork-status`),
-      medical_status:     v(`${prefix}medical-status`),
-      admit_date:         v(`${prefix}admit-date`),
-      sales_owner:        v(`${prefix}sales-owner`),
-    };
-  }
-
-  function v(id) {
-    const el = document.getElementById(id);
-    return el ? el.value.trim() : '';
-  }
-
-  function resetForm() { document.getElementById('prospectForm').reset(); }
-
-  // ── Load ────────────────────────────────────────────────────────────────────
-  async function loadProspects() {
-    const { data, error } = await sb.from('tour_prospects').select('*').order('created_at', { ascending: false });
-    if (error) { console.error(error); showToast('Could not load prospects', 'error'); return; }
-    prospects = data.map(rowToProspect);
-    populateOwnerFilter();
-    renderQueue();
-    updateStats();
-    updateTabCount();
-  }
-
-  function rowToProspect(r) {
-    let notes = [];
-    try { notes = typeof r.contact_notes === 'string' ? JSON.parse(r.contact_notes) : (r.contact_notes || []); } catch(e) {}
-    return {
-      id: r.id,
-      residentName: r.resident_name, campus: r.campus, poaName: r.poa_name,
-      poaPhone: r.poa_phone, poaEmail: r.poa_email, referralSource: r.referral_source,
-      organic: r.organic, tourDate: r.tour_date, touredBy: r.toured_by,
-      stage: r.stage, followupDate: r.followup_date, contactNotes: notes,
-      lostReason: r.lost_reason, room: r.room, quotedRate: r.quoted_rate,
-      standardFee: r.standard_fee, agreedFee: r.agreed_fee,
-      concessionAmount: r.concession_amount, concessionReason: r.concession_reason,
-      depositReceived: r.deposit_received, depositDate: r.deposit_date,
-      tbStatus: r.tb_status, clinicalStatus: r.clinical_status,
-      paperworkStatus: r.paperwork_status, medicalStatus: r.medical_status,
-      admitDate: r.admit_date, salesOwner: r.sales_owner,
-      createdAt: r.created_at
-    };
-  }
-
-  sb.channel('tour-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'tour_prospects' }, loadProspects)
-    .subscribe();
-
-  // ── Tab / expand ─────────────────────────────────────────────────────────────
-  function switchTab(name, btn) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('panel-' + name).classList.add('active');
-    if (name === 'queue') renderQueue();
-  }
-
-  function toggleCard(id) {
-    const card = document.getElementById('pc-' + id);
-    if (!card) return;
-    if (expandedIds.has(id)) { expandedIds.delete(id); card.classList.remove('expanded'); }
-    else { expandedIds.add(id); card.classList.add('expanded'); hideEditForm(id); }
-  }
-
-  // ── Edit ────────────────────────────────────────────────────────────────────
-  function showEditForm(id) {
-    const p = prospects.find(p => p.id === id);
-    if (!p) return;
-    const wrap = document.getElementById(`edit-wrap-${id}`);
-    if (!wrap) return;
-    wrap.classList.add('visible');
-
-    // Pre-fill all edit fields
-    setEv(id, 'resident-name', p.residentName);
-    setEv(id, 'campus', p.campus);
-    setEv(id, 'poa-name', p.poaName);
-    setEv(id, 'poa-phone', p.poaPhone);
-    setEv(id, 'poa-email', p.poaEmail);
-    setEv(id, 'referral-source', p.referralSource);
-    setEv(id, 'organic', p.organic);
-    setEv(id, 'tour-date', p.tourDate || '');
-    setEv(id, 'toured-by', p.touredBy);
-    setEv(id, 'stage', p.stage);
-    setEv(id, 'followup-date', p.followupDate || '');
-    setEv(id, 'lost-reason', p.lostReason);
-    setEv(id, 'room', p.room);
-    setEv(id, 'quoted-rate', p.quotedRate);
-    setEv(id, 'standard-fee', p.standardFee);
-    setEv(id, 'agreed-fee', p.agreedFee);
-    setEv(id, 'concession-amount', p.concessionAmount);
-    setEv(id, 'concession-reason', p.concessionReason);
-    setEv(id, 'deposit-received', p.depositReceived);
-    setEv(id, 'deposit-date', p.depositDate || '');
-    setEv(id, 'tb-status', p.tbStatus);
-    setEv(id, 'clinical-status', p.clinicalStatus);
-    setEv(id, 'paperwork-status', p.paperworkStatus);
-    setEv(id, 'medical-status', p.medicalStatus);
-    setEv(id, 'admit-date', p.admitDate);
-    setEv(id, 'sales-owner', p.salesOwner);
-  }
-
-  function hideEditForm(id) {
-    const wrap = document.getElementById(`edit-wrap-${id}`);
-    if (wrap) wrap.classList.remove('visible');
-  }
-
-  function setEv(id, field, val) {
-    const el = document.getElementById(`e-${id}-${field}`);
-    if (el) el.value = val || '';
-  }
-  function gEv(id, field) {
-    const el = document.getElementById(`e-${id}-${field}`);
-    return el ? el.value.trim() : '';
-  }
-
-  async function saveEdit(id) {
-    const payload = {
-      resident_name:     gEv(id,'resident-name'),
-      campus:            gEv(id,'campus'),
-      poa_name:          gEv(id,'poa-name'),
-      poa_phone:         gEv(id,'poa-phone'),
-      poa_email:         gEv(id,'poa-email'),
-      referral_source:   gEv(id,'referral-source'),
-      organic:           gEv(id,'organic'),
-      tour_date:         gEv(id,'tour-date') || null,
-      toured_by:         gEv(id,'toured-by'),
-      stage:             gEv(id,'stage'),
-      followup_date:     gEv(id,'followup-date') || null,
-      lost_reason:       gEv(id,'lost-reason'),
-      room:              gEv(id,'room'),
-      quoted_rate:       gEv(id,'quoted-rate'),
-      standard_fee:      gEv(id,'standard-fee'),
-      agreed_fee:        gEv(id,'agreed-fee'),
-      concession_amount: gEv(id,'concession-amount'),
-      concession_reason: gEv(id,'concession-reason'),
-      deposit_received:  gEv(id,'deposit-received'),
-      deposit_date:      gEv(id,'deposit-date') || null,
-      tb_status:         gEv(id,'tb-status'),
-      clinical_status:   gEv(id,'clinical-status'),
-      paperwork_status:  gEv(id,'paperwork-status'),
-      medical_status:    gEv(id,'medical-status'),
-      admit_date:        gEv(id,'admit-date'),
-      sales_owner:       gEv(id,'sales-owner'),
-    };
-    const { error } = await sb.from('tour_prospects').update(payload).eq('id', id);
-    if (error) { console.error(error); showToast('Could not save changes', 'error'); return; }
-    showToast('Changes saved', 'success');
-    hideEditForm(id);
-    loadProspects();
-  }
-
-  // ── Contact notes ────────────────────────────────────────────────────────────
-  async function addNote(id) {
-    const text = prompt('Add a contact note or update:');
-    if (!text || !text.trim()) return;
-    const p = prospects.find(p => p.id === id);
-    if (!p) return;
-    const updated = [...p.contactNotes, { text: text.trim(), timestamp: new Date().toISOString() }];
-    const { error } = await sb.from('tour_prospects').update({ contact_notes: updated }).eq('id', id);
-    if (error) { showToast('Could not add note', 'error'); return; }
-    loadProspects(); showToast('Note added', 'success');
-  }
-
-  // ── Delete ───────────────────────────────────────────────────────────────────
-  async function deleteProspect(id) {
-    if (!confirm('Delete this prospect record?')) return;
-    const { error } = await sb.from('tour_prospects').delete().eq('id', id);
-    if (error) { showToast('Could not delete', 'error'); return; }
-    loadProspects(); showToast('Record deleted', '');
-  }
-
-  // ── Stats / filters ──────────────────────────────────────────────────────────
-  function updateStats() {
-    document.getElementById('statTotal').textContent           = prospects.length;
-    document.getElementById('statToured').textContent          = prospects.filter(p => p.stage === 'Toured').length;
-    document.getElementById('statDepositPending').textContent  = prospects.filter(p => p.stage === 'Deposit Pending').length;
-    document.getElementById('statDepositReceived').textContent = prospects.filter(p => p.stage === 'Deposit Received').length;
-    document.getElementById('statMoveIn').textContent          = prospects.filter(p => p.stage === 'Move-In Scheduled').length;
-    document.getElementById('statWon').textContent             = prospects.filter(p => p.stage === 'Closed - Won').length;
-  }
-
-  function updateTabCount() {
-    const active = prospects.filter(p => !['Closed - Won','Closed - Lost'].includes(p.stage)).length;
-    document.getElementById('queueTabCount').textContent = active ? `(${active})` : '';
-  }
-
-  function populateOwnerFilter() {
-    const sel = document.getElementById('filterOwner');
-    const cur = sel.value;
-    const owners = [...new Set(prospects.map(p => p.salesOwner).filter(Boolean))].sort();
-    sel.innerHTML = '<option value="">All owners</option>' + owners.map(o => `<option>${esc(o)}</option>`).join('');
-    if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
-  }
-
-  // ── Render queue ─────────────────────────────────────────────────────────────
-  function renderQueue() {
-    updateStats();
-    const fs = document.getElementById('filterStage')?.value || '';
-    const fc = document.getElementById('filterCampus')?.value || '';
-    const fo = document.getElementById('filterOwner')?.value || '';
-
-    let filtered = prospects.filter(p => {
-      if (fs && p.stage !== fs) return false;
-      if (fc && p.campus !== fc) return false;
-      if (fo && p.salesOwner !== fo) return false;
-      return true;
-    });
-
-    document.getElementById('visibleCount').textContent = filtered.length + ' record' + (filtered.length !== 1 ? 's' : '');
-
-    const list = document.getElementById('prospectList');
-    if (!filtered.length) {
-      list.innerHTML = `<div class="empty-state"><p>${prospects.length ? 'No records match your filters.' : 'No prospects yet.'}</p><small>${prospects.length ? 'Try clearing a filter.' : 'Add a prospect to get started.'}</small></div>`;
-      return;
-    }
-
-    list.innerHTML = filtered.map(p => {
-      const isExp = expandedIds.has(p.id) ? 'expanded' : '';
-      const stageKey = stageClass(p.stage);
-      const stagePillHtml = `<span class="stage-pill ${stageKey}">${esc(p.stage)}</span>`;
-
-      // Follow-up date urgency
-      let followupHtml = '<span class="p-followup-date">—</span>';
-      if (p.followupDate) {
-        const today = new Date(); today.setHours(0,0,0,0);
-        const target = new Date(p.followupDate); target.setHours(0,0,0,0);
-        const diff = (target - today) / 86400000;
-        const cls = diff < 0 ? 'overdue' : diff <= 3 ? 'soon' : '';
-        followupHtml = `<span class="p-followup-date ${cls}">${fmtDate(p.followupDate)}</span>`;
-      }
-
-      // Notes list
-      const notesHtml = p.contactNotes.length > 0
-        ? p.contactNotes.map(n => `<div class="note-item"><span class="note-text">${esc(n.text)}</span><span class="note-ts">${fmtDateTime(n.timestamp)}</span></div>`).join('')
-        : `<div style="font-size:14px;color:var(--muted);font-style:italic">No contact notes yet.</div>`;
-
-      // Pipeline status colors
-      const pvClass = s => ({ Pending: 'pv-pending', Scheduled: 'pv-scheduled', Completed: 'pv-completed', 'N/A': 'pv-na' }[s] || '');
-
-      // Edit form HTML (inline, hidden until Edit clicked)
-      const ef = (field, type='text', opts=null) => {
-        if (opts) {
-          return `<div class="select-wrap"><select id="e-${p.id}-${field}">${opts.map(o => `<option>${o}</option>`).join('')}</select></div>`;
-        }
-        return `<input type="${type}" id="e-${p.id}-${field}" placeholder="">`;
-      };
-
-      const editFormHtml = `
-        <div class="edit-form-wrap" id="edit-wrap-${p.id}">
-          <div class="edit-section-title">Prospect / Family</div>
-          <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Resident Name</label>${ef(p.id+'-resident-name'.replace(p.id+'-',''),'text')}</div>
-            <div class="form-group"><label style="font-size:12px">Campus</label>${ef(p.id+'-campus','text',['','Frisco','McKinney'])}</div>
-            <div class="form-group"><label style="font-size:12px">POA / Decision-Maker</label>${ef(p.id+'-poa-name')}</div>
-            <div class="form-group"><label style="font-size:12px">POA Phone</label>${ef(p.id+'-poa-phone')}</div>
-            <div class="form-group"><label style="font-size:12px">POA Email</label>${ef(p.id+'-poa-email','email')}</div>
-            <div class="form-group"><label style="font-size:12px">Referral Source</label>${ef(p.id+'-referral-source')}</div>
-            <div class="form-group"><label style="font-size:12px">Organic</label>${ef(p.id+'-organic','text',['','Organic','Non-Organic'])}</div>
-            <div class="form-group"><label style="font-size:12px">Tour Date</label>${ef(p.id+'-tour-date','date')}</div>
-            <div class="form-group"><label style="font-size:12px">Toured By</label>${ef(p.id+'-toured-by')}</div>
-          </div>
-          <div class="edit-section-title">Status &amp; Follow-Up</div>
-          <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Stage</label>${ef(p.id+'-stage','text',['','Toured','Deposit Pending','Deposit Received','Move-In Scheduled','Closed - Won','Closed - Lost'])}</div>
-            <div class="form-group"><label style="font-size:12px">Next Follow-Up Date</label>${ef(p.id+'-followup-date','date')}</div>
-            <div class="form-group"><label style="font-size:12px">Lost Reason</label>${ef(p.id+'-lost-reason')}</div>
-          </div>
-          <div class="edit-section-title">Deal Terms</div>
-          <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Room / Unit</label>${ef(p.id+'-room')}</div>
-            <div class="form-group"><label style="font-size:12px">Quoted Rate</label>${ef(p.id+'-quoted-rate')}</div>
-            <div class="form-group"><label style="font-size:12px">Standard Community Fee</label>${ef(p.id+'-standard-fee')}</div>
-            <div class="form-group"><label style="font-size:12px">Agreed Community Fee</label>${ef(p.id+'-agreed-fee')}</div>
-            <div class="form-group"><label style="font-size:12px">Concession Amount</label>${ef(p.id+'-concession-amount')}</div>
-            <div class="form-group"><label style="font-size:12px">Concession Reason</label>${ef(p.id+'-concession-reason')}</div>
-          </div>
-          <div class="edit-section-title">Admissions Pipeline</div>
-          <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Deposit Received</label>${ef(p.id+'-deposit-received','text',['','Y','N'])}</div>
-            <div class="form-group"><label style="font-size:12px">Deposit Date</label>${ef(p.id+'-deposit-date','date')}</div>
-            <div class="form-group"><label style="font-size:12px">TB Test Status</label>${ef(p.id+'-tb-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
-            <div class="form-group"><label style="font-size:12px">Clinical Assessment</label>${ef(p.id+'-clinical-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
-            <div class="form-group"><label style="font-size:12px">Admissions Paperwork</label>${ef(p.id+'-paperwork-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
-            <div class="form-group"><label style="font-size:12px">Medical Notes/Scripts</label>${ef(p.id+'-medical-status','text',['','Pending','Scheduled','Completed','N/A'])}</div>
-            <div class="form-group"><label style="font-size:12px">Target Admit Date</label>${ef(p.id+'-admit-date')}</div>
-          </div>
-          <div class="edit-section-title">Ownership</div>
-          <div class="grid-2" style="gap:16px">
-            <div class="form-group"><label style="font-size:12px">Sales Owner</label>${ef(p.id+'-sales-owner')}</div>
-          </div>
-          <div class="edit-actions">
-            <button class="btn btn-primary btn-sm" onclick="saveEdit(${p.id})">Save Changes</button>
-            <button class="btn btn-secondary btn-sm" onclick="hideEditForm(${p.id})">Cancel</button>
-          </div>
-        </div>`;
-
-      return `
-      <div class="prospect-card ${stageKey} ${isExp}" id="pc-${p.id}">
-        <div class="prospect-header-row" onclick="toggleCard(${p.id})">
-          <div class="p-name">${esc(p.residentName)} ${stagePillHtml}</div>
-          <div class="p-campus">${esc(p.campus) || '—'}</div>
-          <div class="p-stage-wrap">${stagePillHtml}</div>
-          <div class="p-followup-wrap">
-            <div class="p-followup-label">Follow-Up</div>
-            ${followupHtml}
-          </div>
-          <div class="p-owner"><strong>${esc(p.salesOwner) || '—'}</strong>Sales Owner</div>
-          <button class="th-toggle">▼</button>
-        </div>
-
-        <div class="prospect-expanded">
-          <div class="expanded-actions">
-            <button class="btn btn-edit btn-sm" onclick="showEditForm(${p.id}); event.stopPropagation()">✏️ Edit</button>
-            <button class="btn btn-secondary btn-sm" onclick="addNote(${p.id}); event.stopPropagation()">+ Contact Note</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteProspect(${p.id}); event.stopPropagation()">Delete</button>
-          </div>
-
-          ${editFormHtml}
-
-          <div class="detail-section-title">Prospect / Family</div>
-          <div class="detail-grid">
-            <div class="detail-item"><strong>Resident</strong><span>${esc(p.residentName)||'—'}</span></div>
-            <div class="detail-item"><strong>Campus</strong><span>${esc(p.campus)||'—'}</span></div>
-            <div class="detail-item"><strong>POA / Decision-Maker</strong><span>${esc(p.poaName)||'—'}</span></div>
-            <div class="detail-item"><strong>POA Phone</strong><span>${esc(p.poaPhone)||'—'}</span></div>
-            <div class="detail-item"><strong>POA Email</strong><span>${esc(p.poaEmail)||'—'}</span></div>
-            <div class="detail-item"><strong>Referral Source</strong><span>${esc(p.referralSource)||'—'}</span></div>
-            <div class="detail-item"><strong>Organic</strong><span>${esc(p.organic)||'—'}</span></div>
-            <div class="detail-item"><strong>Tour Date</strong><span>${p.tourDate ? fmtDate(p.tourDate) : '—'}</span></div>
-            <div class="detail-item"><strong>Toured By</strong><span>${esc(p.touredBy)||'—'}</span></div>
-          </div>
-
-          <div class="detail-section-title">Status &amp; Follow-Up</div>
-          <div class="detail-grid">
-            <div class="detail-item"><strong>Stage</strong><span>${esc(p.stage)||'—'}</span></div>
-            <div class="detail-item"><strong>Next Follow-Up</strong><span>${p.followupDate ? fmtDate(p.followupDate) : '—'}</span></div>
-            <div class="detail-item"><strong>Sales Owner</strong><span>${esc(p.salesOwner)||'—'}</span></div>
-            ${p.lostReason ? `<div class="detail-item"><strong>Lost Reason</strong><span>${esc(p.lostReason)}</span></div>` : ''}
-          </div>
-
-          <div class="detail-section-title">Deal Terms</div>
-          <div class="detail-grid">
-            <div class="detail-item"><strong>Room / Unit</strong><span>${esc(p.room)||'—'}</span></div>
-            <div class="detail-item"><strong>Quoted Rate</strong><span>${esc(p.quotedRate)||'—'}</span></div>
-            <div class="detail-item"><strong>Standard Community Fee</strong><span>${esc(p.standardFee)||'—'}</span></div>
-            <div class="detail-item"><strong>Agreed Community Fee</strong><span>${esc(p.agreedFee)||'—'}</span></div>
-            <div class="detail-item"><strong>Concession Amount</strong><span>${esc(p.concessionAmount)||'—'}</span></div>
-            <div class="detail-item"><strong>Concession Reason</strong><span>${esc(p.concessionReason)||'—'}</span></div>
-          </div>
-
-          <div class="detail-section-title">Admissions Pipeline</div>
-          <div class="pipeline-grid">
-            <div class="pipeline-item"><div class="pipeline-item-label">Deposit Received</div><div class="pipeline-item-value">${esc(p.depositReceived)||'—'}${p.depositDate ? ` · ${fmtDate(p.depositDate)}` : ''}</div></div>
-            <div class="pipeline-item"><div class="pipeline-item-label">TB Test Status</div><div class="pipeline-item-value ${pvClass(p.tbStatus)}">${esc(p.tbStatus)||'—'}</div></div>
-            <div class="pipeline-item"><div class="pipeline-item-label">Clinical Assessment</div><div class="pipeline-item-value ${pvClass(p.clinicalStatus)}">${esc(p.clinicalStatus)||'—'}</div></div>
-            <div class="pipeline-item"><div class="pipeline-item-label">Admissions Paperwork</div><div class="pipeline-item-value ${pvClass(p.paperworkStatus)}">${esc(p.paperworkStatus)||'—'}</div></div>
-            <div class="pipeline-item"><div class="pipeline-item-label">Medical Notes/Scripts</div><div class="pipeline-item-value ${pvClass(p.medicalStatus)}">${esc(p.medicalStatus)||'—'}</div></div>
-            <div class="pipeline-item"><div class="pipeline-item-label">Target Admit Date</div><div class="pipeline-item-value">${esc(p.admitDate)||'—'}</div></div>
-          </div>
-
-          <div class="notes-wrapper">
-            <span class="section-title-sm">Last Contact Notes</span>
-            <div class="notes-list">${notesHtml}</div>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
-
-    // After rendering, re-fire showEditForm for any open edit panels to restore their values
-    expandedIds.forEach(id => {
-      const wrap = document.getElementById(`edit-wrap-${id}`);
-      if (wrap && wrap.classList.contains('visible')) showEditForm(id);
-    });
-  }
-
-  function stageClass(stage) {
-    return ({
-      'Toured': 'stage-toured',
-      'Deposit Pending': 'stage-deposit-pending',
-      'Deposit Received': 'stage-deposit-received',
-      'Move-In Scheduled': 'stage-move-in',
-      'Closed - Won': 'stage-won',
-      'Closed - Lost': 'stage-lost',
-    })[stage] || '';
-  }
-
-  function exportCSV() {
-    if (!prospects.length) { showToast('No records to export', ''); return; }
-    const headers = ['ID','Resident Name','Campus','POA Name','POA Phone','POA Email','Referral Source','Organic','Tour Date','Toured By','Stage','Next Follow-Up','Lost Reason','Room','Quoted Rate','Standard Fee','Agreed Fee','Concession Amount','Concession Reason','Deposit Received','Deposit Date','TB Status','Clinical Status','Paperwork Status','Medical Status','Admit Date','Sales Owner','Created'];
-    const rows = prospects.map(p => [
-      p.id, p.residentName, p.campus, p.poaName, p.poaPhone, p.poaEmail,
-      p.referralSource, p.organic, p.tourDate, p.touredBy, p.stage, p.followupDate,
-      p.lostReason, p.room, p.quotedRate, p.standardFee, p.agreedFee,
-      p.concessionAmount, p.concessionReason, p.depositReceived, p.depositDate,
-      p.tbStatus, p.clinicalStatus, p.paperworkStatus, p.medicalStatus,
-      p.admitDate, p.salesOwner, p.createdAt
-    ].map(v => `"${String(v||'').replace(/"/g,'""')}"`));
-    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-    a.download = `post-tour-tracker-${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
-    showToast('Exported', 'success');
-  }
-
-  function esc(s) {
-    if (!s) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function fmtDate(iso) {
-    if (!iso) return '—';
-    // Handle YYYY-MM-DD without timezone shift
-    const [y,m,d] = iso.split('T')[0].split('-');
-    return new Date(+y, +m-1, +d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
-  function fmtDateTime(iso) {
-    if (!iso) return '';
-    return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-  }
-
-  let toastTimer;
-  function showToast(msg, type) {
-    const t = document.getElementById('toast');
-    document.getElementById('toastMsg').textContent = msg;
-    t.className = 'toast show ' + (type || '');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
-  }
-
-  loadProspects();
 </script>
+
 </body>
 </html>
